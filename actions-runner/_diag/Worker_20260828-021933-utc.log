@@ -1,0 +1,4874 @@
+[2026-08-28 02:19:33Z INFO HostContext] No proxy settings were found based on environmental variables (http_proxy/https_proxy/HTTP_PROXY/HTTPS_PROXY)
+[2026-08-28 02:19:33Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:33Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:33Z INFO HostContext] Well known config file 'Credentials': 'D:\actions-runner\.credentials'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known config file 'Runner': 'D:\actions-runner\.runner'
+[2026-08-28 02:19:34Z INFO Worker] Version: 2.336.0
+[2026-08-28 02:19:34Z INFO Worker] Commit: 98aabcd429c4e8402406c56ce2d26387fed3b9ce
+[2026-08-28 02:19:34Z INFO Worker] Culture: es-MX
+[2026-08-28 02:19:34Z INFO Worker] UI Culture: es-MX
+[2026-08-28 02:19:34Z INFO Worker] Waiting to receive the job message from the channel.
+[2026-08-28 02:19:34Z INFO ProcessChannel] Receiving message of length 23742, with hash 'a90010deaa6e64e64a382b6e301bd107a794c97740d07e21c2997176366d2e7c'
+[2026-08-28 02:19:34Z INFO Worker] Message received.
+[2026-08-28 02:19:34Z INFO Worker] Job message:
+ {
+  "defaults": [
+    {
+      "type": 2,
+      "file": 1,
+      "line": 14,
+      "col": 7,
+      "map": [
+        {
+          "key": {
+            "type": 0,
+            "file": 1,
+            "line": 14,
+            "col": 7,
+            "lit": "run"
+          },
+          "value": {
+            "type": 2,
+            "file": 1,
+            "line": 15,
+            "col": 9,
+            "map": [
+              {
+                "key": {
+                  "type": 0,
+                  "file": 1,
+                  "line": 15,
+                  "col": 9,
+                  "lit": "working-directory"
+                },
+                "value": {
+                  "type": 0,
+                  "file": 1,
+                  "line": 15,
+                  "col": 28,
+                  "lit": "signserver-web"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "fileTable": [
+    ".github/workflows/main.yml"
+  ],
+  "mask": [
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    },
+    {
+      "type": "regex",
+      "value": "***"
+    }
+  ],
+  "steps": [
+    {
+      "type": "action",
+      "reference": {
+        "type": "repository",
+        "name": "actions/checkout",
+        "ref": "v4",
+        "repositoryType": "GitHub"
+      },
+      "displayNameToken": {
+        "type": 0,
+        "file": 1,
+        "line": 18,
+        "col": 15,
+        "lit": "Checkout"
+      },
+      "contextName": "__actions_checkout",
+      "condition": "success()",
+      "id": "1e925565-4acf-499e-87d2-329cd047639a",
+      "name": "__actions_checkout"
+    },
+    {
+      "type": "action",
+      "reference": {
+        "type": "repository",
+        "name": "actions/setup-node",
+        "ref": "v4",
+        "repositoryType": "GitHub"
+      },
+      "displayNameToken": {
+        "type": 0,
+        "file": 1,
+        "line": 21,
+        "col": 15,
+        "lit": "Instalar Node.js"
+      },
+      "contextName": "__actions_setup-node",
+      "inputs": {
+        "type": 2,
+        "file": 1,
+        "line": 24,
+        "col": 11,
+        "map": [
+          {
+            "key": {
+              "type": 0,
+              "file": 1,
+              "line": 24,
+              "col": 11,
+              "lit": "node-version"
+            },
+            "value": {
+              "type": 0,
+              "file": 1,
+              "line": 24,
+              "col": 25,
+              "lit": "20"
+            }
+          },
+          {
+            "key": {
+              "type": 0,
+              "file": 1,
+              "line": 25,
+              "col": 11,
+              "lit": "cache"
+            },
+            "value": {
+              "type": 0,
+              "file": 1,
+              "line": 25,
+              "col": 18,
+              "lit": "npm"
+            }
+          },
+          {
+            "key": {
+              "type": 0,
+              "file": 1,
+              "line": 26,
+              "col": 11,
+              "lit": "cache-dependency-path"
+            },
+            "value": {
+              "type": 0,
+              "file": 1,
+              "line": 26,
+              "col": 34,
+              "lit": "signserver-web/package-lock.json"
+            }
+          }
+        ]
+      },
+      "condition": "success()",
+      "id": "df872a33-c807-41b1-9f3b-8a61fea72087",
+      "name": "__actions_setup-node"
+    },
+    {
+      "type": "action",
+      "reference": {
+        "type": "script"
+      },
+      "displayNameToken": {
+        "type": 0,
+        "file": 1,
+        "line": 28,
+        "col": 15,
+        "lit": "Instalar dependencias"
+      },
+      "contextName": "__run",
+      "inputs": {
+        "type": 2,
+        "map": [
+          {
+            "key": "script",
+            "value": {
+              "type": 0,
+              "file": 1,
+              "line": 29,
+              "col": 14,
+              "lit": "npm install"
+            }
+          }
+        ]
+      },
+      "condition": "success()",
+      "id": "b58ffc8d-0098-4080-882c-a1208b3cb5fe",
+      "name": "__run"
+    },
+    {
+      "type": "action",
+      "reference": {
+        "type": "script"
+      },
+      "displayNameToken": {
+        "type": 0,
+        "file": 1,
+        "line": 31,
+        "col": 15,
+        "lit": "Compilar (build de producción)"
+      },
+      "contextName": "__run_2",
+      "inputs": {
+        "type": 2,
+        "map": [
+          {
+            "key": "script",
+            "value": {
+              "type": 0,
+              "file": 1,
+              "line": 32,
+              "col": 14,
+              "lit": "npm run build"
+            }
+          }
+        ]
+      },
+      "condition": "success()",
+      "id": "55578da9-4540-42f5-8523-28c8d0b60c31",
+      "name": "__run_2"
+    },
+    {
+      "type": "action",
+      "reference": {
+        "type": "script"
+      },
+      "displayNameToken": {
+        "type": 0,
+        "file": 1,
+        "line": 34,
+        "col": 15,
+        "lit": "Publicar en el volumen de nginx"
+      },
+      "contextName": "__run_3",
+      "inputs": {
+        "type": 2,
+        "map": [
+          {
+            "key": "script",
+            "value": {
+              "type": 0,
+              "file": 1,
+              "line": 35,
+              "col": 14,
+              "lit": "podman exec signserver-web sh -c \"rm -rf /usr/share/nginx/html/assets/*\"\npodman cp dist/. signserver-web:/usr/share/nginx/html\npodman exec signserver-web nginx -s reload\n"
+            }
+          }
+        ]
+      },
+      "condition": "success()",
+      "id": "205dfa8c-7602-4409-8dc0-791c87ff2481",
+      "name": "__run_3"
+    }
+  ],
+  "variables": {
+    "Actions.EnableHttpRedirects": {
+      "value": "true"
+    },
+    "DistributedTask.AddWarningToNode12Action": {
+      "value": "true"
+    },
+    "DistributedTask.AddWarningToNode16Action": {
+      "value": "true"
+    },
+    "DistributedTask.AllowRunnerContainerHooks": {
+      "value": "true"
+    },
+    "DistributedTask.DeprecateStepOutputCommands": {
+      "value": "true"
+    },
+    "DistributedTask.DetailUntarFailure": {
+      "value": "true"
+    },
+    "DistributedTask.EnableCompositeActions": {
+      "value": "true"
+    },
+    "DistributedTask.EnableJobServerQueueTelemetry": {
+      "value": "true"
+    },
+    "DistributedTask.EnhancedAnnotations": {
+      "value": "true"
+    },
+    "DistributedTask.ForceGithubJavascriptActionsToNode16": {
+      "value": "true"
+    },
+    "DistributedTask.ForceGithubJavascriptActionsToNode20": {
+      "value": "true"
+    },
+    "DistributedTask.LogTemplateErrorsAsDebugMessages": {
+      "value": "true"
+    },
+    "DistributedTask.MarkJobAsFailedOnWorkerCrash": {
+      "value": "true"
+    },
+    "DistributedTask.NewActionMetadata": {
+      "value": "true"
+    },
+    "DistributedTask.UploadStepSummary": {
+      "value": "true"
+    },
+    "DistributedTask.UseActionArchiveCache": {
+      "value": "true"
+    },
+    "DistributedTask.UseWhich2": {
+      "value": "true"
+    },
+    "RunService.FixEmbeddedIssues": {
+      "value": "true"
+    },
+    "actions.runner.requirenode24": {
+      "value": "false"
+    },
+    "actions.runner.usenode24bydefault": {
+      "value": "true"
+    },
+    "actions.runner.warnonnode20": {
+      "value": "true"
+    },
+    "actions_add_check_run_id_to_job_context": {
+      "value": "true"
+    },
+    "actions_batch_action_resolution": {
+      "value": "false"
+    },
+    "actions_container_action_runner_temp": {
+      "value": "true"
+    },
+    "actions_display_helpful_actions_download_errors": {
+      "value": "true"
+    },
+    "actions_runner_allow_artifacts_file": {
+      "value": "false"
+    },
+    "actions_runner_compare_workflow_parser": {
+      "value": "false"
+    },
+    "actions_runner_deprecate_linux_arm32": {
+      "value": "true"
+    },
+    "actions_runner_emit_composite_markers": {
+      "value": "true"
+    },
+    "actions_runner_kill_linux_arm32": {
+      "value": "false"
+    },
+    "actions_runner_node20_removal_date": {
+      "value": ""
+    },
+    "actions_runner_node24_default_date": {
+      "value": "June 16th, 2026"
+    },
+    "actions_self_repository": {
+      "value": "true"
+    },
+    "actions_service_container_command": {
+      "value": "true"
+    },
+    "actions_set_orchestration_id_env_for_actions": {
+      "value": "true"
+    },
+    "actions_skip_retry_complete_job_upon_known_errors": {
+      "value": "true"
+    },
+    "actions_snapshot_preflight_hosted_runner_check": {
+      "value": "false"
+    },
+    "actions_snapshot_preflight_image_gen_pool_check": {
+      "value": "false"
+    },
+    "actions_use_bearer_token_for_codeload": {
+      "value": "false"
+    },
+    "actions_uses_cache_service_v2": {
+      "value": "true"
+    },
+    "github_token": {
+      "value": "***",
+      "isSecret": true
+    },
+    "system.from_run_service": {
+      "value": "true"
+    },
+    "system.github.job": {
+      "value": "deploy"
+    },
+    "system.github.launch_endpoint": {
+      "value": "https://launch.actions.githubusercontent.com"
+    },
+    "system.github.results_endpoint": {
+      "value": "https://results-receiver.actions.githubusercontent.com/"
+    },
+    "system.github.results_upload_with_sdk": {
+      "value": "true"
+    },
+    "system.github.token": {
+      "value": "***",
+      "isSecret": true
+    },
+    "system.github.token.permissions": {
+      "value": "{\"Contents\":\"read\",\"Metadata\":\"read\",\"Packages\":\"read\"}"
+    },
+    "system.orchestrationId": {
+      "value": "898e28ac-81ce-4b75-9b2c-0329401b6ae0.deploy.__default"
+    },
+    "system.phaseDisplayName": {
+      "value": "deploy"
+    },
+    "system.runner.lowdiskspacethreshold": {
+      "value": "100"
+    },
+    "system.runnerEnvironment": {
+      "value": "self-hosted"
+    },
+    "system.runnerGroupName": {
+      "value": "Default"
+    }
+  },
+  "messageType": "RunnerJobRequest",
+  "plan": {
+    "scopeIdentifier": "00000000-0000-0000-0000-000000000000",
+    "planType": "actions",
+    "version": 0,
+    "planId": "898e28ac-81ce-4b75-9b2c-0329401b6ae0",
+    "planGroup": null,
+    "artifactUri": null,
+    "artifactLocation": null,
+    "definition": null,
+    "owner": null
+  },
+  "timeline": {
+    "id": "898e28ac-81ce-4b75-9b2c-0329401b6ae0",
+    "changeId": 0,
+    "location": null
+  },
+  "jobId": "b7e0ffa3-1131-5e5e-a91f-2caf269eaaa6",
+  "jobDisplayName": "deploy",
+  "jobName": "__default",
+  "requestId": 0,
+  "lockedUntil": "0001-01-01T00:00:00",
+  "resources": {
+    "endpoints": [
+      {
+        "data": {
+          "ServerId": "",
+          "ServerName": "",
+          "CacheServerUrl": "https://artifactcache.actions.githubusercontent.com/EmAG2M8FINDSjrWclBxv8jvpEp68V4tP5qcz0uU8ldIEJDfNWQ/",
+          "FeedStreamUrl": "wss://results-receiver.actions.githubusercontent.com/_ws/ingest.sock",
+          "ResultsServiceUrl": "https://results-receiver.actions.githubusercontent.com/",
+          "PipelinesServiceUrl": "https://pipelinesghubeus3.actions.githubusercontent.com/EmAG2M8FINDSjrWclBxv8jvpEp68V4tP5qcz0uU8ldIEJDfNWQ/",
+          "GenerateIdTokenUrl": "",
+          "ConnectivityChecks": "[\"https://broker.actions.githubusercontent.com/health\",\"https://token.actions.githubusercontent.com/ready\",\"https://run.actions.githubusercontent.com/health\"]",
+          "ConnectivityAndDNSChecks": ""
+        },
+        "name": "SystemVssConnection",
+        "url": "https://run-actions-2-azure-eastus.actions.githubusercontent.com/227/",
+        "authorization": {
+          "parameters": {
+            "AccessToken": "***"
+          },
+          "scheme": "OAuth"
+        },
+        "isShared": false,
+        "isReady": true
+      }
+    ]
+  },
+  "contextData": {
+    "github": {
+      "t": 2,
+      "d": [
+        {
+          "k": "ref",
+          "v": "refs/heads/main"
+        },
+        {
+          "k": "sha",
+          "v": "45cd495803e9554ed3f74b9f3b2afa8103d3596e"
+        },
+        {
+          "k": "repository",
+          "v": "ElAlecs69/SignServer"
+        },
+        {
+          "k": "repository_owner",
+          "v": "ElAlecs69"
+        },
+        {
+          "k": "repository_owner_id",
+          "v": "182047642"
+        },
+        {
+          "k": "repositoryUrl",
+          "v": "git://github.com/ElAlecs69/SignServer.git"
+        },
+        {
+          "k": "run_id",
+          "v": "33135555354"
+        },
+        {
+          "k": "run_number",
+          "v": "12"
+        },
+        {
+          "k": "retention_days",
+          "v": "90"
+        },
+        {
+          "k": "run_attempt",
+          "v": "1"
+        },
+        {
+          "k": "artifact_cache_size_limit",
+          "v": "10"
+        },
+        {
+          "k": "repository_visibility",
+          "v": "private"
+        },
+        {
+          "k": "actor_id",
+          "v": "182047642"
+        },
+        {
+          "k": "actor",
+          "v": "ElAlecs69"
+        },
+        {
+          "k": "workflow",
+          "v": "Build y desplegar signserver-web"
+        },
+        {
+          "k": "head_ref",
+          "v": ""
+        },
+        {
+          "k": "base_ref",
+          "v": ""
+        },
+        {
+          "k": "event_name",
+          "v": "push"
+        },
+        {
+          "k": "server_url",
+          "v": "https://github.com"
+        },
+        {
+          "k": "api_url",
+          "v": "https://api.github.com"
+        },
+        {
+          "k": "graphql_url",
+          "v": "https://api.github.com/graphql"
+        },
+        {
+          "k": "ref_name",
+          "v": "main"
+        },
+        {
+          "k": "ref_protected",
+          "v": false
+        },
+        {
+          "k": "ref_type",
+          "v": "branch"
+        },
+        {
+          "k": "secret_source",
+          "v": "Actions"
+        },
+        {
+          "k": "event",
+          "v": {
+            "t": 2,
+            "d": [
+              {
+                "k": "after",
+                "v": "45cd495803e9554ed3f74b9f3b2afa8103d3596e"
+              },
+              {
+                "k": "base_ref",
+                "v": null
+              },
+              {
+                "k": "before",
+                "v": "c2679aa69217f5184e1584aa8435524687882235"
+              },
+              {
+                "k": "commits",
+                "v": {
+                  "t": 1,
+                  "a": [
+                    {
+                      "t": 2,
+                      "d": [
+                        {
+                          "k": "author",
+                          "v": {
+                            "t": 2,
+                            "d": [
+                              {
+                                "k": "email",
+                                "v": "alejandroestradita55@gmail.com"
+                              },
+                              {
+                                "k": "name",
+                                "v": "ElAlecs69"
+                              },
+                              {
+                                "k": "username",
+                                "v": "ElAlecs69"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "k": "committer",
+                          "v": {
+                            "t": 2,
+                            "d": [
+                              {
+                                "k": "email",
+                                "v": "noreply@github.com"
+                              },
+                              {
+                                "k": "name",
+                                "v": "GitHub"
+                              },
+                              {
+                                "k": "username",
+                                "v": "web-flow"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "k": "distinct",
+                          "v": true
+                        },
+                        {
+                          "k": "id",
+                          "v": "45cd495803e9554ed3f74b9f3b2afa8103d3596e"
+                        },
+                        {
+                          "k": "message",
+                          "v": "Change title from 'Firma digital' to 'prueba'"
+                        },
+                        {
+                          "k": "timestamp",
+                          "v": "2026-08-27T20:19:11-06:00"
+                        },
+                        {
+                          "k": "tree_id",
+                          "v": "5604c3073d4352df0a08b865f058d44b8ddb56c1"
+                        },
+                        {
+                          "k": "url",
+                          "v": "https://github.com/ElAlecs69/SignServer/commit/45cd495803e9554ed3f74b9f3b2afa8103d3596e"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "k": "compare",
+                "v": "https://github.com/ElAlecs69/SignServer/compare/c2679aa69217...45cd495803e9"
+              },
+              {
+                "k": "created",
+                "v": false
+              },
+              {
+                "k": "deleted",
+                "v": false
+              },
+              {
+                "k": "forced",
+                "v": false
+              },
+              {
+                "k": "head_commit",
+                "v": {
+                  "t": 2,
+                  "d": [
+                    {
+                      "k": "author",
+                      "v": {
+                        "t": 2,
+                        "d": [
+                          {
+                            "k": "email",
+                            "v": "alejandroestradita55@gmail.com"
+                          },
+                          {
+                            "k": "name",
+                            "v": "ElAlecs69"
+                          },
+                          {
+                            "k": "username",
+                            "v": "ElAlecs69"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "k": "committer",
+                      "v": {
+                        "t": 2,
+                        "d": [
+                          {
+                            "k": "email",
+                            "v": "noreply@github.com"
+                          },
+                          {
+                            "k": "name",
+                            "v": "GitHub"
+                          },
+                          {
+                            "k": "username",
+                            "v": "web-flow"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "k": "distinct",
+                      "v": true
+                    },
+                    {
+                      "k": "id",
+                      "v": "45cd495803e9554ed3f74b9f3b2afa8103d3596e"
+                    },
+                    {
+                      "k": "message",
+                      "v": "Change title from 'Firma digital' to 'prueba'"
+                    },
+                    {
+                      "k": "timestamp",
+                      "v": "2026-08-27T20:19:11-06:00"
+                    },
+                    {
+                      "k": "tree_id",
+                      "v": "5604c3073d4352df0a08b865f058d44b8ddb56c1"
+                    },
+                    {
+                      "k": "url",
+                      "v": "https://github.com/ElAlecs69/SignServer/commit/45cd495803e9554ed3f74b9f3b2afa8103d3596e"
+                    }
+                  ]
+                }
+              },
+              {
+                "k": "pusher",
+                "v": {
+                  "t": 2,
+                  "d": [
+                    {
+                      "k": "email",
+                      "v": "alejandroestradita55@gmail.com"
+                    },
+                    {
+                      "k": "name",
+                      "v": "ElAlecs69"
+                    }
+                  ]
+                }
+              },
+              {
+                "k": "ref",
+                "v": "refs/heads/main"
+              },
+              {
+                "k": "repository",
+                "v": {
+                  "t": 2,
+                  "d": [
+                    {
+                      "k": "allow_forking",
+                      "v": true
+                    },
+                    {
+                      "k": "archive_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/{archive_format}{/ref}"
+                    },
+                    {
+                      "k": "archived",
+                      "v": false
+                    },
+                    {
+                      "k": "assignees_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/assignees{/user}"
+                    },
+                    {
+                      "k": "blobs_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/git/blobs{/sha}"
+                    },
+                    {
+                      "k": "branches_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/branches{/branch}"
+                    },
+                    {
+                      "k": "clone_url",
+                      "v": "https://github.com/ElAlecs69/SignServer.git"
+                    },
+                    {
+                      "k": "collaborators_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/collaborators{/collaborator}"
+                    },
+                    {
+                      "k": "comments_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/comments{/number}"
+                    },
+                    {
+                      "k": "commits_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/commits{/sha}"
+                    },
+                    {
+                      "k": "compare_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/compare/{base}...{head}"
+                    },
+                    {
+                      "k": "contents_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/contents/{+path}"
+                    },
+                    {
+                      "k": "contributors_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/contributors"
+                    },
+                    {
+                      "k": "created_at",
+                      "v": 1787711936.0
+                    },
+                    {
+                      "k": "default_branch",
+                      "v": "main"
+                    },
+                    {
+                      "k": "deployments_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/deployments"
+                    },
+                    {
+                      "k": "description",
+                      "v": null
+                    },
+                    {
+                      "k": "disabled",
+                      "v": false
+                    },
+                    {
+                      "k": "downloads_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/downloads"
+                    },
+                    {
+                      "k": "events_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/events"
+                    },
+                    {
+                      "k": "fork",
+                      "v": false
+                    },
+                    {
+                      "k": "forks",
+                      "v": 0.0
+                    },
+                    {
+                      "k": "forks_count",
+                      "v": 0.0
+                    },
+                    {
+                      "k": "forks_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/forks"
+                    },
+                    {
+                      "k": "full_name",
+                      "v": "ElAlecs69/SignServer"
+                    },
+                    {
+                      "k": "git_commits_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/git/commits{/sha}"
+                    },
+                    {
+                      "k": "git_refs_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/git/refs{/sha}"
+                    },
+                    {
+                      "k": "git_tags_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/git/tags{/sha}"
+                    },
+                    {
+                      "k": "git_url",
+                      "v": "git://github.com/ElAlecs69/SignServer.git"
+                    },
+                    {
+                      "k": "has_discussions",
+                      "v": false
+                    },
+                    {
+                      "k": "has_downloads",
+                      "v": true
+                    },
+                    {
+                      "k": "has_issues",
+                      "v": true
+                    },
+                    {
+                      "k": "has_pages",
+                      "v": false
+                    },
+                    {
+                      "k": "has_projects",
+                      "v": true
+                    },
+                    {
+                      "k": "has_pull_requests",
+                      "v": true
+                    },
+                    {
+                      "k": "has_wiki",
+                      "v": true
+                    },
+                    {
+                      "k": "homepage",
+                      "v": null
+                    },
+                    {
+                      "k": "hooks_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/hooks"
+                    },
+                    {
+                      "k": "html_url",
+                      "v": "https://github.com/ElAlecs69/SignServer"
+                    },
+                    {
+                      "k": "id",
+                      "v": 1346827750.0
+                    },
+                    {
+                      "k": "is_template",
+                      "v": false
+                    },
+                    {
+                      "k": "issue_comment_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/issues/comments{/number}"
+                    },
+                    {
+                      "k": "issue_events_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/issues/events{/number}"
+                    },
+                    {
+                      "k": "issues_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/issues{/number}"
+                    },
+                    {
+                      "k": "keys_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/keys{/key_id}"
+                    },
+                    {
+                      "k": "labels_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/labels{/name}"
+                    },
+                    {
+                      "k": "language",
+                      "v": "TypeScript"
+                    },
+                    {
+                      "k": "languages_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/languages"
+                    },
+                    {
+                      "k": "license",
+                      "v": null
+                    },
+                    {
+                      "k": "master_branch",
+                      "v": "main"
+                    },
+                    {
+                      "k": "merges_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/merges"
+                    },
+                    {
+                      "k": "milestones_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/milestones{/number}"
+                    },
+                    {
+                      "k": "mirror_url",
+                      "v": null
+                    },
+                    {
+                      "k": "name",
+                      "v": "SignServer"
+                    },
+                    {
+                      "k": "node_id",
+                      "v": "R_kgDOUEb15g"
+                    },
+                    {
+                      "k": "notifications_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/notifications{?since,all,participating}"
+                    },
+                    {
+                      "k": "open_issues",
+                      "v": 0.0
+                    },
+                    {
+                      "k": "open_issues_count",
+                      "v": 0.0
+                    },
+                    {
+                      "k": "owner",
+                      "v": {
+                        "t": 2,
+                        "d": [
+                          {
+                            "k": "avatar_url",
+                            "v": "https://avatars.githubusercontent.com/u/182047642?v=4"
+                          },
+                          {
+                            "k": "email",
+                            "v": "alejandroestradita55@gmail.com"
+                          },
+                          {
+                            "k": "events_url",
+                            "v": "https://api.github.com/users/ElAlecs69/events{/privacy}"
+                          },
+                          {
+                            "k": "followers_url",
+                            "v": "https://api.github.com/users/ElAlecs69/followers"
+                          },
+                          {
+                            "k": "following_url",
+                            "v": "https://api.github.com/users/ElAlecs69/following{/other_user}"
+                          },
+                          {
+                            "k": "gists_url",
+                            "v": "https://api.github.com/users/ElAlecs69/gists{/gist_id}"
+                          },
+                          {
+                            "k": "gravatar_id",
+                            "v": ""
+                          },
+                          {
+                            "k": "html_url",
+                            "v": "https://github.com/ElAlecs69"
+                          },
+                          {
+                            "k": "id",
+                            "v": 182047642.0
+                          },
+                          {
+                            "k": "login",
+                            "v": "ElAlecs69"
+                          },
+                          {
+                            "k": "name",
+                            "v": "ElAlecs69"
+                          },
+                          {
+                            "k": "node_id",
+                            "v": "U_kgDOCtnTmg"
+                          },
+                          {
+                            "k": "organizations_url",
+                            "v": "https://api.github.com/users/ElAlecs69/orgs"
+                          },
+                          {
+                            "k": "received_events_url",
+                            "v": "https://api.github.com/users/ElAlecs69/received_events"
+                          },
+                          {
+                            "k": "repos_url",
+                            "v": "https://api.github.com/users/ElAlecs69/repos"
+                          },
+                          {
+                            "k": "site_admin",
+                            "v": false
+                          },
+                          {
+                            "k": "starred_url",
+                            "v": "https://api.github.com/users/ElAlecs69/starred{/owner}{/repo}"
+                          },
+                          {
+                            "k": "subscriptions_url",
+                            "v": "https://api.github.com/users/ElAlecs69/subscriptions"
+                          },
+                          {
+                            "k": "type",
+                            "v": "User"
+                          },
+                          {
+                            "k": "url",
+                            "v": "https://api.github.com/users/ElAlecs69"
+                          },
+                          {
+                            "k": "user_view_type",
+                            "v": "public"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "k": "private",
+                      "v": true
+                    },
+                    {
+                      "k": "pull_request_creation_policy",
+                      "v": "all"
+                    },
+                    {
+                      "k": "pulls_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/pulls{/number}"
+                    },
+                    {
+                      "k": "pushed_at",
+                      "v": 1787883551.0
+                    },
+                    {
+                      "k": "releases_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/releases{/id}"
+                    },
+                    {
+                      "k": "size",
+                      "v": 69.0
+                    },
+                    {
+                      "k": "ssh_url",
+                      "v": "git@github.com:ElAlecs69/SignServer.git"
+                    },
+                    {
+                      "k": "stargazers",
+                      "v": 1.0
+                    },
+                    {
+                      "k": "stargazers_count",
+                      "v": 1.0
+                    },
+                    {
+                      "k": "stargazers_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/stargazers"
+                    },
+                    {
+                      "k": "statuses_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/statuses/{sha}"
+                    },
+                    {
+                      "k": "subscribers_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/subscribers"
+                    },
+                    {
+                      "k": "subscription_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/subscription"
+                    },
+                    {
+                      "k": "svn_url",
+                      "v": "https://github.com/ElAlecs69/SignServer"
+                    },
+                    {
+                      "k": "tags_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/tags"
+                    },
+                    {
+                      "k": "teams_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/teams"
+                    },
+                    {
+                      "k": "topics",
+                      "v": {
+                        "t": 1
+                      }
+                    },
+                    {
+                      "k": "trees_url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer/git/trees{/sha}"
+                    },
+                    {
+                      "k": "updated_at",
+                      "v": "2026-08-28T02:16:46Z"
+                    },
+                    {
+                      "k": "url",
+                      "v": "https://api.github.com/repos/ElAlecs69/SignServer"
+                    },
+                    {
+                      "k": "visibility",
+                      "v": "private"
+                    },
+                    {
+                      "k": "watchers",
+                      "v": 1.0
+                    },
+                    {
+                      "k": "watchers_count",
+                      "v": 1.0
+                    },
+                    {
+                      "k": "web_commit_signoff_required",
+                      "v": false
+                    }
+                  ]
+                }
+              },
+              {
+                "k": "sender",
+                "v": {
+                  "t": 2,
+                  "d": [
+                    {
+                      "k": "avatar_url",
+                      "v": "https://avatars.githubusercontent.com/u/182047642?v=4"
+                    },
+                    {
+                      "k": "events_url",
+                      "v": "https://api.github.com/users/ElAlecs69/events{/privacy}"
+                    },
+                    {
+                      "k": "followers_url",
+                      "v": "https://api.github.com/users/ElAlecs69/followers"
+                    },
+                    {
+                      "k": "following_url",
+                      "v": "https://api.github.com/users/ElAlecs69/following{/other_user}"
+                    },
+                    {
+                      "k": "gists_url",
+                      "v": "https://api.github.com/users/ElAlecs69/gists{/gist_id}"
+                    },
+                    {
+                      "k": "gravatar_id",
+                      "v": ""
+                    },
+                    {
+                      "k": "html_url",
+                      "v": "https://github.com/ElAlecs69"
+                    },
+                    {
+                      "k": "id",
+                      "v": 182047642.0
+                    },
+                    {
+                      "k": "login",
+                      "v": "ElAlecs69"
+                    },
+                    {
+                      "k": "node_id",
+                      "v": "U_kgDOCtnTmg"
+                    },
+                    {
+                      "k": "organizations_url",
+                      "v": "https://api.github.com/users/ElAlecs69/orgs"
+                    },
+                    {
+                      "k": "received_events_url",
+                      "v": "https://api.github.com/users/ElAlecs69/received_events"
+                    },
+                    {
+                      "k": "repos_url",
+                      "v": "https://api.github.com/users/ElAlecs69/repos"
+                    },
+                    {
+                      "k": "site_admin",
+                      "v": false
+                    },
+                    {
+                      "k": "starred_url",
+                      "v": "https://api.github.com/users/ElAlecs69/starred{/owner}{/repo}"
+                    },
+                    {
+                      "k": "subscriptions_url",
+                      "v": "https://api.github.com/users/ElAlecs69/subscriptions"
+                    },
+                    {
+                      "k": "type",
+                      "v": "User"
+                    },
+                    {
+                      "k": "url",
+                      "v": "https://api.github.com/users/ElAlecs69"
+                    },
+                    {
+                      "k": "user_view_type",
+                      "v": "public"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "k": "workflow_ref",
+          "v": "ElAlecs69/SignServer/.github/workflows/main.yml@refs/heads/main"
+        },
+        {
+          "k": "workflow_sha",
+          "v": "45cd495803e9554ed3f74b9f3b2afa8103d3596e"
+        },
+        {
+          "k": "repository_id",
+          "v": "1346827750"
+        },
+        {
+          "k": "triggering_actor",
+          "v": "ElAlecs69"
+        }
+      ]
+    },
+    "inputs": {
+      "t": 2
+    },
+    "job": {
+      "t": 2,
+      "d": [
+        {
+          "k": "check_run_id",
+          "v": 98734573885.0
+        },
+        {
+          "k": "workflow_ref",
+          "v": "ElAlecs69/SignServer/.github/workflows/main.yml@refs/heads/main"
+        },
+        {
+          "k": "workflow_sha",
+          "v": "45cd495803e9554ed3f74b9f3b2afa8103d3596e"
+        },
+        {
+          "k": "workflow_repository",
+          "v": "ElAlecs69/SignServer"
+        },
+        {
+          "k": "workflow_file_path",
+          "v": ".github/workflows/main.yml"
+        }
+      ]
+    },
+    "matrix": null,
+    "needs": {
+      "t": 2
+    },
+    "strategy": {
+      "t": 2,
+      "d": [
+        {
+          "k": "fail-fast",
+          "v": true
+        },
+        {
+          "k": "job-index",
+          "v": 0.0
+        },
+        {
+          "k": "job-total",
+          "v": 1.0
+        },
+        {
+          "k": "max-parallel",
+          "v": 1.0
+        }
+      ]
+    },
+    "vars": {
+      "t": 2
+    }
+  },
+  "billingOwnerId": "U_kgDOCtnTmg"
+}
+[2026-08-28 02:19:34Z INFO JobRunner] Job ID b7e0ffa3-1131-5e5e-a91f-2caf269eaaa6
+[2026-08-28 02:19:34Z INFO ConfigurationStore] currentAssemblyLocation: D:\actions-runner\bin\Runner.Worker.dll
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO ConfigurationStore] binPath: D:\actions-runner\bin
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO ConfigurationStore] RootFolder: D:\actions-runner
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known config file 'Runner': 'D:\actions-runner\.runner'
+[2026-08-28 02:19:34Z INFO ConfigurationStore] ConfigFilePath: D:\actions-runner\.runner
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known config file 'MigratedRunner': 'D:\actions-runner\.runner_migrated'
+[2026-08-28 02:19:34Z INFO ConfigurationStore] MigratedConfigFilePath: D:\actions-runner\.runner_migrated
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known config file 'Credentials': 'D:\actions-runner\.credentials'
+[2026-08-28 02:19:34Z INFO ConfigurationStore] CredFilePath: D:\actions-runner\.credentials
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known config file 'MigratedCredentials': 'D:\actions-runner\.credentials_migrated'
+[2026-08-28 02:19:34Z INFO ConfigurationStore] MigratedCredFilePath: D:\actions-runner\.credentials_migrated
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known config file 'Service': 'D:\actions-runner\.service'
+[2026-08-28 02:19:34Z INFO ConfigurationStore] ServiceConfigFilePath: D:\actions-runner\.service
+[2026-08-28 02:19:34Z INFO ConfigurationStore] Read setting file: 388 chars
+[2026-08-28 02:19:34Z INFO JobRunner] Initializing launch client
+[2026-08-28 02:19:34Z INFO JobServerQueue] Initializing results client
+[2026-08-28 02:19:34Z INFO ResultServer] Creating websocket client ...wss://results-receiver.actions.githubusercontent.com/_ws/ingest.sock
+[2026-08-28 02:19:34Z INFO ResultServer] Attempting to start websocket client with delay 00:00:00.
+[2026-08-28 02:19:34Z INFO JobServerQueue] Start process web console line queue.
+[2026-08-28 02:19:34Z INFO JobServerQueue] Start process file upload queue.
+[2026-08-28 02:19:34Z INFO JobServerQueue] Start results file upload queue.
+[2026-08-28 02:19:34Z INFO JobServerQueue] Starting results-based upload queue...
+[2026-08-28 02:19:34Z INFO JobServerQueue] Start process timeline update queue.
+[2026-08-28 02:19:34Z INFO ExecutionContext] Initializing Job context
+[2026-08-28 02:19:34Z INFO ExecutionContext] Initialize GitHub context
+[2026-08-28 02:19:34Z INFO ExecutionContext] Initialize Env context
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:34Z INFO JobRunner] Starting the job execution context.
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:34Z INFO JobRunner] Validating directory permissions for: 'D:\actions-runner\_work'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Tools': 'D:\actions-runner\_work\_tool'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:19:34Z INFO JobRunner] Getting job extension.
+[2026-08-28 02:19:34Z INFO JobRunner] Initialize job. Getting all job steps.
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known config file 'Credentials': 'D:\actions-runner\.credentials'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known config file 'SetupInfo': 'D:\actions-runner\.setup_info'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:34Z INFO PipelineDirectoryManager] Loading tracking config if exists: D:\actions-runner\_work\_PipelineMapping\ElAlecs69/SignServer\PipelineFolder.json
+[2026-08-28 02:19:34Z INFO PipelineDirectoryManager] Updating job run properties.
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:34Z INFO JobExtension] Downloading actions
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:34Z INFO Worker] Listening for cancel message from the channel.
+[2026-08-28 02:19:34Z INFO Worker] Waiting for the job to complete or for a cancel message from the channel.
+[2026-08-28 02:19:34Z INFO ResultServer] Successfully started websocket client.
+[2026-08-28 02:19:34Z INFO JobServerQueue] Try to append 1 batches web console lines for record '038d7e5b-dd82-4238-a961-3eb85728e4e0', success rate: 1/1.
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:34Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:34Z INFO ActionManager] Save archive 'https://codeload.github.com/actions/checkout/zip/11d5960a326750d5838078e36cf38b85af677262' into D:\actions-runner\_work\_actions\_temp_df224f57-a585-4a8d-958c-d9141d4ba976\60de6e85-2f8a-4663-b8f2-bffecda1b108.zip.
+[2026-08-28 02:19:34Z INFO ActionManager] Using Basic token for action archive download.
+[2026-08-28 02:19:35Z INFO JobServerQueue] Try to append 1 batches web console lines for record '038d7e5b-dd82-4238-a961-3eb85728e4e0', success rate: 1/1.
+[2026-08-28 02:19:35Z INFO JobServerQueue] Job timeline record has been updated for the first time.
+[2026-08-28 02:19:35Z INFO ActionManager] Request URL: https://codeload.github.com/actions/checkout/zip/11d5960a326750d5838078e36cf38b85af677262 X-GitHub-Request-Id: 0EE6:F6918:267FC0:3A1076:6A90F027 Http Status: OK
+[2026-08-28 02:19:35Z INFO ActionManager] Finished getting action repository.
+[2026-08-28 02:19:35Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:35Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:35Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:35Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:35Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:35Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:35Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:35Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:35Z INFO ActionManager] Save archive 'https://codeload.github.com/actions/setup-node/zip/49933ea5288caeca8642d1e84afbd3f7d6820020' into D:\actions-runner\_work\_actions\_temp_edbb18e6-b0e8-418c-a5e7-a1fb3718c63b\6cf645f0-1248-4de4-a3d6-8c0c61ac7a10.zip.
+[2026-08-28 02:19:35Z INFO ActionManager] Using Basic token for action archive download.
+[2026-08-28 02:19:36Z INFO JobServerQueue] Try to append 1 batches web console lines for record '038d7e5b-dd82-4238-a961-3eb85728e4e0', success rate: 1/1.
+[2026-08-28 02:19:36Z INFO ActionManager] Request URL: https://codeload.github.com/actions/setup-node/zip/49933ea5288caeca8642d1e84afbd3f7d6820020 X-GitHub-Request-Id: 0EE7:36705A:280F04:3BB956:6A90F028 Http Status: OK
+[2026-08-28 02:19:37Z INFO ActionManager] Finished getting action repository.
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Load schema file with definitions: [
+  "null",
+  "boolean",
+  "number",
+  "string",
+  "sequence",
+  "mapping",
+  "any",
+  "action-root",
+  "inputs",
+  "input",
+  "outputs",
+  "output-definition",
+  "runs",
+  "container-runs",
+  "container-runs-args",
+  "container-runs-env",
+  "node-runs",
+  "plugin-runs",
+  "composite-runs",
+  "composite-steps",
+  "composite-step",
+  "run-step",
+  "uses-step",
+  "container-runs-context",
+  "output-value",
+  "input-default-context",
+  "non-empty-string",
+  "string-steps-context",
+  "boolean-steps-context",
+  "step-env",
+  "step-if",
+  "step-with"
+]
+[2026-08-28 02:19:37Z INFO ActionManifestManager] Load schema file with definitions: [
+  "null",
+  "boolean",
+  "number",
+  "string",
+  "sequence",
+  "mapping",
+  "any",
+  "action-root",
+  "inputs",
+  "input",
+  "outputs",
+  "output-definition",
+  "runs",
+  "container-runs",
+  "container-runs-args",
+  "container-runs-env",
+  "node-runs",
+  "plugin-runs",
+  "composite-runs",
+  "composite-steps",
+  "composite-step",
+  "run-step",
+  "uses-step",
+  "container-runs-context",
+  "output-value",
+  "input-default-context",
+  "non-empty-string",
+  "string-steps-context",
+  "boolean-steps-context",
+  "step-env",
+  "step-if",
+  "step-with"
+]
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Loaded action.yml file: {
+  "name": "Checkout",
+  "description": "Checkout a Git repository at a particular version",
+  "inputs": {
+    "type": 2,
+    "map": [
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 4,
+          "col": 3,
+          "lit": "repository"
+        },
+        "value": {
+          "type": 3,
+          "file": 2,
+          "line": 6,
+          "col": 14,
+          "expr": "github.repository"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 7,
+          "col": 3,
+          "lit": "ref"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 12,
+          "col": 3,
+          "lit": "token"
+        },
+        "value": {
+          "type": 3,
+          "file": 2,
+          "line": 24,
+          "col": 14,
+          "expr": "github.token"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 25,
+          "col": 3,
+          "lit": "ssh-key"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 37,
+          "col": 3,
+          "lit": "ssh-known-hosts"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 42,
+          "col": 3,
+          "lit": "ssh-strict"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 47,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 48,
+          "col": 3,
+          "lit": "ssh-user"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 51,
+          "col": 14,
+          "lit": "git"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 52,
+          "col": 3,
+          "lit": "persist-credentials"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 54,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 55,
+          "col": 3,
+          "lit": "path"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 57,
+          "col": 3,
+          "lit": "clean"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 59,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 60,
+          "col": 3,
+          "lit": "filter"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 64,
+          "col": 14,
+          "lit": ""
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 65,
+          "col": 3,
+          "lit": "sparse-checkout"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 69,
+          "col": 14,
+          "lit": ""
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 70,
+          "col": 3,
+          "lit": "sparse-checkout-cone-mode"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 73,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 74,
+          "col": 3,
+          "lit": "fetch-depth"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 76,
+          "col": 14,
+          "lit": "1"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 77,
+          "col": 3,
+          "lit": "fetch-tags"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 79,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 80,
+          "col": 3,
+          "lit": "show-progress"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 82,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 83,
+          "col": 3,
+          "lit": "lfs"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 85,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 86,
+          "col": 3,
+          "lit": "submodules"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 94,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 95,
+          "col": 3,
+          "lit": "set-safe-directory"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 97,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 98,
+          "col": 3,
+          "lit": "github-server-url"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 101,
+          "col": 3,
+          "lit": "allow-unsafe-pr-checkout"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 109,
+          "col": 14,
+          "lit": "false"
+        }
+      }
+    ]
+  },
+  "execution": {
+    "executionType": "nodeJS",
+    "hasPre": false,
+    "hasPost": true,
+    "script": "dist/index.js",
+    "pre": null,
+    "post": "dist/index.js",
+    "nodeVersion": "node20",
+    "cleanupCondition": "always()",
+    "initCondition": "always()"
+  },
+  "deprecated": null
+}
+[2026-08-28 02:19:37Z INFO ActionManager] Action node.js file: dist/index.js, no more preparation.
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:37Z INFO ActionManager] Load action that reference repository from 'D:\actions-runner\_work\_actions\actions\checkout\v4'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Loaded action.yml file: {
+  "name": "Checkout",
+  "description": "Checkout a Git repository at a particular version",
+  "inputs": {
+    "type": 2,
+    "map": [
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 4,
+          "col": 3,
+          "lit": "repository"
+        },
+        "value": {
+          "type": 3,
+          "file": 2,
+          "line": 6,
+          "col": 14,
+          "expr": "github.repository"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 7,
+          "col": 3,
+          "lit": "ref"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 12,
+          "col": 3,
+          "lit": "token"
+        },
+        "value": {
+          "type": 3,
+          "file": 2,
+          "line": 24,
+          "col": 14,
+          "expr": "github.token"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 25,
+          "col": 3,
+          "lit": "ssh-key"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 37,
+          "col": 3,
+          "lit": "ssh-known-hosts"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 42,
+          "col": 3,
+          "lit": "ssh-strict"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 47,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 48,
+          "col": 3,
+          "lit": "ssh-user"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 51,
+          "col": 14,
+          "lit": "git"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 52,
+          "col": 3,
+          "lit": "persist-credentials"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 54,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 55,
+          "col": 3,
+          "lit": "path"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 57,
+          "col": 3,
+          "lit": "clean"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 59,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 60,
+          "col": 3,
+          "lit": "filter"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 64,
+          "col": 14,
+          "lit": ""
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 65,
+          "col": 3,
+          "lit": "sparse-checkout"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 69,
+          "col": 14,
+          "lit": ""
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 70,
+          "col": 3,
+          "lit": "sparse-checkout-cone-mode"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 73,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 74,
+          "col": 3,
+          "lit": "fetch-depth"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 76,
+          "col": 14,
+          "lit": "1"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 77,
+          "col": 3,
+          "lit": "fetch-tags"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 79,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 80,
+          "col": 3,
+          "lit": "show-progress"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 82,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 83,
+          "col": 3,
+          "lit": "lfs"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 85,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 86,
+          "col": 3,
+          "lit": "submodules"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 94,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 95,
+          "col": 3,
+          "lit": "set-safe-directory"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 97,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 98,
+          "col": 3,
+          "lit": "github-server-url"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 101,
+          "col": 3,
+          "lit": "allow-unsafe-pr-checkout"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 109,
+          "col": 14,
+          "lit": "false"
+        }
+      }
+    ]
+  },
+  "execution": {
+    "executionType": "nodeJS",
+    "hasPre": false,
+    "hasPost": true,
+    "script": "dist/index.js",
+    "pre": null,
+    "post": "dist/index.js",
+    "nodeVersion": "node20",
+    "cleanupCondition": "always()",
+    "initCondition": "always()"
+  },
+  "deprecated": null
+}
+[2026-08-28 02:19:37Z INFO ActionManager] Action pre node.js file: N/A.
+[2026-08-28 02:19:37Z INFO ActionManager] Action node.js file: dist/index.js.
+[2026-08-28 02:19:37Z INFO ActionManager] Action post node.js file: dist/index.js.
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Ignore action property author.
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Loaded action.yml file: {
+  "name": "Setup Node.js environment",
+  "description": "Setup a Node.js environment by adding problem matchers and optionally downloading and adding it to the PATH.",
+  "inputs": {
+    "type": 2,
+    "map": [
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 5,
+          "col": 3,
+          "lit": "always-auth"
+        },
+        "value": {
+          "type": 0,
+          "file": 3,
+          "line": 7,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 8,
+          "col": 3,
+          "lit": "node-version"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 10,
+          "col": 3,
+          "lit": "node-version-file"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 12,
+          "col": 3,
+          "lit": "architecture"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 14,
+          "col": 3,
+          "lit": "check-latest"
+        },
+        "value": {
+          "type": 0,
+          "file": 3,
+          "line": 16,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 17,
+          "col": 3,
+          "lit": "registry-url"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 19,
+          "col": 3,
+          "lit": "scope"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 21,
+          "col": 3,
+          "lit": "token"
+        },
+        "value": {
+          "type": 3,
+          "file": 3,
+          "line": 23,
+          "col": 14,
+          "expr": "github.server_url == 'https://github.com' && github.token || ''"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 24,
+          "col": 3,
+          "lit": "cache"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 26,
+          "col": 3,
+          "lit": "cache-dependency-path"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 28,
+          "col": 3,
+          "lit": "mirror"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 30,
+          "col": 3,
+          "lit": "mirror-token"
+        },
+        "value": ""
+      }
+    ]
+  },
+  "execution": {
+    "executionType": "nodeJS",
+    "hasPre": false,
+    "hasPost": true,
+    "script": "dist/setup/index.js",
+    "pre": null,
+    "post": "dist/cache-save/index.js",
+    "nodeVersion": "node20",
+    "cleanupCondition": "success()",
+    "initCondition": "always()"
+  },
+  "deprecated": null
+}
+[2026-08-28 02:19:37Z INFO ActionManager] Action node.js file: dist/setup/index.js, no more preparation.
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:37Z INFO ActionManager] Load action that reference repository from 'D:\actions-runner\_work\_actions\actions\setup-node\v4'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Ignore action property author.
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Loaded action.yml file: {
+  "name": "Setup Node.js environment",
+  "description": "Setup a Node.js environment by adding problem matchers and optionally downloading and adding it to the PATH.",
+  "inputs": {
+    "type": 2,
+    "map": [
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 5,
+          "col": 3,
+          "lit": "always-auth"
+        },
+        "value": {
+          "type": 0,
+          "file": 3,
+          "line": 7,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 8,
+          "col": 3,
+          "lit": "node-version"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 10,
+          "col": 3,
+          "lit": "node-version-file"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 12,
+          "col": 3,
+          "lit": "architecture"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 14,
+          "col": 3,
+          "lit": "check-latest"
+        },
+        "value": {
+          "type": 0,
+          "file": 3,
+          "line": 16,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 17,
+          "col": 3,
+          "lit": "registry-url"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 19,
+          "col": 3,
+          "lit": "scope"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 21,
+          "col": 3,
+          "lit": "token"
+        },
+        "value": {
+          "type": 3,
+          "file": 3,
+          "line": 23,
+          "col": 14,
+          "expr": "github.server_url == 'https://github.com' && github.token || ''"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 24,
+          "col": 3,
+          "lit": "cache"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 26,
+          "col": 3,
+          "lit": "cache-dependency-path"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 28,
+          "col": 3,
+          "lit": "mirror"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 30,
+          "col": 3,
+          "lit": "mirror-token"
+        },
+        "value": ""
+      }
+    ]
+  },
+  "execution": {
+    "executionType": "nodeJS",
+    "hasPre": false,
+    "hasPost": true,
+    "script": "dist/setup/index.js",
+    "pre": null,
+    "post": "dist/cache-save/index.js",
+    "nodeVersion": "node20",
+    "cleanupCondition": "success()",
+    "initCondition": "always()"
+  },
+  "deprecated": null
+}
+[2026-08-28 02:19:37Z INFO ActionManager] Action pre node.js file: N/A.
+[2026-08-28 02:19:37Z INFO ActionManager] Action node.js file: dist/setup/index.js.
+[2026-08-28 02:19:37Z INFO ActionManager] Action post node.js file: dist/cache-save/index.js.
+[2026-08-28 02:19:37Z INFO JobExtension] Adding .
+[2026-08-28 02:19:37Z INFO JobExtension] Adding .
+[2026-08-28 02:19:37Z INFO JobExtension] Adding .
+[2026-08-28 02:19:37Z INFO JobExtension] Adding .
+[2026-08-28 02:19:37Z INFO JobExtension] Adding .
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO JobExtension] Total accessible running process: 174.
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO JobExtension] Start checking server connectivity.
+[2026-08-28 02:19:37Z INFO JobExtension] Check server connectivity for https://broker.actions.githubusercontent.com/health.
+[2026-08-28 02:19:37Z INFO JobExtension] Check server connectivity for https://token.actions.githubusercontent.com/ready.
+[2026-08-28 02:19:37Z INFO JobExtension] Check server connectivity for https://run.actions.githubusercontent.com/health.
+[2026-08-28 02:19:37Z INFO JobExtension] Start checking service connectivity in background.
+[2026-08-28 02:19:37Z INFO ExecutionContext] Publish step telemetry for current step {
+  "action": "setup_job",
+  "type": "runner",
+  "stage": "Pre",
+  "stepId": "038d7e5b-dd82-4238-a961-3eb85728e4e0",
+  "result": "succeeded",
+  "errorMessages": [],
+  "executionTimeInSeconds": 3,
+  "startTime": "2026-08-28T02:19:34.4140683Z",
+  "finishTime": "2026-08-28T02:19:37.285781Z"
+}.
+[2026-08-28 02:19:37Z INFO JobRunner] Total job steps: 5.
+[2026-08-28 02:19:37Z INFO JobRunner] Run all job steps.
+[2026-08-28 02:19:37Z INFO DapDebugger] DapDebugger initialized
+[2026-08-28 02:19:37Z INFO StepsRunner] Processing step: DisplayName='Checkout'
+[2026-08-28 02:19:37Z INFO StepsRunner] Evaluating: success()
+[2026-08-28 02:19:37Z INFO StepsRunner] Result: true
+[2026-08-28 02:19:37Z INFO StepsRunner] Starting the step.
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO StepsRunner] Which2: 'chcp'
+[2026-08-28 02:19:37Z INFO StepsRunner] Location: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   File name: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Arguments: '65001'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Encoding web name:  ; code page: ''
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper] Process started with process id 5812, waiting for process exit.
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper] Finished process 5812 with exit code 0, and elapsed time 00:00:00.0185833.
+[2026-08-28 02:19:37Z INFO StepsRunner] Successfully returned to code page 65001 (UTF8)
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:37Z INFO ActionManager] Load action that reference repository from 'D:\actions-runner\_work\_actions\actions\checkout\v4'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Loaded action.yml file: {
+  "name": "Checkout",
+  "description": "Checkout a Git repository at a particular version",
+  "inputs": {
+    "type": 2,
+    "map": [
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 4,
+          "col": 3,
+          "lit": "repository"
+        },
+        "value": {
+          "type": 3,
+          "file": 2,
+          "line": 6,
+          "col": 14,
+          "expr": "github.repository"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 7,
+          "col": 3,
+          "lit": "ref"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 12,
+          "col": 3,
+          "lit": "token"
+        },
+        "value": {
+          "type": 3,
+          "file": 2,
+          "line": 24,
+          "col": 14,
+          "expr": "github.token"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 25,
+          "col": 3,
+          "lit": "ssh-key"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 37,
+          "col": 3,
+          "lit": "ssh-known-hosts"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 42,
+          "col": 3,
+          "lit": "ssh-strict"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 47,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 48,
+          "col": 3,
+          "lit": "ssh-user"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 51,
+          "col": 14,
+          "lit": "git"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 52,
+          "col": 3,
+          "lit": "persist-credentials"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 54,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 55,
+          "col": 3,
+          "lit": "path"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 57,
+          "col": 3,
+          "lit": "clean"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 59,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 60,
+          "col": 3,
+          "lit": "filter"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 64,
+          "col": 14,
+          "lit": ""
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 65,
+          "col": 3,
+          "lit": "sparse-checkout"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 69,
+          "col": 14,
+          "lit": ""
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 70,
+          "col": 3,
+          "lit": "sparse-checkout-cone-mode"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 73,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 74,
+          "col": 3,
+          "lit": "fetch-depth"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 76,
+          "col": 14,
+          "lit": "1"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 77,
+          "col": 3,
+          "lit": "fetch-tags"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 79,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 80,
+          "col": 3,
+          "lit": "show-progress"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 82,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 83,
+          "col": 3,
+          "lit": "lfs"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 85,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 86,
+          "col": 3,
+          "lit": "submodules"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 94,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 95,
+          "col": 3,
+          "lit": "set-safe-directory"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 97,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 98,
+          "col": 3,
+          "lit": "github-server-url"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 101,
+          "col": 3,
+          "lit": "allow-unsafe-pr-checkout"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 109,
+          "col": 14,
+          "lit": "false"
+        }
+      }
+    ]
+  },
+  "execution": {
+    "executionType": "nodeJS",
+    "hasPre": false,
+    "hasPost": true,
+    "script": "dist/index.js",
+    "pre": null,
+    "post": "dist/index.js",
+    "nodeVersion": "node20",
+    "cleanupCondition": "always()",
+    "initCondition": "always()"
+  },
+  "deprecated": null
+}
+[2026-08-28 02:19:37Z INFO ActionManager] Action pre node.js file: N/A.
+[2026-08-28 02:19:37Z INFO ActionManager] Action node.js file: dist/index.js.
+[2026-08-28 02:19:37Z INFO ActionManager] Action post node.js file: dist/index.js.
+[2026-08-28 02:19:37Z INFO ExecutionContext] Reserve record order 7 to 12 for post job actions.
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:19:37Z INFO ExecutionContext] Write event payload to D:\actions-runner\_work\_temp\_github_workflow\event.json
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:19:37Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IFileCommandExtension'
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.AddPathFileCommand, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.SetEnvFileCommand, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.CreateStepSummaryCommand, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.SaveStateFileCommand, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.SetOutputFileCommand, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.CreateArtifactsFileCommand, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.ArtifactsListFileCommand, Runner.Worker
+[2026-08-28 02:19:37Z INFO JobServerQueue] Try to append 1 batches web console lines for record '038d7e5b-dd82-4238-a961-3eb85728e4e0', success rate: 1/1.
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'repository': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 6,
+  "col": 14,
+  "lit": "ElAlecs69/SignServer"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'ref': default value evaluate result: ""
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'token': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 24,
+  "col": 14,
+  "lit": "***"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'ssh-key': default value evaluate result: ""
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'ssh-known-hosts': default value evaluate result: ""
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'ssh-strict': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 47,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'ssh-user': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 51,
+  "col": 14,
+  "lit": "git"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'persist-credentials': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 54,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'path': default value evaluate result: ""
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'clean': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 59,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'filter': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 64,
+  "col": 14,
+  "lit": ""
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'sparse-checkout': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 69,
+  "col": 14,
+  "lit": ""
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'sparse-checkout-cone-mode': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 73,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'fetch-depth': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 76,
+  "col": 14,
+  "lit": "1"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'fetch-tags': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 79,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'show-progress': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 82,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'lfs': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 85,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'submodules': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 94,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'set-safe-directory': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 97,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'github-server-url': default value evaluate result: ""
+[2026-08-28 02:19:37Z INFO ActionManifestManagerLegacy] Input 'allow-unsafe-pr-checkout': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 109,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:19:37Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IActionCommandExtension'
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.InternalPluginSetRepoPathCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.SetEnvCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.SetOutputCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.SaveStateCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.AddPathCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.AddMaskCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.AddMatcherCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.RemoveMatcherCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.WarningCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.ErrorCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.NoticeCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.DebugCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.GroupCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.EndGroupCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ExtensionManager] Creating instance: GitHub.Runner.Worker.EchoCommandExtension, Runner.Worker
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command internal-set-repo-path
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command set-env
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command set-output
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command save-state
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command add-path
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command add-mask
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command add-matcher
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command remove-matcher
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command warning
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command error
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command notice
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command debug
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command group
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command endgroup
+[2026-08-28 02:19:37Z INFO ActionCommandManager] Register action command extension for command echo
+[2026-08-28 02:19:37Z INFO JobServerQueue] Got a step log file to send to results service.
+[2026-08-28 02:19:37Z INFO JobServerQueue] Starting upload of step log file to results service ResultsLog, D:\actions-runner\_diag\blocks\898e28ac-81ce-4b75-9b2c-0329401b6ae0_038d7e5b-dd82-4238-a961-3eb85728e4e0.1
+[2026-08-28 02:19:37Z INFO JobServerQueue] Try to upload 1 log files or attachments, success rate: 1/1.
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:37Z INFO HostContext] Well known directory 'Externals': 'D:\actions-runner\externals'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   File name: 'D:\actions-runner\externals\node24\bin\node.exe'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Arguments: '"D:\actions-runner\_work\_actions\actions\checkout\v4\dist/index.js"'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work\SignServer\SignServer'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Encoding web name: utf-8 ; code page: '65001'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:19:37Z INFO ProcessInvokerWrapper] Process started with process id 15608, waiting for process exit.
+[2026-08-28 02:19:37Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:38Z INFO JobServerQueue] Tried to upload 1 file(s) to results, success rate: 1/1.
+[2026-08-28 02:19:38Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:38Z INFO AddMaskCommandExtension] Add new secret mask with length of 524
+[2026-08-28 02:19:38Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:38Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:39Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:40Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:40Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:41Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:42Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:43Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:43Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:44Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper] Finished process 15608 with exit code 0, and elapsed time 00:00:07.0156899.
+[2026-08-28 02:19:44Z INFO CreateStepSummaryCommand] Step Summary file (D:\actions-runner\_work\_temp\_runner_file_commands\step_summary_47dc447b-412b-4aca-9543-6e2b381fbb3c) is empty; skipping attachment upload
+[2026-08-28 02:19:44Z INFO StepsRunner] Step result: 
+[2026-08-28 02:19:44Z INFO ExecutionContext] Publish step telemetry for current step {
+  "action": "actions/checkout",
+  "ref": "v4",
+  "type": "node24",
+  "stage": "Main",
+  "stepId": "1e925565-4acf-499e-87d2-329cd047639a",
+  "stepContextName": "__actions_checkout",
+  "hasPreStep": false,
+  "hasPostStep": true,
+  "result": "succeeded",
+  "errorMessages": [],
+  "executionTimeInSeconds": 8,
+  "startTime": "2026-08-28T02:19:37.2995884Z",
+  "finishTime": "2026-08-28T02:19:44.4068821Z"
+}.
+[2026-08-28 02:19:44Z INFO StepsRunner] No need for updating job result with current step result 'Succeeded'.
+[2026-08-28 02:19:44Z INFO StepsRunner] Current state: job state = ''
+[2026-08-28 02:19:44Z INFO StepsRunner] Processing step: DisplayName='Instalar Node.js'
+[2026-08-28 02:19:44Z INFO StepsRunner] Evaluating: success()
+[2026-08-28 02:19:44Z INFO StepsRunner] Result: true
+[2026-08-28 02:19:44Z INFO StepsRunner] Starting the step.
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:44Z INFO StepsRunner] Which2: 'chcp'
+[2026-08-28 02:19:44Z INFO StepsRunner] Location: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   File name: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Arguments: '65001'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Encoding web name:  ; code page: ''
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper] Process started with process id 7768, waiting for process exit.
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper] Finished process 7768 with exit code 0, and elapsed time 00:00:00.0089775.
+[2026-08-28 02:19:44Z INFO StepsRunner] Successfully returned to code page 65001 (UTF8)
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:44Z INFO ActionManager] Load action that reference repository from 'D:\actions-runner\_work\_actions\actions\setup-node\v4'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:19:44Z INFO ActionManifestManagerLegacy] Ignore action property author.
+[2026-08-28 02:19:44Z INFO ActionManifestManagerLegacy] Loaded action.yml file: {
+  "name": "Setup Node.js environment",
+  "description": "Setup a Node.js environment by adding problem matchers and optionally downloading and adding it to the PATH.",
+  "inputs": {
+    "type": 2,
+    "map": [
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 5,
+          "col": 3,
+          "lit": "always-auth"
+        },
+        "value": {
+          "type": 0,
+          "file": 3,
+          "line": 7,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 8,
+          "col": 3,
+          "lit": "node-version"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 10,
+          "col": 3,
+          "lit": "node-version-file"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 12,
+          "col": 3,
+          "lit": "architecture"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 14,
+          "col": 3,
+          "lit": "check-latest"
+        },
+        "value": {
+          "type": 0,
+          "file": 3,
+          "line": 16,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 17,
+          "col": 3,
+          "lit": "registry-url"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 19,
+          "col": 3,
+          "lit": "scope"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 21,
+          "col": 3,
+          "lit": "token"
+        },
+        "value": {
+          "type": 3,
+          "file": 3,
+          "line": 23,
+          "col": 14,
+          "expr": "github.server_url == 'https://github.com' && github.token || ''"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 24,
+          "col": 3,
+          "lit": "cache"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 26,
+          "col": 3,
+          "lit": "cache-dependency-path"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 28,
+          "col": 3,
+          "lit": "mirror"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 30,
+          "col": 3,
+          "lit": "mirror-token"
+        },
+        "value": ""
+      }
+    ]
+  },
+  "execution": {
+    "executionType": "nodeJS",
+    "hasPre": false,
+    "hasPost": true,
+    "script": "dist/setup/index.js",
+    "pre": null,
+    "post": "dist/cache-save/index.js",
+    "nodeVersion": "node20",
+    "cleanupCondition": "success()",
+    "initCondition": "always()"
+  },
+  "deprecated": null
+}
+[2026-08-28 02:19:44Z INFO ActionManager] Action pre node.js file: N/A.
+[2026-08-28 02:19:44Z INFO ActionManager] Action node.js file: dist/setup/index.js.
+[2026-08-28 02:19:44Z INFO ActionManager] Action post node.js file: dist/cache-save/index.js.
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:19:44Z INFO ExecutionContext] Write event payload to D:\actions-runner\_work\_temp\_github_workflow\event.json
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:19:44Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IFileCommandExtension'
+[2026-08-28 02:19:44Z INFO ActionManifestManagerLegacy] Input 'always-auth': default value evaluate result: {
+  "type": 0,
+  "file": 3,
+  "line": 7,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:19:44Z INFO ActionManifestManagerLegacy] Input 'node-version-file': default value evaluate result: ""
+[2026-08-28 02:19:44Z INFO ActionManifestManagerLegacy] Input 'architecture': default value evaluate result: ""
+[2026-08-28 02:19:44Z INFO ActionManifestManagerLegacy] Input 'check-latest': default value evaluate result: {
+  "type": 0,
+  "file": 3,
+  "line": 16,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:19:44Z INFO ActionManifestManagerLegacy] Input 'registry-url': default value evaluate result: ""
+[2026-08-28 02:19:44Z INFO ActionManifestManagerLegacy] Input 'scope': default value evaluate result: ""
+[2026-08-28 02:19:44Z INFO ActionManifestManagerLegacy] Input 'token': default value evaluate result: {
+  "type": 0,
+  "file": 3,
+  "line": 23,
+  "col": 14,
+  "lit": "***"
+}
+[2026-08-28 02:19:44Z INFO ActionManifestManagerLegacy] Input 'mirror': default value evaluate result: ""
+[2026-08-28 02:19:44Z INFO ActionManifestManagerLegacy] Input 'mirror-token': default value evaluate result: ""
+[2026-08-28 02:19:44Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IActionCommandExtension'
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command internal-set-repo-path
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command set-env
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command set-output
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command save-state
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command add-path
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command add-mask
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command add-matcher
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command remove-matcher
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command warning
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command error
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command notice
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command debug
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command group
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command endgroup
+[2026-08-28 02:19:44Z INFO ActionCommandManager] Register action command extension for command echo
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:44Z INFO HostContext] Well known directory 'Externals': 'D:\actions-runner\externals'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   File name: 'D:\actions-runner\externals\node24\bin\node.exe'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Arguments: '"D:\actions-runner\_work\_actions\actions\setup-node\v4\dist/setup/index.js"'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work\SignServer\SignServer'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Encoding web name: utf-8 ; code page: '65001'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:19:44Z INFO JobServerQueue] Try to upload 1 log files or attachments, success rate: 1/1.
+[2026-08-28 02:19:44Z INFO ProcessInvokerWrapper] Process started with process id 13332, waiting for process exit.
+[2026-08-28 02:19:44Z INFO JobServerQueue] Try to append 1 batches web console lines for record '1e925565-4acf-499e-87d2-329cd047639a', success rate: 1/1.
+[2026-08-28 02:19:44Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'df872a33-c807-41b1-9f3b-8a61fea72087', success rate: 1/1.
+[2026-08-28 02:19:45Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'df872a33-c807-41b1-9f3b-8a61fea72087', success rate: 1/1.
+[2026-08-28 02:19:45Z INFO JobServerQueue] Got a step log file to send to results service.
+[2026-08-28 02:19:45Z INFO JobServerQueue] Starting upload of step log file to results service ResultsLog, D:\actions-runner\_diag\blocks\898e28ac-81ce-4b75-9b2c-0329401b6ae0_1e925565-4acf-499e-87d2-329cd047639a.1
+[2026-08-28 02:19:45Z INFO JobServerQueue] Tried to upload 1 file(s) to results, success rate: 1/1.
+[2026-08-28 02:19:46Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'df872a33-c807-41b1-9f3b-8a61fea72087', success rate: 1/1.
+[2026-08-28 02:19:46Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'df872a33-c807-41b1-9f3b-8a61fea72087', success rate: 1/1.
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:47Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'df872a33-c807-41b1-9f3b-8a61fea72087', success rate: 1/1.
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper] Finished process 13332 with exit code 0, and elapsed time 00:00:03.2319640.
+[2026-08-28 02:19:47Z INFO CreateStepSummaryCommand] Step Summary file (D:\actions-runner\_work\_temp\_runner_file_commands\step_summary_67300e2a-905f-464c-82cf-dab493271650) is empty; skipping attachment upload
+[2026-08-28 02:19:47Z INFO StepsRunner] Step result: 
+[2026-08-28 02:19:47Z INFO ExecutionContext] Publish step telemetry for current step {
+  "action": "actions/setup-node",
+  "ref": "v4",
+  "type": "node24",
+  "stage": "Main",
+  "stepId": "df872a33-c807-41b1-9f3b-8a61fea72087",
+  "stepContextName": "__actions_setup-node",
+  "hasPreStep": false,
+  "hasPostStep": true,
+  "result": "succeeded",
+  "errorMessages": [],
+  "executionTimeInSeconds": 4,
+  "startTime": "2026-08-28T02:19:44.4082805Z",
+  "finishTime": "2026-08-28T02:19:47.669727Z"
+}.
+[2026-08-28 02:19:47Z INFO StepsRunner] No need for updating job result with current step result 'Succeeded'.
+[2026-08-28 02:19:47Z INFO StepsRunner] Current state: job state = ''
+[2026-08-28 02:19:47Z INFO StepsRunner] Processing step: DisplayName='Instalar dependencias'
+[2026-08-28 02:19:47Z INFO StepsRunner] Evaluating: success()
+[2026-08-28 02:19:47Z INFO StepsRunner] Result: true
+[2026-08-28 02:19:47Z INFO StepsRunner] Starting the step.
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:47Z INFO StepsRunner] Which2: 'chcp'
+[2026-08-28 02:19:47Z INFO StepsRunner] Location: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   File name: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Arguments: '65001'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Encoding web name:  ; code page: ''
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper] Process started with process id 6444, waiting for process exit.
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper] Finished process 6444 with exit code 0, and elapsed time 00:00:00.0089530.
+[2026-08-28 02:19:47Z INFO StepsRunner] Successfully returned to code page 65001 (UTF8)
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:19:47Z INFO ExecutionContext] Write event payload to D:\actions-runner\_work\_temp\_github_workflow\event.json
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:19:47Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IFileCommandExtension'
+[2026-08-28 02:19:47Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IActionCommandExtension'
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command internal-set-repo-path
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command set-env
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command set-output
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command save-state
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command add-path
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command add-mask
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command add-matcher
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command remove-matcher
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command warning
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command error
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command notice
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command debug
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command group
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command endgroup
+[2026-08-28 02:19:47Z INFO ActionCommandManager] Register action command extension for command echo
+[2026-08-28 02:19:47Z INFO ScriptHandler] Which2: 'pwsh'
+[2026-08-28 02:19:47Z INFO JobServerQueue] Got a step log file to send to results service.
+[2026-08-28 02:19:47Z INFO JobServerQueue] Starting upload of step log file to results service ResultsLog, D:\actions-runner\_diag\blocks\898e28ac-81ce-4b75-9b2c-0329401b6ae0_df872a33-c807-41b1-9f3b-8a61fea72087.1
+[2026-08-28 02:19:47Z INFO ScriptHandler] pwsh: command not found. Make sure 'pwsh' is installed and its location included in the 'Path' environment variable.
+[2026-08-28 02:19:47Z INFO ScriptHandler] Defaulting to powershell
+[2026-08-28 02:19:47Z INFO ScriptHandler] Which2: 'powershell'
+[2026-08-28 02:19:47Z INFO ScriptHandler] Location: 'C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.EXE'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:19:47Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:19:47Z INFO ScriptHandler] Which2: 'pwsh'
+[2026-08-28 02:19:47Z INFO ScriptHandler] pwsh: command not found. Make sure 'pwsh' is installed and its location included in the 'Path' environment variable.
+[2026-08-28 02:19:47Z INFO ScriptHandler] Defaulting to powershell
+[2026-08-28 02:19:47Z INFO ScriptHandler] Which2: 'powershell'
+[2026-08-28 02:19:47Z INFO ScriptHandler] Location: 'C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.EXE'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   File name: 'C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.EXE'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Arguments: '-command ". 'D:\actions-runner\_work\_temp\77caa948-3fdd-471b-aabb-4bf46b727abf.ps1'"'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work\SignServer\SignServer\signserver-web'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Encoding web name:  ; code page: ''
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:19:47Z INFO ProcessInvokerWrapper] Process started with process id 19492, waiting for process exit.
+[2026-08-28 02:19:47Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'df872a33-c807-41b1-9f3b-8a61fea72087', success rate: 1/1.
+[2026-08-28 02:19:47Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'b58ffc8d-0098-4080-882c-a1208b3cb5fe', success rate: 1/1.
+[2026-08-28 02:19:48Z INFO JobServerQueue] Tried to upload 1 file(s) to results, success rate: 1/1.
+[2026-08-28 02:19:48Z INFO JobServerQueue] Try to upload 1 log files or attachments, success rate: 1/1.
+[2026-08-28 02:19:57Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:19:57Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:19:57Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:01Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'b58ffc8d-0098-4080-882c-a1208b3cb5fe', success rate: 1/1.
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper] Finished process 19492 with exit code 0, and elapsed time 00:00:13.3941580.
+[2026-08-28 02:20:01Z INFO CreateStepSummaryCommand] Step Summary file (D:\actions-runner\_work\_temp\_runner_file_commands\step_summary_040459fb-e33c-49dc-8a0e-2c3cdc9fd005) is empty; skipping attachment upload
+[2026-08-28 02:20:01Z INFO StepsRunner] Step result: 
+[2026-08-28 02:20:01Z INFO ExecutionContext] Publish step telemetry for current step {
+  "action": "powershell",
+  "type": "run",
+  "stage": "Main",
+  "stepId": "b58ffc8d-0098-4080-882c-a1208b3cb5fe",
+  "stepContextName": "__run",
+  "result": "succeeded",
+  "errorMessages": [],
+  "executionTimeInSeconds": 14,
+  "startTime": "2026-08-28T02:19:47.6708757Z",
+  "finishTime": "2026-08-28T02:20:01.1763093Z"
+}.
+[2026-08-28 02:20:01Z INFO StepsRunner] No need for updating job result with current step result 'Succeeded'.
+[2026-08-28 02:20:01Z INFO StepsRunner] Current state: job state = ''
+[2026-08-28 02:20:01Z INFO StepsRunner] Processing step: DisplayName='Compilar (build de producción)'
+[2026-08-28 02:20:01Z INFO StepsRunner] Evaluating: success()
+[2026-08-28 02:20:01Z INFO StepsRunner] Result: true
+[2026-08-28 02:20:01Z INFO StepsRunner] Starting the step.
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:01Z INFO StepsRunner] Which2: 'chcp'
+[2026-08-28 02:20:01Z INFO StepsRunner] Location: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   File name: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Arguments: '65001'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Encoding web name:  ; code page: ''
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper] Process started with process id 16636, waiting for process exit.
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:01Z INFO JobServerQueue] Got a step log file to send to results service.
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:01Z INFO JobServerQueue] Starting upload of step log file to results service ResultsLog, D:\actions-runner\_diag\blocks\898e28ac-81ce-4b75-9b2c-0329401b6ae0_b58ffc8d-0098-4080-882c-a1208b3cb5fe.1
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper] Finished process 16636 with exit code 0, and elapsed time 00:00:00.0083088.
+[2026-08-28 02:20:01Z INFO StepsRunner] Successfully returned to code page 65001 (UTF8)
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:20:01Z INFO ExecutionContext] Write event payload to D:\actions-runner\_work\_temp\_github_workflow\event.json
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:20:01Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IFileCommandExtension'
+[2026-08-28 02:20:01Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IActionCommandExtension'
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command internal-set-repo-path
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command set-env
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command set-output
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command save-state
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command add-path
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command add-mask
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command add-matcher
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command remove-matcher
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command warning
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command error
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command notice
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command debug
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command group
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command endgroup
+[2026-08-28 02:20:01Z INFO ActionCommandManager] Register action command extension for command echo
+[2026-08-28 02:20:01Z INFO ScriptHandler] Which2: 'pwsh'
+[2026-08-28 02:20:01Z INFO ScriptHandler] pwsh: command not found. Make sure 'pwsh' is installed and its location included in the 'Path' environment variable.
+[2026-08-28 02:20:01Z INFO ScriptHandler] Defaulting to powershell
+[2026-08-28 02:20:01Z INFO ScriptHandler] Which2: 'powershell'
+[2026-08-28 02:20:01Z INFO ScriptHandler] Location: 'C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.EXE'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:01Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:20:01Z INFO ScriptHandler] Which2: 'pwsh'
+[2026-08-28 02:20:01Z INFO ScriptHandler] pwsh: command not found. Make sure 'pwsh' is installed and its location included in the 'Path' environment variable.
+[2026-08-28 02:20:01Z INFO ScriptHandler] Defaulting to powershell
+[2026-08-28 02:20:01Z INFO ScriptHandler] Which2: 'powershell'
+[2026-08-28 02:20:01Z INFO ScriptHandler] Location: 'C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.EXE'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   File name: 'C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.EXE'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Arguments: '-command ". 'D:\actions-runner\_work\_temp\1a25b922-d833-4a24-b057-51ef954afc9b.ps1'"'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work\SignServer\SignServer\signserver-web'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Encoding web name:  ; code page: ''
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:20:01Z INFO ProcessInvokerWrapper] Process started with process id 7936, waiting for process exit.
+[2026-08-28 02:20:01Z INFO JobServerQueue] Try to append 1 batches web console lines for record '55578da9-4540-42f5-8523-28c8d0b60c31', success rate: 1/1.
+[2026-08-28 02:20:01Z INFO JobServerQueue] Tried to upload 1 file(s) to results, success rate: 1/1.
+[2026-08-28 02:20:01Z INFO JobServerQueue] Try to upload 1 log files or attachments, success rate: 1/1.
+[2026-08-28 02:20:02Z INFO JobServerQueue] Try to append 1 batches web console lines for record '55578da9-4540-42f5-8523-28c8d0b60c31', success rate: 1/1.
+[2026-08-28 02:20:05Z INFO JobServerQueue] Try to append 1 batches web console lines for record '55578da9-4540-42f5-8523-28c8d0b60c31', success rate: 1/1.
+[2026-08-28 02:20:07Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:07Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:07Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:11Z INFO JobServerQueue] Try to append 1 batches web console lines for record '55578da9-4540-42f5-8523-28c8d0b60c31', success rate: 1/1.
+[2026-08-28 02:20:12Z INFO JobServerQueue] Try to append 1 batches web console lines for record '55578da9-4540-42f5-8523-28c8d0b60c31', success rate: 1/1.
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper] Finished process 7936 with exit code 0, and elapsed time 00:00:11.6519380.
+[2026-08-28 02:20:12Z INFO CreateStepSummaryCommand] Step Summary file (D:\actions-runner\_work\_temp\_runner_file_commands\step_summary_7a355a69-8821-4991-8256-2fef6dc9af81) is empty; skipping attachment upload
+[2026-08-28 02:20:12Z INFO StepsRunner] Step result: 
+[2026-08-28 02:20:12Z INFO ExecutionContext] Publish step telemetry for current step {
+  "action": "powershell",
+  "type": "run",
+  "stage": "Main",
+  "stepId": "55578da9-4540-42f5-8523-28c8d0b60c31",
+  "stepContextName": "__run_2",
+  "result": "succeeded",
+  "errorMessages": [],
+  "executionTimeInSeconds": 12,
+  "startTime": "2026-08-28T02:20:01.1771659Z",
+  "finishTime": "2026-08-28T02:20:12.8995332Z"
+}.
+[2026-08-28 02:20:12Z INFO StepsRunner] No need for updating job result with current step result 'Succeeded'.
+[2026-08-28 02:20:12Z INFO StepsRunner] Current state: job state = ''
+[2026-08-28 02:20:12Z INFO StepsRunner] Processing step: DisplayName='Publicar en el volumen de nginx'
+[2026-08-28 02:20:12Z INFO StepsRunner] Evaluating: success()
+[2026-08-28 02:20:12Z INFO StepsRunner] Result: true
+[2026-08-28 02:20:12Z INFO StepsRunner] Starting the step.
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:12Z INFO StepsRunner] Which2: 'chcp'
+[2026-08-28 02:20:12Z INFO StepsRunner] Location: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   File name: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Arguments: '65001'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Encoding web name:  ; code page: ''
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper] Process started with process id 4896, waiting for process exit.
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper] Finished process 4896 with exit code 0, and elapsed time 00:00:00.0083552.
+[2026-08-28 02:20:12Z INFO StepsRunner] Successfully returned to code page 65001 (UTF8)
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:20:12Z INFO ExecutionContext] Write event payload to D:\actions-runner\_work\_temp\_github_workflow\event.json
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:20:12Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IFileCommandExtension'
+[2026-08-28 02:20:12Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IActionCommandExtension'
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command internal-set-repo-path
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command set-env
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command set-output
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command save-state
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command add-path
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command add-mask
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command add-matcher
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command remove-matcher
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command warning
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command error
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command notice
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command debug
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command group
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command endgroup
+[2026-08-28 02:20:12Z INFO ActionCommandManager] Register action command extension for command echo
+[2026-08-28 02:20:12Z INFO ScriptHandler] Which2: 'pwsh'
+[2026-08-28 02:20:12Z INFO ScriptHandler] pwsh: command not found. Make sure 'pwsh' is installed and its location included in the 'Path' environment variable.
+[2026-08-28 02:20:12Z INFO ScriptHandler] Defaulting to powershell
+[2026-08-28 02:20:12Z INFO ScriptHandler] Which2: 'powershell'
+[2026-08-28 02:20:12Z INFO ScriptHandler] Location: 'C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.EXE'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:12Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:20:12Z INFO ScriptHandler] Which2: 'pwsh'
+[2026-08-28 02:20:12Z INFO ScriptHandler] pwsh: command not found. Make sure 'pwsh' is installed and its location included in the 'Path' environment variable.
+[2026-08-28 02:20:12Z INFO ScriptHandler] Defaulting to powershell
+[2026-08-28 02:20:12Z INFO ScriptHandler] Which2: 'powershell'
+[2026-08-28 02:20:12Z INFO ScriptHandler] Location: 'C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.EXE'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   File name: 'C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.EXE'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Arguments: '-command ". 'D:\actions-runner\_work\_temp\a0432cbc-f9f9-484e-a0f7-14ab84f01d13.ps1'"'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work\SignServer\SignServer\signserver-web'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Encoding web name:  ; code page: ''
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:20:12Z INFO ProcessInvokerWrapper] Process started with process id 12348, waiting for process exit.
+[2026-08-28 02:20:12Z INFO JobServerQueue] Try to append 1 batches web console lines for record '55578da9-4540-42f5-8523-28c8d0b60c31', success rate: 1/1.
+[2026-08-28 02:20:12Z INFO JobServerQueue] Try to append 1 batches web console lines for record '205dfa8c-7602-4409-8dc0-791c87ff2481', success rate: 1/1.
+[2026-08-28 02:20:13Z INFO JobServerQueue] Got a step log file to send to results service.
+[2026-08-28 02:20:13Z INFO JobServerQueue] Starting upload of step log file to results service ResultsLog, D:\actions-runner\_diag\blocks\898e28ac-81ce-4b75-9b2c-0329401b6ae0_55578da9-4540-42f5-8523-28c8d0b60c31.1
+[2026-08-28 02:20:13Z INFO JobServerQueue] Try to upload 1 log files or attachments, success rate: 1/1.
+[2026-08-28 02:20:13Z INFO JobServerQueue] Tried to upload 1 file(s) to results, success rate: 1/1.
+[2026-08-28 02:20:14Z INFO JobServerQueue] Try to append 1 batches web console lines for record '205dfa8c-7602-4409-8dc0-791c87ff2481', success rate: 1/1.
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper] Finished process 12348 with exit code 0, and elapsed time 00:00:01.8521372.
+[2026-08-28 02:20:14Z INFO CreateStepSummaryCommand] Step Summary file (D:\actions-runner\_work\_temp\_runner_file_commands\step_summary_8771af25-9d8d-421f-a9d3-ed7269edf9cc) is empty; skipping attachment upload
+[2026-08-28 02:20:14Z INFO StepsRunner] Step result: 
+[2026-08-28 02:20:14Z INFO ExecutionContext] Publish step telemetry for current step {
+  "action": "powershell",
+  "type": "run",
+  "stage": "Main",
+  "stepId": "205dfa8c-7602-4409-8dc0-791c87ff2481",
+  "stepContextName": "__run_3",
+  "result": "succeeded",
+  "errorMessages": [],
+  "executionTimeInSeconds": 2,
+  "startTime": "2026-08-28T02:20:12.9003072Z",
+  "finishTime": "2026-08-28T02:20:14.8205667Z"
+}.
+[2026-08-28 02:20:14Z INFO StepsRunner] No need for updating job result with current step result 'Succeeded'.
+[2026-08-28 02:20:14Z INFO StepsRunner] Current state: job state = ''
+[2026-08-28 02:20:14Z INFO StepsRunner] Processing step: DisplayName='Post Instalar Node.js'
+[2026-08-28 02:20:14Z INFO StepsRunner] Evaluating: success()
+[2026-08-28 02:20:14Z INFO StepsRunner] Result: true
+[2026-08-28 02:20:14Z INFO StepsRunner] Starting the step.
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:14Z INFO StepsRunner] Which2: 'chcp'
+[2026-08-28 02:20:14Z INFO StepsRunner] Location: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   File name: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Arguments: '65001'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Encoding web name:  ; code page: ''
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper] Process started with process id 13020, waiting for process exit.
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper] Finished process 13020 with exit code 0, and elapsed time 00:00:00.0077659.
+[2026-08-28 02:20:14Z INFO StepsRunner] Successfully returned to code page 65001 (UTF8)
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:20:14Z INFO ActionManager] Load action that reference repository from 'D:\actions-runner\_work\_actions\actions\setup-node\v4'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:20:14Z INFO ActionManifestManagerLegacy] Ignore action property author.
+[2026-08-28 02:20:14Z INFO ActionManifestManagerLegacy] Loaded action.yml file: {
+  "name": "Setup Node.js environment",
+  "description": "Setup a Node.js environment by adding problem matchers and optionally downloading and adding it to the PATH.",
+  "inputs": {
+    "type": 2,
+    "map": [
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 5,
+          "col": 3,
+          "lit": "always-auth"
+        },
+        "value": {
+          "type": 0,
+          "file": 3,
+          "line": 7,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 8,
+          "col": 3,
+          "lit": "node-version"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 10,
+          "col": 3,
+          "lit": "node-version-file"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 12,
+          "col": 3,
+          "lit": "architecture"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 14,
+          "col": 3,
+          "lit": "check-latest"
+        },
+        "value": {
+          "type": 0,
+          "file": 3,
+          "line": 16,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 17,
+          "col": 3,
+          "lit": "registry-url"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 19,
+          "col": 3,
+          "lit": "scope"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 21,
+          "col": 3,
+          "lit": "token"
+        },
+        "value": {
+          "type": 3,
+          "file": 3,
+          "line": 23,
+          "col": 14,
+          "expr": "github.server_url == 'https://github.com' && github.token || ''"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 24,
+          "col": 3,
+          "lit": "cache"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 26,
+          "col": 3,
+          "lit": "cache-dependency-path"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 28,
+          "col": 3,
+          "lit": "mirror"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 3,
+          "line": 30,
+          "col": 3,
+          "lit": "mirror-token"
+        },
+        "value": ""
+      }
+    ]
+  },
+  "execution": {
+    "executionType": "nodeJS",
+    "hasPre": false,
+    "hasPost": true,
+    "script": "dist/setup/index.js",
+    "pre": null,
+    "post": "dist/cache-save/index.js",
+    "nodeVersion": "node20",
+    "cleanupCondition": "success()",
+    "initCondition": "always()"
+  },
+  "deprecated": null
+}
+[2026-08-28 02:20:14Z INFO ActionManager] Action pre node.js file: N/A.
+[2026-08-28 02:20:14Z INFO ActionManager] Action node.js file: dist/setup/index.js.
+[2026-08-28 02:20:14Z INFO ActionManager] Action post node.js file: dist/cache-save/index.js.
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:20:14Z INFO ExecutionContext] Write event payload to D:\actions-runner\_work\_temp\_github_workflow\event.json
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:20:14Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IFileCommandExtension'
+[2026-08-28 02:20:14Z INFO ActionManifestManagerLegacy] Input 'always-auth': default value evaluate result: {
+  "type": 0,
+  "file": 3,
+  "line": 7,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:20:14Z INFO ActionManifestManagerLegacy] Input 'node-version-file': default value evaluate result: ""
+[2026-08-28 02:20:14Z INFO ActionManifestManagerLegacy] Input 'architecture': default value evaluate result: ""
+[2026-08-28 02:20:14Z INFO ActionManifestManagerLegacy] Input 'check-latest': default value evaluate result: {
+  "type": 0,
+  "file": 3,
+  "line": 16,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:20:14Z INFO ActionManifestManagerLegacy] Input 'registry-url': default value evaluate result: ""
+[2026-08-28 02:20:14Z INFO ActionManifestManagerLegacy] Input 'scope': default value evaluate result: ""
+[2026-08-28 02:20:14Z INFO ActionManifestManagerLegacy] Input 'token': default value evaluate result: {
+  "type": 0,
+  "file": 3,
+  "line": 23,
+  "col": 14,
+  "lit": "***"
+}
+[2026-08-28 02:20:14Z INFO ActionManifestManagerLegacy] Input 'mirror': default value evaluate result: ""
+[2026-08-28 02:20:14Z INFO ActionManifestManagerLegacy] Input 'mirror-token': default value evaluate result: ""
+[2026-08-28 02:20:14Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IActionCommandExtension'
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command internal-set-repo-path
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command set-env
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command set-output
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command save-state
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command add-path
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command add-mask
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command add-matcher
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command remove-matcher
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command warning
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command error
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command notice
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command debug
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command group
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command endgroup
+[2026-08-28 02:20:14Z INFO ActionCommandManager] Register action command extension for command echo
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:14Z INFO HostContext] Well known directory 'Externals': 'D:\actions-runner\externals'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   File name: 'D:\actions-runner\externals\node24\bin\node.exe'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Arguments: '"D:\actions-runner\_work\_actions\actions\setup-node\v4\dist/cache-save/index.js"'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work\SignServer\SignServer'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Encoding web name: utf-8 ; code page: '65001'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:20:14Z INFO ProcessInvokerWrapper] Process started with process id 14260, waiting for process exit.
+[2026-08-28 02:20:14Z INFO JobServerQueue] Got a step log file to send to results service.
+[2026-08-28 02:20:14Z INFO JobServerQueue] Starting upload of step log file to results service ResultsLog, D:\actions-runner\_diag\blocks\898e28ac-81ce-4b75-9b2c-0329401b6ae0_205dfa8c-7602-4409-8dc0-791c87ff2481.1
+[2026-08-28 02:20:15Z INFO JobServerQueue] Try to append 1 batches web console lines for record '2e5e440e-ee56-4f45-a47a-7aafab91b1c6', success rate: 1/1.
+[2026-08-28 02:20:15Z INFO JobServerQueue] Tried to upload 1 file(s) to results, success rate: 1/1.
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper] Finished process 14260 with exit code 0, and elapsed time 00:00:00.5965662.
+[2026-08-28 02:20:15Z INFO CreateStepSummaryCommand] Step Summary file (D:\actions-runner\_work\_temp\_runner_file_commands\step_summary_8a089a5e-d356-4a00-9ceb-3402b488e858) is empty; skipping attachment upload
+[2026-08-28 02:20:15Z INFO StepsRunner] Step result: 
+[2026-08-28 02:20:15Z INFO ExecutionContext] Publish step telemetry for current step {
+  "action": "actions/setup-node",
+  "ref": "v4",
+  "type": "node24",
+  "stage": "Post",
+  "stepId": "2e5e440e-ee56-4f45-a47a-7aafab91b1c6",
+  "result": "succeeded",
+  "errorMessages": [
+    "Failed to save: \"D:\\Program failed with error: The process 'D:\\Program Files\\Git\\usr\\bin\\tar.exe' failed with exit code 2"
+  ],
+  "executionTimeInSeconds": 1,
+  "startTime": "2026-08-28T02:20:14.8245595Z",
+  "finishTime": "2026-08-28T02:20:15.4458142Z"
+}.
+[2026-08-28 02:20:15Z INFO StepsRunner] No need for updating job result with current step result 'Succeeded'.
+[2026-08-28 02:20:15Z INFO StepsRunner] Current state: job state = ''
+[2026-08-28 02:20:15Z INFO StepsRunner] Processing step: DisplayName='Post Checkout'
+[2026-08-28 02:20:15Z INFO StepsRunner] Evaluating: always()
+[2026-08-28 02:20:15Z INFO StepsRunner] Result: true
+[2026-08-28 02:20:15Z INFO StepsRunner] Starting the step.
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:15Z INFO StepsRunner] Which2: 'chcp'
+[2026-08-28 02:20:15Z INFO StepsRunner] Location: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   File name: 'C:\WINDOWS\system32\chcp.COM'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Arguments: '65001'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Encoding web name:  ; code page: ''
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper] Process started with process id 17852, waiting for process exit.
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper] Finished process 17852 with exit code 0, and elapsed time 00:00:00.0078375.
+[2026-08-28 02:20:15Z INFO StepsRunner] Successfully returned to code page 65001 (UTF8)
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:20:15Z INFO ActionManager] Load action that reference repository from 'D:\actions-runner\_work\_actions\actions\checkout\v4'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Actions': 'D:\actions-runner\_work\_actions'
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Loaded action.yml file: {
+  "name": "Checkout",
+  "description": "Checkout a Git repository at a particular version",
+  "inputs": {
+    "type": 2,
+    "map": [
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 4,
+          "col": 3,
+          "lit": "repository"
+        },
+        "value": {
+          "type": 3,
+          "file": 2,
+          "line": 6,
+          "col": 14,
+          "expr": "github.repository"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 7,
+          "col": 3,
+          "lit": "ref"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 12,
+          "col": 3,
+          "lit": "token"
+        },
+        "value": {
+          "type": 3,
+          "file": 2,
+          "line": 24,
+          "col": 14,
+          "expr": "github.token"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 25,
+          "col": 3,
+          "lit": "ssh-key"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 37,
+          "col": 3,
+          "lit": "ssh-known-hosts"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 42,
+          "col": 3,
+          "lit": "ssh-strict"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 47,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 48,
+          "col": 3,
+          "lit": "ssh-user"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 51,
+          "col": 14,
+          "lit": "git"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 52,
+          "col": 3,
+          "lit": "persist-credentials"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 54,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 55,
+          "col": 3,
+          "lit": "path"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 57,
+          "col": 3,
+          "lit": "clean"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 59,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 60,
+          "col": 3,
+          "lit": "filter"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 64,
+          "col": 14,
+          "lit": ""
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 65,
+          "col": 3,
+          "lit": "sparse-checkout"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 69,
+          "col": 14,
+          "lit": ""
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 70,
+          "col": 3,
+          "lit": "sparse-checkout-cone-mode"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 73,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 74,
+          "col": 3,
+          "lit": "fetch-depth"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 76,
+          "col": 14,
+          "lit": "1"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 77,
+          "col": 3,
+          "lit": "fetch-tags"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 79,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 80,
+          "col": 3,
+          "lit": "show-progress"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 82,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 83,
+          "col": 3,
+          "lit": "lfs"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 85,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 86,
+          "col": 3,
+          "lit": "submodules"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 94,
+          "col": 14,
+          "lit": "false"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 95,
+          "col": 3,
+          "lit": "set-safe-directory"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 97,
+          "col": 14,
+          "lit": "true"
+        }
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 98,
+          "col": 3,
+          "lit": "github-server-url"
+        },
+        "value": ""
+      },
+      {
+        "key": {
+          "type": 0,
+          "file": 2,
+          "line": 101,
+          "col": 3,
+          "lit": "allow-unsafe-pr-checkout"
+        },
+        "value": {
+          "type": 0,
+          "file": 2,
+          "line": 109,
+          "col": 14,
+          "lit": "false"
+        }
+      }
+    ]
+  },
+  "execution": {
+    "executionType": "nodeJS",
+    "hasPre": false,
+    "hasPost": true,
+    "script": "dist/index.js",
+    "pre": null,
+    "post": "dist/index.js",
+    "nodeVersion": "node20",
+    "cleanupCondition": "always()",
+    "initCondition": "always()"
+  },
+  "deprecated": null
+}
+[2026-08-28 02:20:15Z INFO ActionManager] Action pre node.js file: N/A.
+[2026-08-28 02:20:15Z INFO ActionManager] Action node.js file: dist/index.js.
+[2026-08-28 02:20:15Z INFO ActionManager] Action post node.js file: dist/index.js.
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:20:15Z INFO ExecutionContext] Write event payload to D:\actions-runner\_work\_temp\_github_workflow\event.json
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Temp': 'D:\actions-runner\_work\_temp'
+[2026-08-28 02:20:15Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IFileCommandExtension'
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'repository': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 6,
+  "col": 14,
+  "lit": "ElAlecs69/SignServer"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'ref': default value evaluate result: ""
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'token': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 24,
+  "col": 14,
+  "lit": "***"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'ssh-key': default value evaluate result: ""
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'ssh-known-hosts': default value evaluate result: ""
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'ssh-strict': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 47,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'ssh-user': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 51,
+  "col": 14,
+  "lit": "git"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'persist-credentials': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 54,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'path': default value evaluate result: ""
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'clean': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 59,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'filter': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 64,
+  "col": 14,
+  "lit": ""
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'sparse-checkout': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 69,
+  "col": 14,
+  "lit": ""
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'sparse-checkout-cone-mode': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 73,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'fetch-depth': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 76,
+  "col": 14,
+  "lit": "1"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'fetch-tags': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 79,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'show-progress': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 82,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'lfs': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 85,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'submodules': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 94,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'set-safe-directory': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 97,
+  "col": 14,
+  "lit": "true"
+}
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'github-server-url': default value evaluate result: ""
+[2026-08-28 02:20:15Z INFO ActionManifestManagerLegacy] Input 'allow-unsafe-pr-checkout': default value evaluate result: {
+  "type": 0,
+  "file": 2,
+  "line": 109,
+  "col": 14,
+  "lit": "false"
+}
+[2026-08-28 02:20:15Z INFO ExtensionManager] Getting extensions for interface: 'GitHub.Runner.Worker.IActionCommandExtension'
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command internal-set-repo-path
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command set-env
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command set-output
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command save-state
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command add-path
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command add-mask
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command add-matcher
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command remove-matcher
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command warning
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command error
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command notice
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command debug
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command group
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command endgroup
+[2026-08-28 02:20:15Z INFO ActionCommandManager] Register action command extension for command echo
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:15Z INFO HostContext] Well known directory 'Externals': 'D:\actions-runner\externals'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper] Starting process:
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   File name: 'D:\actions-runner\externals\node24\bin\node.exe'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Arguments: '"D:\actions-runner\_work\_actions\actions\checkout\v4\dist/index.js"'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Working directory: 'D:\actions-runner\_work\SignServer\SignServer'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Require exit code zero: 'False'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Encoding web name: utf-8 ; code page: '65001'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Force kill process on cancellation: 'False'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Redirected STDIN: 'False'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Persist current code page: 'True'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   Keep redirected STDIN open: 'False'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper]   High priority process: 'False'
+[2026-08-28 02:20:15Z INFO ProcessInvokerWrapper] Process started with process id 972, waiting for process exit.
+[2026-08-28 02:20:15Z INFO JobServerQueue] Try to append 1 batches web console lines for record '2e5e440e-ee56-4f45-a47a-7aafab91b1c6', success rate: 1/1.
+[2026-08-28 02:20:15Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'fce27664-013b-4514-a01a-5ee927c2be22', success rate: 1/1.
+[2026-08-28 02:20:15Z INFO JobServerQueue] Try to upload 2 log files or attachments, success rate: 2/2.
+[2026-08-28 02:20:15Z INFO AddMaskCommandExtension] Add new secret mask with length of 32
+[2026-08-28 02:20:15Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'fce27664-013b-4514-a01a-5ee927c2be22', success rate: 1/1.
+[2026-08-28 02:20:16Z INFO JobServerQueue] Got a step log file to send to results service.
+[2026-08-28 02:20:16Z INFO JobServerQueue] Starting upload of step log file to results service ResultsLog, D:\actions-runner\_diag\blocks\898e28ac-81ce-4b75-9b2c-0329401b6ae0_2e5e440e-ee56-4f45-a47a-7aafab91b1c6.1
+[2026-08-28 02:20:16Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'fce27664-013b-4514-a01a-5ee927c2be22', success rate: 1/1.
+[2026-08-28 02:20:16Z INFO JobServerQueue] Tried to upload 1 file(s) to results, success rate: 1/1.
+[2026-08-28 02:20:17Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:17Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:17Z INFO HostContext] Well known directory 'Work': 'D:\actions-runner\_work'
+[2026-08-28 02:20:17Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'fce27664-013b-4514-a01a-5ee927c2be22', success rate: 1/1.
+[2026-08-28 02:20:17Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:17Z INFO ProcessInvokerWrapper] STDOUT/STDERR stream read finished.
+[2026-08-28 02:20:17Z INFO ProcessInvokerWrapper] Finished process 972 with exit code 0, and elapsed time 00:00:02.4832967.
+[2026-08-28 02:20:17Z INFO CreateStepSummaryCommand] Step Summary file (D:\actions-runner\_work\_temp\_runner_file_commands\step_summary_53069eab-fde7-417d-a851-272e19630745) is empty; skipping attachment upload
+[2026-08-28 02:20:17Z INFO StepsRunner] Step result: 
+[2026-08-28 02:20:17Z INFO ExecutionContext] Publish step telemetry for current step {
+  "action": "actions/checkout",
+  "ref": "v4",
+  "type": "node24",
+  "stage": "Post",
+  "stepId": "fce27664-013b-4514-a01a-5ee927c2be22",
+  "result": "succeeded",
+  "errorMessages": [],
+  "executionTimeInSeconds": 3,
+  "startTime": "2026-08-28T02:20:15.4475524Z",
+  "finishTime": "2026-08-28T02:20:17.9555049Z"
+}.
+[2026-08-28 02:20:17Z INFO StepsRunner] No need for updating job result with current step result 'Succeeded'.
+[2026-08-28 02:20:17Z INFO StepsRunner] Current state: job state = ''
+[2026-08-28 02:20:17Z INFO JobRunner] Finalize job.
+[2026-08-28 02:20:17Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:17Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:17Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:20:17Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:17Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:17Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:20:17Z INFO JobExtension] Initialize Env context
+[2026-08-28 02:20:17Z INFO JobExtension] Initialize steps context
+[2026-08-28 02:20:17Z INFO JobExtension] Total accessible running process: 174.
+[2026-08-28 02:20:17Z INFO JobExtension] Wait for all connectivity checks to finish.
+[2026-08-28 02:20:17Z INFO JobExtension] Connectivity check result: {
+  "endpointUrl": "https://broker.actions.githubusercontent.com/health",
+  "endpointIPs": null,
+  "startTime": "2026-08-28T02:19:37.2823683Z",
+  "statusCode": "http_OK",
+  "requestId": "0EE8:ECDD8:6CB751:6F1E11:6A90F02A",
+  "httpRequestDurationInMs": 319,
+  "dnsResolutionDurationInMs": 0,
+  "dnsError": null
+}
+[2026-08-28 02:20:17Z INFO JobExtension] Connectivity check result: {
+  "endpointUrl": "https://token.actions.githubusercontent.com/ready",
+  "endpointIPs": null,
+  "startTime": "2026-08-28T02:19:37.2832309Z",
+  "statusCode": "http_NoContent",
+  "requestId": "0EE9:2D65EF:104C86:13C89E:6A90F02A",
+  "httpRequestDurationInMs": 287,
+  "dnsResolutionDurationInMs": 0,
+  "dnsError": null
+}
+[2026-08-28 02:20:17Z INFO JobExtension] Connectivity check result: {
+  "endpointUrl": "https://run.actions.githubusercontent.com/health",
+  "endpointIPs": null,
+  "startTime": "2026-08-28T02:19:37.2834544Z",
+  "statusCode": "http_OK",
+  "requestId": "0EEA:22D387:6BB1E7:70D5C3:6A90F02A",
+  "httpRequestDurationInMs": 317,
+  "dnsResolutionDurationInMs": 0,
+  "dnsError": null
+}
+[2026-08-28 02:20:17Z INFO ExecutionContext] Publish step telemetry for current step {
+  "action": "complete_job",
+  "type": "runner",
+  "stage": "Post",
+  "stepId": "f8f8de25-656e-4acd-ab2e-499a30c35060",
+  "result": "succeeded",
+  "errorMessages": [
+    "Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-act"
+  ],
+  "executionTimeInSeconds": 1,
+  "startTime": "2026-08-28T02:20:17.9643047Z",
+  "finishTime": "2026-08-28T02:20:17.9772207Z"
+}.
+[2026-08-28 02:20:17Z INFO JobRunner] Job result after all job steps finish: Succeeded
+[2026-08-28 02:20:17Z INFO JobRunner] Completing the job execution context.
+[2026-08-28 02:20:17Z INFO JobRunner] Shutting down the job server queue.
+[2026-08-28 02:20:17Z INFO JobServerQueue] Fire signal to shutdown all queues.
+[2026-08-28 02:20:18Z INFO JobServerQueue] All queue process task stopped.
+[2026-08-28 02:20:18Z INFO JobServerQueue] Try to append 1 batches web console lines for record 'f8f8de25-656e-4acd-ab2e-499a30c35060', success rate: 1/1.
+[2026-08-28 02:20:18Z INFO JobServerQueue] Web console line queue drained.
+[2026-08-28 02:20:18Z INFO JobServerQueue] Uploading 3 files in one shot.
+[2026-08-28 02:20:18Z INFO JobServerQueue] Try to upload 3 log files or attachments, success rate: 3/3.
+[2026-08-28 02:20:18Z INFO JobServerQueue] File upload queue drained.
+[2026-08-28 02:20:18Z INFO JobServerQueue] Starting results-based upload queue...
+[2026-08-28 02:20:18Z INFO JobServerQueue] Uploading 3 file(s) in one shot through results service.
+[2026-08-28 02:20:18Z INFO JobServerQueue] Got a step log file to send to results service.
+[2026-08-28 02:20:18Z INFO JobServerQueue] Starting upload of step log file to results service ResultsLog, D:\actions-runner\_diag\blocks\898e28ac-81ce-4b75-9b2c-0329401b6ae0_fce27664-013b-4514-a01a-5ee927c2be22.1
+[2026-08-28 02:20:19Z INFO JobServerQueue] Got a step log file to send to results service.
+[2026-08-28 02:20:19Z INFO JobServerQueue] Starting upload of step log file to results service ResultsLog, D:\actions-runner\_diag\blocks\898e28ac-81ce-4b75-9b2c-0329401b6ae0_f8f8de25-656e-4acd-ab2e-499a30c35060.1
+[2026-08-28 02:20:19Z INFO JobServerQueue] Got a job log file to send to results service.
+[2026-08-28 02:20:19Z INFO JobServerQueue] Starting upload of job log file to results service ResultsLog, D:\actions-runner\_diag\blocks\898e28ac-81ce-4b75-9b2c-0329401b6ae0_b7e0ffa3-1131-5e5e-a91f-2caf269eaaa6.1
+[2026-08-28 02:20:19Z INFO JobServerQueue] Tried to upload 3 file(s) to results, success rate: 3/3.
+[2026-08-28 02:20:19Z INFO JobServerQueue] Results upload queue drained.
+[2026-08-28 02:20:19Z INFO JobServerQueue] Timeline update queue drained.
+[2026-08-28 02:20:19Z INFO JobServerQueue] Disposing job server ...
+[2026-08-28 02:20:19Z INFO JobServerQueue] Disposing results server ...
+[2026-08-28 02:20:19Z INFO JobServerQueue] All queue process tasks have been stopped, and all queues are drained.
+[2026-08-28 02:20:19Z INFO TempDirectoryManager] Cleaning runner temp folder: D:\actions-runner\_work\_temp
+[2026-08-28 02:20:19Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-28 02:20:19Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-28 02:20:19Z INFO HostContext] Well known directory 'Diag': 'D:\actions-runner\_diag'
+[2026-08-28 02:20:19Z INFO HostContext] Well known config file 'Telemetry': 'D:\actions-runner\_diag\.telemetry'
+[2026-08-28 02:20:19Z INFO JobRunner] Raising job completed against run service
+[2026-08-28 02:20:20Z INFO Worker] Job completed.

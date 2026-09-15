@@ -1,0 +1,96 @@
+[2026-08-26 03:56:58Z INFO HostContext] No proxy settings were found based on environmental variables (http_proxy/https_proxy/HTTP_PROXY/HTTPS_PROXY)
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-26 03:56:58Z INFO HostContext] Well known config file 'Credentials': 'D:\actions-runner\.credentials'
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-26 03:56:58Z INFO HostContext] Well known config file 'Runner': 'D:\actions-runner\.runner'
+[2026-08-26 03:56:58Z INFO Listener] Runner is built for Windows (X64) - win-x64.
+[2026-08-26 03:56:58Z INFO Listener] RuntimeInformation: Microsoft Windows 10.0.19044.
+[2026-08-26 03:56:58Z INFO Listener] Version: 2.336.0
+[2026-08-26 03:56:58Z INFO Listener] Commit: 98aabcd429c4e8402406c56ce2d26387fed3b9ce
+[2026-08-26 03:56:58Z INFO Listener] Culture: es-MX
+[2026-08-26 03:56:58Z INFO Listener] UI Culture: es-MX
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-26 03:56:58Z INFO Listener] Validating directory permissions for: 'D:\actions-runner'
+[2026-08-26 03:56:58Z INFO CommandLineParser] Parse
+[2026-08-26 03:56:58Z INFO CommandLineParser] Parsing 3 args
+[2026-08-26 03:56:58Z INFO CommandLineParser] parsing argument
+[2026-08-26 03:56:58Z INFO CommandLineParser] HasArgs: False
+[2026-08-26 03:56:58Z INFO CommandLineParser] Adding Command: remove
+[2026-08-26 03:56:58Z INFO CommandLineParser] parsing argument
+[2026-08-26 03:56:58Z INFO CommandLineParser] HasArgs: True
+[2026-08-26 03:56:58Z INFO CommandLineParser] arg: token
+[2026-08-26 03:56:58Z INFO CommandLineParser] parsing argument
+[2026-08-26 03:56:58Z INFO CommandLineParser] HasArgs: True
+[2026-08-26 03:56:58Z INFO CommandLineParser] Adding option 'token': '***'
+[2026-08-26 03:56:58Z INFO Listener] Arguments parsed
+[2026-08-26 03:56:58Z INFO Runner] ExecuteCommand
+[2026-08-26 03:56:58Z INFO ConfigurationStore] currentAssemblyLocation: D:\actions-runner\bin\Runner.Listener.dll
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-26 03:56:58Z INFO ConfigurationStore] binPath: D:\actions-runner\bin
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-26 03:56:58Z INFO ConfigurationStore] RootFolder: D:\actions-runner
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-26 03:56:58Z INFO HostContext] Well known config file 'Runner': 'D:\actions-runner\.runner'
+[2026-08-26 03:56:58Z INFO ConfigurationStore] ConfigFilePath: D:\actions-runner\.runner
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-26 03:56:58Z INFO HostContext] Well known config file 'MigratedRunner': 'D:\actions-runner\.runner_migrated'
+[2026-08-26 03:56:58Z INFO ConfigurationStore] MigratedConfigFilePath: D:\actions-runner\.runner_migrated
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-26 03:56:58Z INFO HostContext] Well known config file 'Credentials': 'D:\actions-runner\.credentials'
+[2026-08-26 03:56:58Z INFO ConfigurationStore] CredFilePath: D:\actions-runner\.credentials
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-26 03:56:58Z INFO HostContext] Well known config file 'MigratedCredentials': 'D:\actions-runner\.credentials_migrated'
+[2026-08-26 03:56:58Z INFO ConfigurationStore] MigratedCredFilePath: D:\actions-runner\.credentials_migrated
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-26 03:56:58Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-26 03:56:58Z INFO HostContext] Well known config file 'Service': 'D:\actions-runner\.service'
+[2026-08-26 03:56:58Z INFO ConfigurationStore] ServiceConfigFilePath: D:\actions-runner\.service
+[2026-08-26 03:56:58Z INFO CommandSettings] Flag 'help': 'False'
+[2026-08-26 03:56:58Z INFO CommandSettings] Flag 'version': 'False'
+[2026-08-26 03:56:58Z INFO CommandSettings] Flag 'commit': 'False'
+[2026-08-26 03:56:58Z INFO CommandSettings] Flag 'check': 'False'
+[2026-08-26 03:56:58Z INFO CommandSettings] Command 'configure': 'False'
+[2026-08-26 03:56:58Z INFO CommandSettings] Command 'remove': 'True'
+[2026-08-26 03:56:58Z INFO CommandSettings] Flag 'local': 'False'
+[2026-08-26 03:56:58Z INFO ConfigurationStore] IsServiceConfigured()
+[2026-08-26 03:56:58Z INFO ConfigurationStore] IsServiceConfigured: False
+[2026-08-26 03:56:58Z INFO ConfigurationStore] IsConfigured()
+[2026-08-26 03:56:58Z INFO ConfigurationStore] IsConfigured: True
+[2026-08-26 03:56:58Z INFO ConfigurationStore] HasCredentials()
+[2026-08-26 03:56:58Z INFO ConfigurationStore] stored True
+[2026-08-26 03:56:58Z INFO ConfigurationStore] Read setting file: 388 chars
+[2026-08-26 03:56:58Z INFO CommandSettings] Arg 'token': '***'
+[2026-08-26 03:56:58Z INFO CommandSettings] Remove token from Arg dictionary.
+[2026-08-26 03:56:58Z INFO ConfigurationManager] Http response code: OK from 'POST https://api.github.com/actions/runner-registration' (0EF1:3016E4:704EBA9:1737DBD7:6A8E63FF)
+[2026-08-26 03:56:58Z INFO ConfigurationManager] cred retrieved via GitHub auth
+[2026-08-26 03:56:58Z INFO RunnerServer] EstablishVssConnection
+[2026-08-26 03:56:58Z INFO RunnerServer] Establish connection with 100 seconds timeout.
+[2026-08-26 03:56:58Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2026-08-26 03:56:58Z INFO RunnerServer] EstablishVssConnection
+[2026-08-26 03:56:58Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2026-08-26 03:56:58Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2026-08-26 03:56:58Z INFO RunnerServer] EstablishVssConnection
+[2026-08-26 03:56:58Z INFO RunnerServer] Establish connection with 60 seconds timeout.
+[2026-08-26 03:56:59Z INFO GitHubActionsService] Starting operation Location.GetConnectionData
+[2026-08-26 03:56:59Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2026-08-26 03:56:59Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2026-08-26 03:56:59Z INFO GitHubActionsService] Finished operation Location.GetConnectionData
+[2026-08-26 03:56:59Z INFO Terminal] WRITE LINE: 
+[2026-08-26 03:56:59Z INFO ConfigurationStore] IsConfigured()
+[2026-08-26 03:56:59Z INFO ConfigurationStore] IsConfigured: True
+[2026-08-26 03:56:59Z INFO ConfigurationStore] HasCredentials()
+[2026-08-26 03:56:59Z INFO ConfigurationStore] stored True
+[2026-08-26 03:56:59Z INFO HostContext] Well known directory 'Bin': 'D:\actions-runner\bin'
+[2026-08-26 03:56:59Z INFO HostContext] Well known directory 'Root': 'D:\actions-runner'
+[2026-08-26 03:56:59Z INFO HostContext] Well known config file 'RSACredentials': 'D:\actions-runner\.credentials_rsaparams'
+[2026-08-26 03:56:59Z INFO RSAEncryptedFileKeyManager] Deleting RSA key parameters file D:\actions-runner\.credentials_rsaparams
+[2026-08-26 03:56:59Z INFO Terminal] WRITE LINE: 
+[2026-08-26 03:56:59Z INFO Listener] Runner execution has finished with return code 0

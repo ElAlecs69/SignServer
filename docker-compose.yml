@@ -1,0 +1,596 @@
+﻿
+name: signserver
+
+services:
+
+  # ============================================================
+  # 1. GENERACIÃ“N AUTOMÃTICA DE CERTIFICADOS
+  # ============================================================
+  init-certs:
+    image: docker.io/library/alpine:3.20
+    container_name: signserver-init-certs
+
+    env_file:
+      - ./Datos.env
+
+    volumes:
+
+      # Certificados persistentes dentro de Podman
+      - signserver_admin_certs:/out/admin_certs
+
+      # Certificados tambiÃ©n disponibles directamente en Windows
+      - ./certs:/out/windows_certs
+
+      # Certificados TLS de Nginx
+      - nginx_certs:/out/nginx_certs
+
+      # ConfiguraciÃ³n Nginx
+      - nginx_conf:/out/nginx_conf
+
+      # Keystores de workers
+      - signserver_keystores:/out/keystores
+
+    entrypoint:
+      - /bin/sh
+      - -c
+
+    command:
+      - |
+        set -eu
+
+        echo ""
+        echo "=================================================="
+        echo " SignServer CE - InicializaciÃ³n automÃ¡tica"
+        echo "=================================================="
+        echo ""
+
+        apk add --no-cache openssl
+
+        mkdir -p \
+          /out/admin_certs \
+          /out/windows_certs \
+          /out/nginx_certs \
+          /out/nginx_conf \
+          /out/keystores
+
+
+        # ========================================================
+        # VARIABLES OBLIGATORIAS
+        # ========================================================
+
+        : "$${SIGNSERVER_IP:?ERROR: SIGNSERVER_IP no definido}"
+        : "$${KEYSTORE_PASSWORD:?ERROR: KEYSTORE_PASSWORD no definido}"
+        : "$${ADMIN_P12_PASSWORD:?ERROR: ADMIN_P12_PASSWORD no definido}"
+
+
+        # ========================================================
+        # 1. CERTIFICADO TLS PARA NGINX
+        # ========================================================
+
+        echo "[1/6] Verificando certificado TLS del servidor..."
+
+        if [ ! -f /out/nginx_certs/server.key ] || \
+           [ ! -f /out/nginx_certs/server.crt ]; then
+
+          echo "      Generando certificado TLS..."
+
+          openssl req \
+            -x509 \
+            -nodes \
+            -newkey rsa:2048 \
+            -days 3650 \
+            -keyout /out/nginx_certs/server.key \
+            -out /out/nginx_certs/server.crt \
+            -subj "/C=MX/O=SignServer/CN=$${SIGNSERVER_IP}" \
+            -addext "subjectAltName=IP:$${SIGNSERVER_IP},DNS:localhost"
+
+          chmod 600 /out/nginx_certs/server.key
+
+        else
+
+          echo "      Ya existe. No se regenera."
+          signserver-validate:
+            build:
+              context: ./signserver-validacion/validate-service
+            container_name: signserver-validate
+            restart: unless-stopped
+            ports:
+              - "8000:8000"
+            networks:
+              - signserver-net
+
+        fi
+
+
+        # ========================================================
+        # 2. CA DE ADMINISTRACIÃ“N
+        # ========================================================
+
+        echo "[2/6] Verificando CA de administraciÃ³n..."
+
+        if [ ! -f /out/admin_certs/admin-ca.key ] || \
+           [ ! -f /out/admin_certs/admin-ca.crt ]; then
+
+          echo "      Generando SignServer Admin CA..."
+
+          openssl genrsa \
+            -out /out/admin_certs/admin-ca.key \
+            4096
+
+          openssl req \
+            -x509 \
+            -new \
+            -nodes \
+            -key /out/admin_certs/admin-ca.key \
+            -sha256 \
+            -days 3650 \
+            -out /out/admin_certs/admin-ca.crt \
+            -subj "/C=MX/O=SignServer/CN=SignServer Admin CA"
+
+          chmod 600 /out/admin_certs/admin-ca.key
+
+        else
+
+          echo "      Ya existe. No se regenera."
+
+        fi
+
+
+        # ========================================================
+        # 3. CERTIFICADO CLIENTE DEL ADMINISTRADOR
+        # ========================================================
+
+        echo "[3/6] Verificando certificado del administrador..."
+
+        if [ ! -f /out/admin_certs/admin-client.key ] || \
+           [ ! -f /out/admin_certs/admin-client.crt ]; then
+
+          echo "      Generando certificado de cliente..."
+
+          openssl genrsa \
+            -out /out/admin_certs/admin-client.key \
+            2048
+
+          cat > /tmp/admin-client.ext <<'EOF'
+        basicConstraints=CA:FALSE
+        keyUsage=digitalSignature,keyEncipherment
+        extendedKeyUsage=clientAuth
+        subjectKeyIdentifier=hash
+        authorityKeyIdentifier=keyid,issuer
+        EOF
+
+          openssl req \
+            -new \
+            -key /out/admin_certs/admin-client.key \
+            -out /tmp/admin-client.csr \
+            -subj "/C=MX/O=SignServer/CN=SignServer Administrator"
+
+          openssl x509 \
+            -req \
+            -in /tmp/admin-client.csr \
+            -CA /out/admin_certs/admin-ca.crt \
+            -CAkey /out/admin_certs/admin-ca.key \
+            -CAcreateserial \
+            -out /out/admin_certs/admin-client.crt \
+            -days 825 \
+            -sha256 \
+            -extfile /tmp/admin-client.ext
+
+          chmod 600 /out/admin_certs/admin-client.key
+
+        else
+
+          echo "      Ya existe. No se regenera."
+
+        fi
+
+
+        # ========================================================
+        # 4. PKCS#12 DEL ADMINISTRADOR
+        # ========================================================
+
+        echo "[4/6] Verificando admin-client.p12..."
+
+        if [ ! -f /out/admin_certs/admin-client.p12 ]; then
+
+          echo "      Generando PKCS#12..."
+
+          openssl pkcs12 \
+            -export \
+            -out /out/admin_certs/admin-client.p12 \
+            -inkey /out/admin_certs/admin-client.key \
+            -in /out/admin_certs/admin-client.crt \
+            -certfile /out/admin_certs/admin-ca.crt \
+            -name "SignServer Administrator" \
+            -passout env:ADMIN_P12_PASSWORD
+
+          chmod 600 /out/admin_certs/admin-client.p12
+
+        else
+
+          echo "      Ya existe. No se regenera."
+
+        fi
+
+
+        # ========================================================
+        # 5. CERTIFICADOS DE WORKERS
+        # ========================================================
+
+        echo "[5/6] Verificando keystores de workers..."
+
+        for NAME in \
+          pdfsigner \
+          timestamp1 \
+          newcodesigner \
+          jarsigner \
+          debsigner \
+          xmlsigner \
+          mrtdsigner \
+          mrtdsodsigner
+        do
+
+          if [ ! -f "/out/keystores/$${NAME}.p12" ]; then
+
+            echo "      Generando $${NAME}.p12..."
+
+            openssl genrsa \
+              -out "/tmp/$${NAME}.key" \
+              2048
+
+            openssl req \
+              -new \
+              -key "/tmp/$${NAME}.key" \
+              -out "/tmp/$${NAME}.csr" \
+              -subj "/C=MX/O=SignServer/CN=$${NAME}"
+
+            openssl x509 \
+              -req \
+              -in "/tmp/$${NAME}.csr" \
+              -signkey "/tmp/$${NAME}.key" \
+              -out "/tmp/$${NAME}.crt" \
+              -days 3650 \
+              -sha256
+
+            openssl pkcs12 \
+              -export \
+              -out "/out/keystores/$${NAME}.p12" \
+              -inkey "/tmp/$${NAME}.key" \
+              -in "/tmp/$${NAME}.crt" \
+              -name "$${NAME}" \
+              -passout env:KEYSTORE_PASSWORD
+
+            rm -f \
+              "/tmp/$${NAME}.key" \
+              "/tmp/$${NAME}.csr" \
+              "/tmp/$${NAME}.crt"
+
+          else
+
+            echo "      $${NAME}.p12 ya existe."
+
+          fi
+
+        done
+
+
+        # ========================================================
+        # 6. CONFIGURACIÃ“N NGINX
+        # ========================================================
+
+        echo "[6/6] Generando configuraciÃ³n Nginx..."
+
+        cat > /out/nginx_conf/signserver.conf <<'NGINXCONF'
+
+        server {
+            listen 80;
+            server_name _;
+
+            return 301 https://$$host$$request_uri;
+        }
+
+        server {
+            listen 443 ssl;
+            server_name _;
+
+            ssl_certificate /etc/nginx/certs/server.crt;
+            ssl_certificate_key /etc/nginx/certs/server.key;
+
+            ssl_protocols TLSv1.2 TLSv1.3;
+
+            root /usr/share/nginx/html;
+            index index.html;
+
+            location / {
+             try_files $$uri $$uri/ /index.html; 
+            }
+
+            location /signserver/ {
+                proxy_pass http://signserver-app:8080/signserver/;
+
+                proxy_set_header Host $$host;
+                proxy_set_header X-Real-IP $$remote_addr;
+                proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $$scheme;
+
+                proxy_connect_timeout 60s;
+                proxy_send_timeout 60s;
+                proxy_read_timeout 60s;
+            }
+
+              location /validate/ {
+                proxy_pass http://signserver-validate:8000/;
+
+                proxy_set_header Host $$host;
+                proxy_set_header X-Real-IP $$remote_addr;
+                proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $$scheme;
+
+                proxy_connect_timeout 30s;
+                proxy_send_timeout 120s;
+                proxy_read_timeout 120s;
+                proxy_request_buffering off;
+            }
+        }
+
+        NGINXCONF
+
+
+        # ========================================================
+        # COPIAR CERTIFICADOS AL DIRECTORIO DE WINDOWS
+        # ========================================================
+
+        echo ""
+        echo "Copiando certificados a la carpeta Windows..."
+
+        cp /out/admin_certs/admin-ca.crt \
+           /out/windows_certs/admin-ca.crt
+
+        cp /out/admin_certs/admin-ca.key \
+           /out/windows_certs/admin-ca.key
+
+        cp /out/admin_certs/admin-client.crt \
+           /out/windows_certs/admin-client.crt
+
+        cp /out/admin_certs/admin-client.key \
+           /out/windows_certs/admin-client.key
+
+        cp /out/admin_certs/admin-client.p12 \
+           /out/windows_certs/admin-client.p12
+
+        cp /out/nginx_certs/server.crt \
+           /out/windows_certs/server.crt
+
+        cp /out/nginx_certs/server.key \
+           /out/windows_certs/server.key
+
+
+        # ========================================================
+        # PERMISOS
+        # ========================================================
+
+        chmod 600 \
+          /out/windows_certs/admin-ca.key \
+          /out/windows_certs/admin-client.key \
+          /out/windows_certs/admin-client.p12 \
+          /out/windows_certs/server.key
+
+
+        echo ""
+        echo "=================================================="
+        echo " InicializaciÃ³n terminada correctamente"
+        echo "=================================================="
+        echo ""
+        echo "Certificado para el navegador:"
+        echo "  ./certs/admin-client.p12"
+        echo ""
+        echo "CA de administraciÃ³n:"
+        echo "  ./certs/admin-ca.crt"
+        echo ""
+        echo "IMPORTANTE:"
+        echo "  Las claves privadas NO deben compartirse."
+        echo "=================================================="
+        echo ""
+
+
+  # ============================================================
+  # 2. MARIADB
+  # ============================================================
+  signserver-db:
+    image: docker.io/library/mariadb:10.11
+    container_name: signserver-db
+
+    env_file:
+      - ./Datos.env
+
+    restart: unless-stopped
+
+    volumes:
+      - signserver_db_data:/var/lib/mysql
+
+    networks:
+      - signserver-net
+
+    healthcheck:
+      test:
+        - CMD
+        - healthcheck.sh
+        - --connect
+        - --innodb_initialized
+
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+
+  # ============================================================
+  # 3. SIGNSERVER CE
+  # ============================================================
+  signserver-app:
+    image: docker.io/keyfactor/signserver-ce:7.3.2
+    container_name: signserver-app
+
+    env_file:
+      - ./Datos.env
+
+    depends_on:
+
+      signserver-db:
+        condition: service_healthy
+
+      init-certs:
+        condition: service_completed_successfully
+
+    restart: unless-stopped
+
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+
+    environment:
+
+      DATABASE_JDBC_URL: "jdbc:mariadb://signserver-db:3306/signserver?characterEncoding=UTF-8"
+
+      DATABASE_USER: "signserver"
+
+      ALLOW_ANY: "true"
+
+      APPSERVER_USE_MANAGED_ID: "false"
+
+      APPSERVER_DEPLOYMENT_TIMEOUT: "300"
+
+      LOG_AUDIT_TO_DB: "true"
+
+      LOG_LEVEL_APP: "INFO"
+
+      LOG_LEVEL_SERVER: "INFO"
+
+      LOG_LEVEL_SERVER_SUBSYSTEMS: "WARN"
+
+      LOG_STORAGE_MAX_SIZE_MB: "256"
+
+      OBSERVABLE_BIND: "127.0.0.1"
+
+      ADMINWEB_ACCESS: "true"
+
+      TLS_SETUP_ENABLED: "true"
+
+      RUN_TIMEMONITOR: "false"
+
+      METRICS_ENABLED: "false"
+
+    volumes:
+
+      # Workers
+      - signserver_keystores:/opt/keyfactor/signserver/res/test
+
+      # CA que firma los certificados de administradores
+      #
+      # IMPORTANTE:
+      # SignServer busca las CA administrativas aquÃ­.
+      - signserver_admin_ca:/mnt/external/secrets/tls/cas:ro
+
+    networks:
+      - signserver-net
+
+
+  # ============================================================
+  # 4. SERVICIO DE VALIDACION
+  # ============================================================
+  signserver-validate:
+    build:
+      context: ./signserver-validacion/validate-service
+    container_name: signserver-validate
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    networks:
+      - signserver-net
+
+
+  # ============================================================
+  # 5. NGINX
+  # ============================================================
+  signserver-web:
+    image: docker.io/library/nginx:stable
+    container_name: signserver-web
+
+    depends_on:
+
+      signserver-app:
+        condition: service_started
+
+      signserver-validate:
+        condition: service_started
+
+      init-certs:
+        condition: service_completed_successfully
+
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+
+      - signserver_nginx_html:/usr/share/nginx/html
+
+      - nginx_conf:/etc/nginx/conf.d
+
+      - nginx_certs:/etc/nginx/certs
+
+    networks:
+      - signserver-net
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - nginx -t
+
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+# ================================================================
+# VOLUMES PERSISTENTES
+# ================================================================
+volumes:
+
+  signserver_db_data:
+    name: signserver_db_data
+
+  signserver_keystores:
+    name: signserver_keystores
+
+  signserver_nginx_html:
+    name: signserver_nginx_html
+
+  nginx_conf:
+    name: signserver_nginx_conf
+
+  nginx_certs:
+    name: signserver_nginx_certs
+
+  signserver_admin_ca:
+    name: signserver_admin_ca
+
+  signserver_admin_certs:
+    name: signserver_admin_certs
+
+
+# ================================================================
+# RED
+# ================================================================
+networks:
+
+  signserver-net:
+    name: signserver-net
+    driver: bridge
+
+
+
+
+
