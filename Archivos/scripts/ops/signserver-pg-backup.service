@@ -1,0 +1,9 @@
+[Unit]
+Description=Backup PostgreSQL de SignServer
+Requires=podman.service
+After=podman.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/signserver/Archivos
+ExecStart=/opt/signserver/Archivos/scripts/ops/backup_pg.sh

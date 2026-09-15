@@ -1,0 +1,39 @@
+﻿name: Build y desplegar signserver-web
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'signserver-web/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, signserver]
+    defaults:
+      run:
+        working-directory: signserver-web
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: signserver-web/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Compilar (build de producción)
+        run: npm run build
+
+      - name: Publicar en el volumen de nginx
+        run: |
+          podman exec signserver-web sh -c "rm -rf /usr/share/nginx/html/assets/*"
+          podman cp dist/. signserver-web:/usr/share/nginx/html
+          podman exec signserver-web nginx -s reload
+

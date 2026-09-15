@@ -1,10 +1,10 @@
-# GitHub Actions Runner
-actions-runner/
-_work/
-
 # Dependencias de Node.js
 node_modules/
 .npm/
 
 # Entornos virtuales
 _tool/
+
+# Archivos temporales y artefactos locales
+.DS_Store
+Thumbs.db

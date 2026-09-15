@@ -1,0 +1,212 @@
+name: signserver
+
+services:
+  business-db:
+    image: docker.io/library/postgres:16-alpine
+    container_name: signserver-business-db
+    env_file:
+      - ./Datos.env
+    environment:
+      POSTGRES_DB: "${BUSINESS_DB_NAME:-signserver_business}"
+      POSTGRES_USER: "${BUSINESS_DB_USER:-signserver_app}"
+      POSTGRES_PASSWORD: "${BUSINESS_DB_PASSWORD:?BUSINESS_DB_PASSWORD is required}"
+    restart: unless-stopped
+    volumes:
+      - business_db_data:/var/lib/postgresql/data
+    networks: [signserver-net]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  clamav:
+    image: docker.io/clamav/clamav:stable
+    container_name: signserver-clamav
+    restart: unless-stopped
+    networks: [signserver-net]
+
+  signserver-db:
+    image: docker.io/library/mariadb:10.11
+    container_name: signserver-db
+    env_file:
+      - ./Datos.env
+    environment:
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-signserver}"
+      MYSQL_USER: "${MYSQL_USER:-signserver}"
+      MYSQL_PASSWORD: "${DATABASE_PASSWORD:?DATABASE_PASSWORD is required}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}"
+    restart: unless-stopped
+    volumes:
+      - signserver_db_data:/var/lib/mysql
+    networks: [signserver-net]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  signserver-materials:
+    image: docker.io/library/alpine:3.20
+    container_name: signserver-materials
+    volumes:
+      - ./runtime/tls:/materials/tls:ro
+      - ./runtime/ca:/materials/ca:ro
+      - ./runtime/admin:/materials/admin:ro
+      - ./runtime/keystores:/materials/keystores:ro
+      - nginx_certs:/out/tls
+      - signserver_admin_ca:/out/ca
+      - signserver_keystores:/out/keystores
+      - nginx_conf:/out/nginx_conf
+      - ./deploy/nginx/signserver.conf:/templates/signserver.conf:ro
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        required_files="
+          /materials/tls/server.crt
+          /materials/tls/server.key
+          /materials/ca/trust-chain.pem
+          /materials/admin/admin-ca.pem
+          /materials/keystores/pdfsigner.p12
+          /materials/keystores/timestamp1.p12
+          /materials/keystores/newcodesigner.p12
+          /materials/keystores/jarsigner.p12
+          /materials/keystores/debsigner.p12
+          /materials/keystores/xmlsigner.p12
+          /materials/keystores/mrtdsigner.p12
+          /materials/keystores/mrtdsodsigner.p12
+        "
+        for file in $${required_files}; do
+          if [ ! -s "$${file}" ]; then
+            echo "ERROR: falta material real requerido: $${file}" >&2
+            exit 1
+          fi
+        done
+        cp /materials/tls/server.crt /out/tls/server.crt
+        cp /materials/tls/server.key /out/tls/server.key
+        cp /materials/ca/trust-chain.pem /out/ca/trust-chain.pem
+        cp /materials/admin/admin-ca.pem /out/ca/admin-ca.pem
+        cp /materials/keystores/*.p12 /out/keystores/
+        cp /templates/signserver.conf /out/nginx_conf/signserver.conf
+
+  signserver-app:
+    image: docker.io/keyfactor/signserver-ce:7.3.2
+    container_name: signserver-app
+    env_file:
+      - ./Datos.env
+    depends_on:
+      signserver-db:
+        condition: service_healthy
+      signserver-materials:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    environment:
+      DATABASE_JDBC_URL: "jdbc:mariadb://signserver-db:3306/signserver?characterEncoding=UTF-8"
+      DATABASE_USER: "${DATABASE_USER:-signserver}"
+      ALLOW_ANY: "false"
+      APPSERVER_USE_MANAGED_ID: "false"
+      APPSERVER_DEPLOYMENT_TIMEOUT: "300"
+      LOG_AUDIT_TO_DB: "true"
+      LOG_LEVEL_APP: "INFO"
+      LOG_LEVEL_SERVER: "INFO"
+      LOG_LEVEL_SERVER_SUBSYSTEMS: "WARN"
+      LOG_STORAGE_MAX_SIZE_MB: "256"
+      ADMINWEB_ACCESS: "true"
+      TLS_SETUP_ENABLED: "true"
+      RUN_TIMEMONITOR: "false"
+      METRICS_ENABLED: "false"
+    volumes:
+      - signserver_keystores:/opt/keyfactor/signserver/res/test:ro
+      - signserver_admin_ca:/mnt/external/secrets/tls/cas:ro
+    networks: [signserver-net]
+
+  signserver-validate:
+    build:
+      context: ./services/validate-service
+    container_name: signserver-validate
+    restart: unless-stopped
+    environment:
+      TRUST_CA_FILE: /etc/signserver/trust/trust-chain.pem
+    volumes:
+      - ./runtime/ca:/etc/signserver/trust:ro
+    depends_on:
+      signserver-materials:
+        condition: service_completed_successfully
+    networks: [signserver-net]
+
+  document-api:
+    build:
+      context: ./services/document-api
+    container_name: signserver-document-api
+    env_file:
+      - ./Datos.env
+    environment:
+      DATABASE_URL: "postgresql+psycopg://${BUSINESS_DB_USER:-signserver_app}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME:-signserver_business}"
+      APP_PUBLIC_URL: "${APP_PUBLIC_URL:-https://148.215.109.222}"
+      SESSION_SECRET: "${SESSION_SECRET:?SESSION_SECRET is required}"
+      OIDC_CLIENT_ID: "${OIDC_CLIENT_ID:?OIDC_CLIENT_ID is required}"
+      OIDC_CLIENT_SECRET: "${OIDC_CLIENT_SECRET:?OIDC_CLIENT_SECRET is required}"
+      OIDC_SERVER_METADATA_URL: "${OIDC_SERVER_METADATA_URL:?OIDC_SERVER_METADATA_URL is required}"
+      OIDC_REDIRECT_URI: "${OIDC_REDIRECT_URI:-https://148.215.109.222/auth/callback}"
+      ADMIN_EMAILS: "${ADMIN_EMAILS:-}"
+      AUDITOR_EMAILS: "${AUDITOR_EMAILS:-}"
+      SIGN_SERVER_URL: "http://signserver-app:8080/signserver"
+      SIGN_SERVER_WORKER: "${SIGN_SERVER_WORKER:-PDFSigner}"
+      CLAMAV_HOST: "clamav"
+      DOCUMENTS_DIR: "/data/documents"
+    depends_on:
+      business-db:
+        condition: service_healthy
+      clamav:
+        condition: service_started
+      signserver-app:
+        condition: service_started
+    volumes:
+      - business_documents:/data/documents
+    networks: [signserver-net]
+
+  signserver-web:
+    image: docker.io/library/nginx:stable
+    container_name: signserver-web
+    depends_on:
+      signserver-app:
+        condition: service_started
+      signserver-validate:
+        condition: service_started
+      document-api:
+        condition: service_started
+      signserver-materials:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - signserver_nginx_html:/usr/share/nginx/html:ro
+      - nginx_conf:/etc/nginx/conf.d:ro
+      - nginx_certs:/etc/nginx/certs:ro
+    networks: [signserver-net]
+
+volumes:
+  signserver_db_data:
+    name: signserver_db_data
+  business_db_data:
+    name: signserver_business_db_data
+  business_documents:
+    name: signserver_business_documents
+  signserver_keystores:
+    name: signserver_keystores
+  signserver_nginx_html:
+    name: signserver_nginx_html
+  nginx_conf:
+    name: signserver_nginx_conf
+  nginx_certs:
+    name: signserver_nginx_certs
+  signserver_admin_ca:
+    name: signserver_admin_ca
+
+networks:
+  signserver-net:
+    name: signserver-net
+    driver: bridge
