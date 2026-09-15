@@ -8,3 +8,6 @@ _tool/
 # Archivos temporales y artefactos locales
 .DS_Store
 Thumbs.db
+
+Archivos/Datos.env
+*.env
