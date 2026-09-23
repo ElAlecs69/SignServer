@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import io
 import os
 import secrets
 import uuid
@@ -17,7 +18,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 from pydantic import BaseModel
-from sqlalchemy import DateTime, ForeignKey, String, Text, create_engine, select
+from sqlalchemy import DateTime, ForeignKey, String, Text, create_engine, select, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship, sessionmaker
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -29,10 +30,16 @@ SIGN_SERVER_WORKER = os.getenv("SIGN_SERVER_WORKER", "PDFSigner")
 CLAMAV_HOST = os.getenv("CLAMAV_HOST", "clamav")
 MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(25 * 1024 * 1024)))
 SESSION_SECRET = os.environ["SESSION_SECRET"]
+SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "false").lower() == "true"
 OIDC_CLIENT_ID = os.environ["OIDC_CLIENT_ID"]
 OIDC_CLIENT_SECRET = os.environ["OIDC_CLIENT_SECRET"]
 OIDC_SERVER_METADATA_URL = os.environ["OIDC_SERVER_METADATA_URL"]
 OIDC_REDIRECT_URI = os.getenv("OIDC_REDIRECT_URI", "")
+DEMO_AUTH_ENABLED = os.getenv("DEMO_AUTH_ENABLED", "false").lower() == "true"
+DEMO_ACCOUNTS = {
+    "admin@demo.test": {"password": "demo123", "role": "admin"},
+    "demo@example.com": {"password": "demo123", "role": "signer"},
+}
 
 DOCUMENTS_DIR.mkdir(parents=True, exist_ok=True)
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)
@@ -61,7 +68,9 @@ class Document(Base):
     sha256: Mapped[str] = mapped_column(String(64))
     signed_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
     status: Mapped[str] = mapped_column(String(32), default="pending")
+    size_bytes: Mapped[int] = mapped_column(default=0)
     uploaded_by: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"))
+    uploaded_from_ip: Mapped[str] = mapped_column(String(64), default="unknown")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
 
@@ -70,9 +79,16 @@ class Assignment(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     document_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("documents.id"), index=True)
     signer_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"), index=True)
+    assigned_by_user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("app_users.id"), nullable=True)
     status: Mapped[str] = mapped_column(String(32), default="pending")
     assigned_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    assigned_from_ip: Mapped[str] = mapped_column(String(64), default="unknown")
+    received_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    received_from_ip: Mapped[str | None] = mapped_column(String(64), nullable=True)
     signed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    signed_by_ip: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    last_downloaded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_downloaded_ip: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
 
 class AuditEvent(Base):
@@ -86,12 +102,34 @@ class AuditEvent(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
 
+def ensure_schema() -> None:
+    with engine.begin() as conn:
+        document_columns = {row[0] for row in conn.execute(text("SELECT column_name FROM information_schema.columns WHERE table_name = 'documents'"))}
+        if "size_bytes" not in document_columns:
+            conn.execute(text("ALTER TABLE documents ADD COLUMN size_bytes INTEGER NOT NULL DEFAULT 0"))
+        if "uploaded_from_ip" not in document_columns:
+            conn.execute(text("ALTER TABLE documents ADD COLUMN uploaded_from_ip VARCHAR(64) NOT NULL DEFAULT 'unknown'"))
+
+        assignment_columns = {row[0] for row in conn.execute(text("SELECT column_name FROM information_schema.columns WHERE table_name = 'document_assignments'"))}
+        for column_name, ddl in {
+            "assigned_by_user_id": "ALTER TABLE document_assignments ADD COLUMN assigned_by_user_id UUID NULL",
+            "assigned_from_ip": "ALTER TABLE document_assignments ADD COLUMN assigned_from_ip VARCHAR(64) NOT NULL DEFAULT 'unknown'",
+            "received_at": "ALTER TABLE document_assignments ADD COLUMN received_at TIMESTAMPTZ NULL",
+            "received_from_ip": "ALTER TABLE document_assignments ADD COLUMN received_from_ip VARCHAR(64) NULL",
+            "signed_by_ip": "ALTER TABLE document_assignments ADD COLUMN signed_by_ip VARCHAR(64) NULL",
+            "last_downloaded_at": "ALTER TABLE document_assignments ADD COLUMN last_downloaded_at TIMESTAMPTZ NULL",
+            "last_downloaded_ip": "ALTER TABLE document_assignments ADD COLUMN last_downloaded_ip VARCHAR(64) NULL",
+        }.items():
+            if column_name not in assignment_columns:
+                conn.execute(text(ddl))
+
 Base.metadata.create_all(engine)
+ensure_schema()
 app = FastAPI(title="SignServer Document API")
 limiter = Limiter(key_func=get_remote_address, default_limits=["120/minute"])
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET, max_age=900, same_site="lax", https_only=True)
+app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET, max_age=900, same_site="lax", https_only=SESSION_COOKIE_SECURE)
 app.add_middleware(CORSMiddleware, allow_origins=[], allow_credentials=True)
 
 oauth = OAuth()
@@ -142,10 +180,46 @@ def health():
     return {"status": "ok"}
 
 
-@app.get("/auth/login")
+@app.api_route("/auth/login", methods=["GET", "POST"])
 async def login(request: Request):
+    if request.method == "POST":
+        form = await request.form()
+        email = str(form.get("email", "")).strip().lower()
+        password = str(form.get("password", "")).strip()
+    else:
+        email = request.query_params.get("email", "").strip().lower()
+        password = request.query_params.get("password", "").strip()
+
+    if DEMO_AUTH_ENABLED:
+        if not email or "@" not in email or not password:
+            raise HTTPException(400, "Escribe un correo y una contraseña de prueba")
+        expected = DEMO_ACCOUNTS.get(email)
+        if not expected or password != expected["password"]:
+            raise HTTPException(401, "Credenciales de prueba invalidas")
+        return await create_demo_session(request, email)
+
     redirect_uri = OIDC_REDIRECT_URI or request.url_for("auth_callback")
     return await oauth.entra.authorize_redirect(request, redirect_uri)
+
+
+async def create_demo_session(request: Request, email: str):
+    email = email.strip().lower()
+    account = DEMO_ACCOUNTS.get(email)
+    role = account["role"] if account else os.getenv("DEFAULT_NEW_USER_ROLE", "signer")
+    with SessionLocal() as db:
+        sub = f"demo:{email}"
+        user = db.scalar(select(User).where(User.oidc_sub == sub))
+        if not user:
+            user = User(oidc_sub=sub, email=email, display_name=email.split("@", 1)[0], role=role)
+            db.add(user)
+        else:
+            user.email = email
+            user.display_name = email.split("@", 1)[0]
+            user.role = role
+        db.commit()
+    request.session["identity"] = {"sub": sub}
+    request.session["csrf"] = secrets.token_urlsafe(32)
+    return RedirectResponse("/")
 
 
 @app.get("/auth/callback", name="auth_callback")
@@ -206,18 +280,28 @@ async def upload_document(request: Request, file: Annotated[UploadFile, File(...
         raise HTTPException(413 if len(data) > MAX_UPLOAD_BYTES else 415, "Archivo PDF invalido o demasiado grande")
     try:
         scanner = clamd.ClamdNetworkSocket(host=CLAMAV_HOST, port=3310, timeout=10)
-        if scanner.instream(data)["stream"][0] != "OK":
+        if scanner.instream(io.BytesIO(data))["stream"][0] != "OK":
             raise HTTPException(422, "El antivirus rechazo el archivo")
     except clamd.ConnectionError as exc:
         raise HTTPException(503, "El antivirus no esta disponible") from exc
     document_id = uuid.uuid4()
     path = DOCUMENTS_DIR / f"{document_id}.pdf"
     path.write_bytes(data)
-    document = Document(id=document_id, original_name=file.filename or "documento.pdf", stored_path=str(path), sha256=hashlib.sha256(data).hexdigest(), uploaded_by=admin.id)
+    source_ip = request.client.host if request.client else "unknown"
+    document = Document(
+        id=document_id,
+        original_name=file.filename or "documento.pdf",
+        stored_path=str(path),
+        sha256=hashlib.sha256(data).hexdigest(),
+        size_bytes=len(data),
+        uploaded_by=admin.id,
+        uploaded_from_ip=source_ip,
+    )
     db.add(document)
-    audit(db, admin, "document.uploaded", request, document_id, document.original_name)
+    db.flush()
+    audit(db, admin, "document.uploaded", request, document_id, f"filename={document.original_name};size_bytes={document.size_bytes};ip={source_ip}")
     db.commit()
-    return {"id": str(document_id), "name": document.original_name, "sha256": document.sha256}
+    return {"id": str(document_id), "name": document.original_name, "sha256": document.sha256, "size_bytes": document.size_bytes}
 
 
 @app.post("/api/documents/{document_id}/assign")
@@ -227,9 +311,16 @@ def assign_document(document_id: uuid.UUID, payload: AssignmentRequest, request:
     signer = db.scalar(select(User).where(User.email == payload.signer_email))
     if not document or not signer or signer.role != "signer":
         raise HTTPException(404, "Documento o firmante no encontrado")
-    assignment = Assignment(document_id=document.id, signer_id=signer.id)
+    source_ip = request.client.host if request.client else "unknown"
+    assignment = Assignment(
+        document_id=document.id,
+        signer_id=signer.id,
+        assigned_by_user_id=admin.id,
+        assigned_from_ip=source_ip,
+    )
     db.add(assignment)
-    audit(db, admin, "document.assigned", request, document.id, f"signer={signer.email}")
+    db.flush()
+    audit(db, admin, "document.assigned", request, document.id, f"signer={signer.email};file={document.original_name};size_bytes={document.size_bytes};ip={source_ip}")
     db.commit()
     return {"assignment_id": str(assignment.id), "status": assignment.status}
 
@@ -258,17 +349,19 @@ async def sign_assignment(assignment_id: uuid.UUID, request: Request, _csrf=Depe
     signed = base64.b64decode(response.json()["data"], validate=True)
     signed_path = DOCUMENTS_DIR / f"{document.id}.signed.pdf"
     signed_path.write_bytes(signed)
+    source_ip = request.client.host if request.client else "unknown"
     document.signed_path = str(signed_path)
     document.signed_sha256 = hashlib.sha256(signed).hexdigest()
     document.status = assignment.status = "signed"
     assignment.signed_at = datetime.now(timezone.utc)
-    audit(db, user, "document.signed", request, document.id, f"worker={SIGN_SERVER_WORKER};sha256={document.signed_sha256}")
+    assignment.signed_by_ip = source_ip
+    audit(db, user, "document.signed", request, document.id, f"worker={SIGN_SERVER_WORKER};sha256={document.signed_sha256};ip={source_ip}")
     db.commit()
     return {"status": "signed", "sha256": document.signed_sha256}
 
 
 @app.get("/api/assignments/{assignment_id}/download")
-def download_assignment(assignment_id: uuid.UUID, user: User = Depends(current_user), db: Session = Depends(db_session)):
+def download_assignment(assignment_id: uuid.UUID, request: Request, user: User = Depends(current_user), db: Session = Depends(db_session)):
     assignment = db.get(Assignment, assignment_id)
     if not assignment or (user.role == "signer" and assignment.signer_id != user.id):
         raise HTTPException(404, "Documento no disponible")
@@ -276,6 +369,13 @@ def download_assignment(assignment_id: uuid.UUID, user: User = Depends(current_u
     path = document.signed_path if assignment.status == "signed" else document.stored_path
     if not path or not Path(path).is_file():
         raise HTTPException(404, "Archivo no disponible")
+    source_ip = request.client.host if request.client else "unknown"
+    assignment.received_at = datetime.now(timezone.utc)
+    assignment.received_from_ip = source_ip
+    assignment.last_downloaded_at = datetime.now(timezone.utc)
+    assignment.last_downloaded_ip = source_ip
+    audit(db, user, "document.downloaded", request, document.id, f"file={document.original_name};size_bytes={document.size_bytes};ip={source_ip}")
+    db.commit()
     return FileResponse(path, filename=document.original_name, media_type="application/pdf")
 
 
