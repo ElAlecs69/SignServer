@@ -1,10 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import Seal from './Seal'
+import { burst } from './motion'
 
 type User = { id: string; email: string; name: string; role: 'admin' | 'signer' | 'auditor' }
 type Assignment = { id: string; name: string; status: string; sha256: string }
-type Audit = { id: string; action: string; ip: string; details: string; created_at: string }
+type Audit = {
+  id: string
+  actor_email: string
+  action: string
+  status: 'SUCCESS' | 'FAILED'
+  client: string
+  user_agent: string
+  ip: string
+  details: string
+  created_at: string
+}
+type AuditVerify = { valid: boolean; events_checked: number; broken_at_event_id: string | null }
 
 type WorkerOption = {
   id: string
@@ -109,14 +121,34 @@ function timeStamp(): string {
   return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
 }
 
+const st = (i: number) => ({ '--i': Math.min(i, 14) } as React.CSSProperties)
+
+function LoginSeal() {
+  const [s, setS] = useState<'working' | 'stamped'>('working')
+  useEffect(() => { const t = setTimeout(() => setS('stamped'), 1200); return () => clearTimeout(t) }, [])
+  return <Seal state={s} />
+}
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" pathLength={1} className="draw" />
+      <path d="M7 12.5l3.2 3.2L17 9" pathLength={1} className="draw draw-2" />
+    </svg>
+  )
+}
+
 export default function App() {
   const [user, setUser] = useState<User | null>(null)
   const [csrf, setCsrf] = useState('')
   const [assignments, setAssignments] = useState<Assignment[]>([])
   const [users, setUsers] = useState<User[]>([])
   const [audit, setAudit] = useState<Audit[]>([])
+  const [auditVerify, setAuditVerify] = useState<AuditVerify | null>(null)
+  const [verifyingAudit, setVerifyingAudit] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [signerEmail, setSignerEmail] = useState('')
+  const [sendToAll, setSendToAll] = useState(false)
   const [message, setMessage] = useState('')
   const [busy, setBusy] = useState(false)
   const [loginEmail, setLoginEmail] = useState('admin@demo.test')
@@ -133,6 +165,7 @@ export default function App() {
   const [validateResult, setValidateResult] = useState<{ valid: boolean; summary: string; details: string } | null>(null)
   const [sealState, setSealState] = useState<'idle' | 'working' | 'stamped'>('idle')
   const [directBusy, setDirectBusy] = useState(false)
+  const [dragOver, setDragOver] = useState(false)
 
   // Campos del diseñador de PDF
   const [pdfDesign, setPdfDesign] = useState({
@@ -182,20 +215,32 @@ export default function App() {
 
   async function uploadAndAssign(event: FormEvent) {
     event.preventDefault()
-    if (!file || !signerEmail) return
+    if (!file || (!sendToAll && !signerEmail)) return
     setBusy(true)
     setMessage('')
     try {
       const form = new FormData()
       form.append('file', file)
       const document = await api('/api/documents', { method: 'POST', headers: { 'X-CSRF-Token': csrf }, body: form })
-      await api(`/api/documents/${document.id}/assign`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
-        body: JSON.stringify({ signer_email: signerEmail }),
-      })
+      if (sendToAll) {
+        const result = await api(`/api/documents/${document.id}/assign-bulk`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+          body: JSON.stringify({ all_signers: true }),
+        })
+        setMessage(
+          `Documento enviado a ${result.assigned} firmante(s).` +
+            (result.skipped.length ? ` (${result.skipped.length} ya lo tenían asignado)` : ''),
+        )
+      } else {
+        await api(`/api/documents/${document.id}/assign`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+          body: JSON.stringify({ signer_email: signerEmail }),
+        })
+        setMessage('Documento asignado correctamente.')
+      }
       setFile(null)
-      setMessage('Documento asignado correctamente.')
       if (user) await refresh(user)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : String(error))
@@ -288,9 +333,20 @@ export default function App() {
       const designedFile = new File([blob], fileName, { type: 'application/pdf' })
       handleSelectDirectFile(designedFile)
       addLog('PDF diseñado generado y listo para firmar.')
+      reportClientAudit('document.designed', `filename=${fileName};titulo=${pdfDesign.titulo};destino=firmar`)
     } catch (err) {
       addLog(`Error generando PDF: ${err instanceof Error ? err.message : String(err)}`)
     }
+  }
+
+  // Reporta a la bitácora del servidor una acción que ocurrió solo en el navegador
+  // (jsPDF no pasa por el backend). Best-effort: si falla, no interrumpe al usuario.
+  function reportClientAudit(action: string, details: string) {
+    api('/api/audit/client-event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+      body: JSON.stringify({ action, details }),
+    }).catch(() => {})
   }
 
   // Genera el PDF diseñado y lo descarga directamente al equipo
@@ -300,8 +356,22 @@ export default function App() {
       const fileName = `${(pdfDesign.titulo || 'documento').trim().slice(0, 60) || 'documento'}.pdf`
       doc.save(fileName)
       addLog('PDF diseñado descargado correctamente.')
+      reportClientAudit('document.designed.downloaded', `filename=${fileName};titulo=${pdfDesign.titulo}`)
     } catch (err) {
       addLog(`Error generando PDF: ${err instanceof Error ? err.message : String(err)}`)
+    }
+  }
+
+  // Verifica la cadena de hashes de la bitácora (detecta manipulación o borrado de registros)
+  async function handleVerifyAudit() {
+    setVerifyingAudit(true)
+    try {
+      const result: AuditVerify = await api('/api/audit/verify')
+      setAuditVerify(result)
+    } catch (error) {
+      setAuditVerify({ valid: false, events_checked: 0, broken_at_event_id: null })
+    } finally {
+      setVerifyingAudit(false)
     }
   }
 
@@ -351,23 +421,18 @@ export default function App() {
 
     try {
       const b64 = await fileToBase64(directFile)
-      addLog(`Enviando a /signserver/rest/v1/workers/${selectedWorkerId}/process`)
-      const res = await fetch(`/signserver/rest/v1/workers/${selectedWorkerId}/process`, {
+      addLog('Enviando a /api/direct/sign (queda registrado en la bitácora)')
+      const json = await api('/api/direct/sign', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: b64, encoding: 'BASE64' }),
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+        body: JSON.stringify({ worker: selectedWorkerId, filename: directFile.name, data: b64 }),
       })
 
-      if (!res.ok) {
-        const errorText = await res.text()
-        throw new Error(`HTTP ${res.status}: ${errorText.slice(0, 180)}`)
-      }
-
-      const json = await res.json()
       const signedBase64 = json.data
       const signedName = directFile.name.replace(/(\.[^.]+)$/, '-firmado$1')
       setSignedResult({ name: signedName, base64: signedBase64 })
       setSealState('stamped')
+      setTimeout(() => burst(document.querySelector('[data-seal]'), 'gold'), 260)
       addLog(`Listo. Descarga disponible: ${signedName}`)
     } catch (err) {
       setSealState('idle')
@@ -385,24 +450,20 @@ export default function App() {
     setValidateResult(null)
     setSignedResult(null)
     const worker = WORKERS.find((w) => w.id === selectedWorkerId) || WORKERS[0]
-    addLog(`Validando archivo con endpoint ${worker.validatePath}...`)
+    const format = worker.validatePath.replace('/validate/', '')
+    addLog(`Validando archivo con formato "${format}" (vía /api/direct/validate)...`)
 
     try {
       const b64 = await fileToBase64(directFile)
-      const res = await fetch(worker.validatePath, {
+      const data = await api('/api/direct/validate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: b64, filename: directFile.name, encoding: 'BASE64' }),
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+        body: JSON.stringify({ format, filename: directFile.name, data: b64 }),
       })
 
-      if (!res.ok) {
-        const errTxt = await res.text()
-        throw new Error(`HTTP ${res.status}: ${errTxt.slice(0, 180)}`)
-      }
-
-      const data = await res.json()
       setValidateResult({ valid: data.valid, summary: data.summary, details: data.details })
       setSealState(data.valid ? 'stamped' : 'idle')
+      if (data.valid) setTimeout(() => burst(document.querySelector('[data-seal]'), 'green'), 260)
       addLog(`Resultado: ${data.valid ? 'FIRMA VÁLIDA' : 'FIRMA NO VÁLIDA'} - ${data.summary}`)
     } catch (err) {
       setSealState('idle')
@@ -416,10 +477,10 @@ export default function App() {
 
   if (!user) {
     return (
-      <main className="min-h-screen bg-ink flex items-center justify-center p-6">
-        <section className="w-full max-w-lg rounded-2xl border border-ink-line bg-ink-surface p-10 text-center">
+      <main className="min-h-screen flex items-center justify-center p-6">
+        <section className="w-full max-w-lg spot pop-login rounded-2xl border border-ink-line bg-ink-surface p-10 text-center">
           <div className="flex justify-center mb-4">
-            <Seal state="idle" />
+            <LoginSeal />
           </div>
           <h1 className="font-display text-3xl text-parchment">SignServer</h1>
           <p className="mt-3 text-parchment-muted">Login de pruebas · firma y trazabilidad documental</p>
@@ -432,7 +493,7 @@ export default function App() {
                 value={loginEmail}
                 onChange={(event) => setLoginEmail(event.target.value)}
                 required
-                className="rounded-lg border border-ink-line bg-ink-raised px-3 py-3 text-parchment"
+                className="field rounded-lg border border-ink-line bg-ink-raised px-3 py-3 text-parchment"
                 placeholder="correo@example.com"
               />
             </label>
@@ -444,11 +505,11 @@ export default function App() {
                 value={loginPassword}
                 onChange={(event) => setLoginPassword(event.target.value)}
                 required
-                className="rounded-lg border border-ink-line bg-ink-raised px-3 py-3 text-parchment"
+                className="field rounded-lg border border-ink-line bg-ink-raised px-3 py-3 text-parchment"
                 placeholder="Contraseña de prueba"
               />
             </label>
-            <button type="submit" className="mt-2 rounded-lg bg-seal px-5 py-3 font-medium text-ink">
+            <button type="submit" className="btn btn-seal mt-2 rounded-lg px-5 py-3 font-medium">
               Entrar
             </button>
           </form>
@@ -458,10 +519,11 @@ export default function App() {
   }
 
   return (
-    <main className="min-h-screen bg-ink px-6 py-8 text-parchment">
+    <main className="min-h-screen px-6 py-8 text-parchment">
+      <div className="topbar" data-on={directBusy || busy || verifyingAudit} />
       <div className="mx-auto max-w-6xl">
         {/* Encabezado principal */}
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-ink-line pb-6">
+        <header className="enter flex flex-wrap items-center justify-between gap-4 border-b border-ink-line pb-6">
           <div className="flex items-center gap-4">
             <Seal state={view === 'direct' ? sealState : 'idle'} />
             <div>
@@ -475,7 +537,7 @@ export default function App() {
           <div className="flex flex-wrap items-center gap-3">
             {/* Indicador de servicio activo */}
             <div className="flex items-center gap-2 rounded-full border border-verified/30 bg-verified-bg px-3 py-1 text-xs text-verified">
-              <span className="inline-block h-2 w-2 rounded-full bg-verified animate-pulse" />
+              <span className="inline-block h-2 w-2 rounded-full bg-verified animate-ping" />
               <span>servicio activo</span>
             </div>
 
@@ -483,14 +545,14 @@ export default function App() {
             {view === 'direct' ? (
               <button
                 onClick={() => setView('assigned')}
-                className="rounded-lg border border-ink-line px-4 py-2 text-sm text-parchment-muted hover:border-parchment-muted hover:text-parchment transition-colors"
+                className="btn btn-ghost rounded-lg px-4 py-2 text-sm"
               >
                 Ver asignaciones y auditoría
               </button>
             ) : (
               <button
                 onClick={() => setView('direct')}
-                className="rounded-lg bg-seal px-4 py-2 text-sm font-medium text-ink transition-opacity hover:opacity-90"
+                className="btn btn-seal rounded-lg px-4 py-2 text-sm font-medium"
               >
                 Firma directa y validación
               </button>
@@ -498,7 +560,7 @@ export default function App() {
 
             <button
               onClick={() => api('/auth/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrf } }).then(() => location.reload())}
-              className="rounded-lg border border-ink-line px-4 py-2 text-sm text-parchment-muted hover:text-parchment transition-colors"
+              className="btn btn-ghost rounded-lg px-4 py-2 text-sm"
             >
               Cerrar sesión
             </button>
@@ -511,7 +573,7 @@ export default function App() {
         {view === 'direct' && (
           <div className="mt-8 grid gap-8 lg:grid-cols-2">
             {/* Columna Izquierda: Firma / Validación */}
-            <section className="rounded-2xl border border-ink-line bg-ink-surface p-7 shadow-lg">
+            <section className="spot reveal rounded-2xl border border-ink-line bg-ink-surface p-7 shadow-lg">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <h2 className="font-display text-2xl">
@@ -525,15 +587,15 @@ export default function App() {
                 </div>
 
                 {/* Alternador de Modo: Firmar / Validar */}
-                <div className="inline-flex rounded-lg border border-ink-line bg-ink p-1 text-xs">
+                <div data-mode={directMode} className="seg relative inline-flex rounded-lg border border-ink-line bg-ink p-1 text-xs">
                   <button
                     onClick={() => {
                       setDirectMode('sign')
                       setSignedResult(null)
                       setValidateResult(null)
                     }}
-                    className={`rounded-md px-3 py-1 font-medium transition-colors ${
-                      directMode === 'sign' ? 'bg-seal text-ink' : 'text-parchment-muted hover:text-parchment'
+                    className={`relative z-10 rounded-md px-3 py-1 font-medium transition-colors duration-300 ${
+                      directMode === 'sign' ? 'text-ink' : 'text-parchment-muted hover:text-parchment'
                     }`}
                   >
                     Firmar
@@ -544,8 +606,8 @@ export default function App() {
                       setSignedResult(null)
                       setValidateResult(null)
                     }}
-                    className={`rounded-md px-3 py-1 font-medium transition-colors ${
-                      directMode === 'validate' ? 'bg-verified text-parchment' : 'text-parchment-muted hover:text-parchment'
+                    className={`relative z-10 rounded-md px-3 py-1 font-medium transition-colors duration-300 ${
+                      directMode === 'validate' ? 'text-parchment' : 'text-parchment-muted hover:text-parchment'
                     }`}
                   >
                     Validar
@@ -556,14 +618,17 @@ export default function App() {
               {/* Zona de Arrastrar / Cargar Archivo */}
               <div
                 onClick={() => directFileInputRef.current?.click()}
-                onDragOver={(e) => e.preventDefault()}
+                onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
+                onDragLeave={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setDragOver(false) }}
                 onDrop={(e) => {
                   e.preventDefault()
+                  setDragOver(false)
                   if (e.dataTransfer.files?.[0]) {
                     handleSelectDirectFile(e.dataTransfer.files[0])
                   }
                 }}
-                className="mt-6 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-ink-line bg-ink-raised/60 p-8 text-center cursor-pointer transition-colors hover:border-seal/60"
+                data-drag={dragOver}
+                className="dropzone relative mt-6 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-ink-line bg-ink-raised/60 p-8 text-center cursor-pointer"
               >
                 <input
                   ref={directFileInputRef}
@@ -577,7 +642,7 @@ export default function App() {
                 />
 
                 {directFile ? (
-                  <div>
+                  <div key={directFile.name} className="animate-pop">
                     <span className="font-mono text-xs font-semibold uppercase tracking-wider text-seal">
                       ARCHIVO LISTO
                     </span>
@@ -589,7 +654,7 @@ export default function App() {
                   </div>
                 ) : (
                   <div>
-                    <svg className="mx-auto h-10 w-10 text-parchment-muted/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="float mx-auto h-10 w-10 text-parchment-muted/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                     </svg>
                     <p className="mt-3 text-sm text-parchment">
@@ -611,7 +676,7 @@ export default function App() {
                       setSealState('idle')
                       addLog('Archivo removido.')
                     }}
-                    className="text-xs text-alert hover:underline"
+                    className="link-draw text-xs text-alert"
                   >
                     Quitar archivo
                   </button>
@@ -635,7 +700,7 @@ export default function App() {
                       setSignedResult(null)
                     }
                   }}
-                  className="mt-2 w-full rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
+                  className="mt-2 w-full field rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
                 >
                   <optgroup label="── Firmadores ──────────────────">
                     {SIGNER_WORKERS.map((w) => (
@@ -666,7 +731,8 @@ export default function App() {
                   <button
                     disabled={!directFile || directBusy || currentWorker.validatorOnly}
                     onClick={handleDirectSign}
-                    className="w-full rounded-xl bg-seal py-3.5 font-medium text-ink transition-opacity hover:opacity-95 disabled:opacity-50"
+                    data-loading={directBusy}
+                    className="btn btn-seal w-full rounded-xl py-3.5 font-medium"
                   >
                     {directBusy ? 'Firmando documento...' : 'Firmar documento'}
                   </button>
@@ -674,7 +740,8 @@ export default function App() {
                   <button
                     disabled={!directFile || directBusy}
                     onClick={handleDirectValidate}
-                    className="w-full rounded-xl bg-verified py-3.5 font-medium text-parchment transition-opacity hover:opacity-95 disabled:opacity-50"
+                    data-loading={directBusy}
+                    className="btn btn-verified w-full rounded-xl py-3.5 font-medium"
                   >
                     {directBusy ? 'Validando...' : 'Validar documento'}
                   </button>
@@ -683,14 +750,14 @@ export default function App() {
 
               {/* Resultado de Firma: Barra con botón Descargar */}
               {signedResult && (
-                <div className="mt-5 flex items-center justify-between rounded-xl border border-verified/40 bg-verified-bg p-4 animate-rise">
+                <div className="mt-5 flex items-center justify-between rounded-xl border border-verified/40 bg-verified-bg p-4 animate-pop glow">
                   <div className="flex items-center gap-2 text-sm font-medium text-verified">
-                    <span>✓</span>
+                    <CheckIcon />
                     <span>Documento firmado</span>
                   </div>
                   <button
                     onClick={downloadSignedFile}
-                    className="rounded-lg border border-verified bg-verified/20 px-4 py-2 text-sm font-medium text-verified transition-colors hover:bg-verified hover:text-ink"
+                    className="btn btn-fill rounded-lg px-4 py-2 text-sm font-medium"
                   >
                     Descargar
                   </button>
@@ -700,7 +767,7 @@ export default function App() {
               {/* Resultado de Validación */}
               {validateResult && (
                 <div
-                  className={`mt-5 rounded-xl border p-4 animate-rise ${
+                  className={`mt-5 rounded-xl border p-4 ${validateResult.valid ? 'animate-pop glow' : 'animate-shake'} ${
                     validateResult.valid
                       ? 'border-verified/40 bg-verified-bg text-verified'
                       : 'border-alert/40 bg-alert-bg text-alert'
@@ -720,7 +787,7 @@ export default function App() {
             </section>
 
             {/* Columna Derecha: Bitácora de Sesión */}
-            <section className="flex flex-col rounded-2xl border border-ink-line bg-ink-surface p-7 shadow-lg">
+            <section className="flex flex-col spot reveal rounded-2xl border border-ink-line bg-ink-surface p-7 shadow-lg">
               <div className="flex items-center gap-3 border-b border-ink-line pb-4">
                 <div className="h-8 w-8 text-seal">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -739,10 +806,11 @@ export default function App() {
                 className="mt-6 flex-1 min-h-[300px] max-h-[440px] overflow-y-auto rounded-xl border border-ink-line bg-ink p-4 font-mono text-xs text-verified/90 space-y-2 select-text"
               >
                 {logs.map((item, idx) => (
-                  <div key={idx} className="leading-relaxed">
-                    {item}
+                  <div key={idx} className="log-line leading-relaxed">
+                    <span className="text-parchment-faint">{item.slice(0, 8)}</span>{item.slice(8)}
                   </div>
                 ))}
+                <span className="caret" />
               </div>
             </section>
           </div>
@@ -752,7 +820,7 @@ export default function App() {
         {/* DISEÑADOR DE PDF: crear un documento desde cero y descargarlo */}
         {/* ============================================================ */}
         {view === 'direct' && (
-          <section className="mt-8 rounded-2xl border border-ink-line bg-ink-surface p-7 shadow-lg">
+          <section className="mt-8 spot reveal rounded-2xl border border-ink-line bg-ink-surface p-7 shadow-lg">
             <h2 className="font-display text-2xl">Diseñar PDF</h2>
             <p className="mt-1 text-sm text-parchment-muted">
               Completa los campos para armar un documento PDF y descárgalo, o úsalo directamente para firmarlo arriba.
@@ -768,7 +836,7 @@ export default function App() {
                   value={pdfDesign.titulo}
                   onChange={(e) => setPdfDesign({ ...pdfDesign, titulo: e.target.value })}
                   placeholder="Título del documento"
-                  className="mt-2 w-full rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
+                  className="mt-2 w-full field rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
                 />
               </div>
 
@@ -781,7 +849,7 @@ export default function App() {
                   value={pdfDesign.autor}
                   onChange={(e) => setPdfDesign({ ...pdfDesign, autor: e.target.value })}
                   placeholder="Nombre del autor o emisor"
-                  className="mt-2 w-full rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
+                  className="mt-2 w-full field rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
                 />
               </div>
 
@@ -793,7 +861,7 @@ export default function App() {
                   type="date"
                   value={pdfDesign.fecha}
                   onChange={(e) => setPdfDesign({ ...pdfDesign, fecha: e.target.value })}
-                  className="mt-2 w-full rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
+                  className="mt-2 w-full field rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
                 />
               </div>
 
@@ -806,7 +874,7 @@ export default function App() {
                   value={pdfDesign.piePagina}
                   onChange={(e) => setPdfDesign({ ...pdfDesign, piePagina: e.target.value })}
                   placeholder="Texto de pie de página (opcional)"
-                  className="mt-2 w-full rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
+                  className="mt-2 w-full field rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
                 />
               </div>
 
@@ -819,7 +887,7 @@ export default function App() {
                   onChange={(e) => setPdfDesign({ ...pdfDesign, cuerpo: e.target.value })}
                   placeholder="Escribe aquí el cuerpo del documento..."
                   rows={6}
-                  className="mt-2 w-full resize-y rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
+                  className="mt-2 w-full resize-y field rounded-lg border border-ink-line bg-ink-raised px-4 py-3 text-parchment outline-none focus:border-seal"
                 />
               </div>
             </div>
@@ -828,14 +896,14 @@ export default function App() {
               <button
                 type="button"
                 onClick={handleDownloadDesignedPdf}
-                className="rounded-xl bg-seal px-6 py-3 font-medium text-ink transition-opacity hover:opacity-95"
+                className="btn btn-seal rounded-xl px-6 py-3 font-medium"
               >
                 Descargar PDF
               </button>
               <button
                 type="button"
                 onClick={handleUsePdfForSigning}
-                className="rounded-xl border border-ink-line px-6 py-3 font-medium text-parchment transition-colors hover:border-seal/60"
+                className="btn btn-ghost rounded-xl px-6 py-3 font-medium !text-parchment"
               >
                 Usar para firmar
               </button>
@@ -849,27 +917,28 @@ export default function App() {
         {view === 'assigned' && (
           <div>
             {message && (
-              <p className="my-5 rounded-lg border border-seal/40 bg-seal/10 p-3 text-sm" role="status">
+              <p className="animate-pop my-5 rounded-lg border border-seal/40 bg-seal/10 p-3 text-sm" role="status">
                 {message}
               </p>
             )}
 
             {user.role === 'admin' && (
-              <section className="mt-8 rounded-2xl border border-ink-line bg-ink-surface p-6 shadow-lg">
+              <section className="mt-8 spot reveal rounded-2xl border border-ink-line bg-ink-surface p-6 shadow-lg">
                 <h2 className="font-display text-2xl">Asignar documento</h2>
                 <form onSubmit={uploadAndAssign} className="mt-5 grid gap-4 md:grid-cols-[1fr_1fr_auto]">
                   <input
                     type="file"
                     accept="application/pdf"
                     onChange={(event) => setFile(event.target.files?.[0] ?? null)}
-                    className="rounded-lg border border-ink-line bg-ink-raised p-3 text-sm"
+                    className="field rounded-lg border border-ink-line bg-ink-raised p-3 text-sm"
                     required
                   />
                   <select
                     value={signerEmail}
                     onChange={(event) => setSignerEmail(event.target.value)}
-                    className="rounded-lg border border-ink-line bg-ink-raised p-3"
-                    required
+                    disabled={sendToAll}
+                    className="field rounded-lg border border-ink-line bg-ink-raised p-3 disabled:opacity-40"
+                    required={!sendToAll}
                   >
                     <option value="">Selecciona firmante</option>
                     {users.map((item) => (
@@ -880,15 +949,24 @@ export default function App() {
                   </select>
                   <button
                     disabled={busy}
-                    className="rounded-lg bg-seal px-6 py-3 font-medium text-ink disabled:opacity-50"
+                    className="btn btn-seal rounded-lg px-6 py-3 font-medium"
                   >
-                    Subir y asignar
+                    {sendToAll ? 'Subir y enviar a todos' : 'Subir y asignar'}
                   </button>
+                  <label className="flex items-center gap-2 text-sm text-parchment-muted md:col-span-3">
+                    <input
+                      type="checkbox"
+                      checked={sendToAll}
+                      onChange={(event) => setSendToAll(event.target.checked)}
+                      className="h-4 w-4 rounded border-ink-line accent-seal"
+                    />
+                    Enviar en masa a todos los firmantes registrados (en vez de elegir uno solo)
+                  </label>
                 </form>
               </section>
             )}
 
-            <section className="mt-8 rounded-2xl border border-ink-line bg-ink-surface p-6 shadow-lg">
+            <section className="mt-8 spot reveal rounded-2xl border border-ink-line bg-ink-surface p-6 shadow-lg">
               <h2 className="font-display text-2xl">
                 {user.role === 'signer' ? 'Mis documentos' : 'Documentos asignados'}
               </h2>
@@ -896,8 +974,8 @@ export default function App() {
                 {assignments.length === 0 ? (
                   <p className="py-5 text-sm text-parchment-muted">No hay documentos asignados.</p>
                 ) : (
-                  assignments.map((item) => (
-                    <div key={item.id} className="flex flex-wrap items-center justify-between gap-4 py-4">
+                  assignments.map((item, i) => (
+                    <div key={item.id} style={st(i)} className="row-in flex flex-wrap items-center justify-between gap-4 py-4">
                       <div>
                         <p>{item.name}</p>
                         <p className="mt-1 font-mono text-xs text-parchment-faint">SHA-256: {item.sha256}</p>
@@ -908,7 +986,7 @@ export default function App() {
                           <button
                             disabled={busy}
                             onClick={() => sign(item.id)}
-                            className="rounded-lg bg-seal px-4 py-2 text-sm text-ink"
+                            className="btn btn-seal rounded-lg px-4 py-2 text-sm font-medium"
                           >
                             Firmar
                           </button>
@@ -916,7 +994,7 @@ export default function App() {
                         {item.status === 'signed' && (
                           <a
                             href={`/api/assignments/${item.id}/download`}
-                            className="rounded-lg border border-verified/50 px-4 py-2 text-sm text-verified"
+                            className="btn btn-fill rounded-lg px-4 py-2 text-sm"
                           >
                             Descargar
                           </a>
@@ -929,24 +1007,66 @@ export default function App() {
             </section>
 
             {(user.role === 'admin' || user.role === 'auditor') && (
-              <section className="mt-8 rounded-2xl border border-ink-line bg-ink-surface p-6 shadow-lg">
-                <h2 className="font-display text-2xl">Auditoría</h2>
+              <section className="mt-8 spot reveal rounded-2xl border border-ink-line bg-ink-surface p-6 shadow-lg">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="font-display text-2xl">Auditoría</h2>
+                  <button
+                    type="button"
+                    disabled={verifyingAudit}
+                    onClick={handleVerifyAudit}
+                    data-loading={verifyingAudit}
+                    className="btn btn-ghost rounded-lg px-4 py-2 text-xs font-medium"
+                  >
+                    {verifyingAudit ? 'Verificando...' : 'Verificar integridad de la bitácora'}
+                  </button>
+                </div>
+
+                {auditVerify && (
+                  <p
+                    className={`mt-3 rounded-lg border p-3 text-xs font-medium ${
+                      auditVerify.valid
+                        ? 'border-verified/40 bg-verified-bg text-verified'
+                        : 'border-alert/40 bg-alert-bg text-alert'
+                    }`}
+                  >
+                    {auditVerify.valid
+                      ? `✓ Cadena de auditoría íntegra (${auditVerify.events_checked} eventos verificados, sin alteraciones).`
+                      : `✕ Se detectó una posible alteración en la bitácora${
+                          auditVerify.broken_at_event_id ? ` (evento ${auditVerify.broken_at_event_id})` : ''
+                        }.`}
+                  </p>
+                )}
+
                 <div className="mt-5 overflow-auto">
                   <table className="w-full text-left text-sm">
                     <thead className="text-parchment-muted">
                       <tr>
                         <th className="p-2">Fecha</th>
+                        <th className="p-2">Usuario</th>
                         <th className="p-2">Evento</th>
+                        <th className="p-2">Estado</th>
                         <th className="p-2">IP</th>
+                        <th className="p-2">Cliente</th>
                         <th className="p-2">Detalle</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {audit.map((item) => (
-                        <tr key={item.id} className="border-t border-ink-line">
+                      {audit.map((item, i) => (
+                        <tr key={item.id} style={st(i)} className="row-in border-t border-ink-line transition-colors hover:bg-ink-raised/60">
                           <td className="p-2 whitespace-nowrap">{new Date(item.created_at).toLocaleString()}</td>
-                          <td className="p-2">{item.action}</td>
-                          <td className="p-2">{item.ip}</td>
+                          <td className="p-2 whitespace-nowrap">{item.actor_email}</td>
+                          <td className="p-2 whitespace-nowrap">{item.action}</td>
+                          <td className="p-2">
+                            <span
+                              className={`rounded px-2 py-0.5 text-xs font-semibold ${
+                                item.status === 'FAILED' ? 'bg-alert-bg text-alert' : 'bg-verified-bg text-verified'
+                              }`}
+                            >
+                              {item.status}
+                            </span>
+                          </td>
+                          <td className="p-2 whitespace-nowrap">{item.ip}</td>
+                          <td className="p-2 whitespace-nowrap">{item.client}</td>
                           <td className="p-2">{item.details}</td>
                         </tr>
                       ))}
