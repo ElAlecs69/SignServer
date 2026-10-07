@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 // El proxy /signserver/* lo resuelve nginx (ver deploy/signserver.conf),
 // así que en dev usamos el mismo prefijo apuntando al backend real.
 export default defineConfig({
+  publicDir: '../../Formatos',
   plugins: [react()],
   server: {
     proxy: {

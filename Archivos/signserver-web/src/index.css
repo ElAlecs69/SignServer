@@ -2,6 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+.format-html-text-layer {
+  z-index: 1;
+  overflow: hidden;
+  line-height: 1;
+  transform-origin: top left;
+  color: transparent;
+}
+
+.format-html-text-layer :is(span, br) {
+  position: absolute;
+  color: transparent;
+  white-space: pre;
+  transform-origin: 0 0;
+}
+
+.format-fill-control {
+  border: 1px solid rgba(184, 147, 74, 0.6);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 1px 4px rgba(14, 20, 31, 0.2);
+  color: #151515;
+}
+
+.format-fill-control:focus {
+  border-color: #8d6d31;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(184, 147, 74, 0.22);
+}
+
 @layer base {
   html {
     color-scheme: dark;

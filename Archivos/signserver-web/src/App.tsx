@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import Seal from './Seal'
+import Formats from './Formats'
 import { burst } from './motion'
 
 type User = { id: string; email: string; name: string; role: 'admin' | 'signer' | 'auditor' }
@@ -155,7 +156,7 @@ export default function App() {
   const [loginPassword, setLoginPassword] = useState('demo123')
 
   // Vista activa: 'assigned' (flujo documental institucional) o 'direct' (pantalla original de firma/validación directa)
-  const [view, setView] = useState<'assigned' | 'direct'>('direct')
+  const [view, setView] = useState<'assigned' | 'direct' | 'formats'>('direct')
 
   // Estados de la vista directa
   const [directMode, setDirectMode] = useState<'sign' | 'validate'>('sign')
@@ -521,7 +522,7 @@ export default function App() {
   return (
     <main className="min-h-screen px-6 py-8 text-parchment">
       <div className="topbar" data-on={directBusy || busy || verifyingAudit} />
-      <div className="mx-auto max-w-6xl">
+      <div className={`mx-auto ${view === 'formats' ? 'max-w-[1600px]' : 'max-w-6xl'}`}>
         {/* Encabezado principal */}
         <header className="enter flex flex-wrap items-center justify-between gap-4 border-b border-ink-line pb-6">
           <div className="flex items-center gap-4">
@@ -542,7 +543,31 @@ export default function App() {
             </div>
 
             {/* Selector de pantalla */}
-            {view === 'direct' ? (
+            {user.role === 'admin' ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={() => setView('direct')}
+                  aria-pressed={view === 'direct'}
+                  className={`btn rounded-lg px-4 py-2 text-sm ${view === 'direct' ? 'btn-seal' : 'btn-ghost'}`}
+                >
+                  Firma directa
+                </button>
+                <button
+                  onClick={() => setView('assigned')}
+                  aria-pressed={view === 'assigned'}
+                  className={`btn rounded-lg px-4 py-2 text-sm ${view === 'assigned' ? 'btn-seal' : 'btn-ghost'}`}
+                >
+                  Asignaciones y auditoría
+                </button>
+                <button
+                  onClick={() => setView('formats')}
+                  aria-pressed={view === 'formats'}
+                  className={`btn rounded-lg px-4 py-2 text-sm ${view === 'formats' ? 'btn-seal' : 'btn-ghost'}`}
+                >
+                  Formatos
+                </button>
+              </div>
+            ) : view === 'direct' ? (
               <button
                 onClick={() => setView('assigned')}
                 className="btn btn-ghost rounded-lg px-4 py-2 text-sm"
@@ -911,6 +936,19 @@ export default function App() {
           </section>
         )}
 
+        {view === 'formats' && user.role === 'admin' && (
+          <Formats
+            csrf={csrf}
+            onQueueForAssignment={(signedFile) => {
+              setFile(signedFile)
+              setSignerEmail('')
+              setSendToAll(false)
+              setMessage(`Formato firmado listo para asignar: ${signedFile.name}`)
+              setView('assigned')
+            }}
+          />
+        )}
+
         {/* ============================================================ */}
         {/* VISTA 2: FLUJO DE DOCUMENTOS ASIGNADOS Y AUDITORÍA GENERAL */}
         {/* ============================================================ */}
@@ -926,12 +964,20 @@ export default function App() {
               <section className="mt-8 spot reveal rounded-2xl border border-ink-line bg-ink-surface p-6 shadow-lg">
                 <h2 className="font-display text-2xl">Asignar documento</h2>
                 <form onSubmit={uploadAndAssign} className="mt-5 grid gap-4 md:grid-cols-[1fr_1fr_auto]">
+                  {file && (
+                    <p className="rounded-lg border border-verified/30 bg-verified-bg p-3 text-sm text-verified md:col-span-3">
+                      Archivo seleccionado: {file.name}
+                      <button type="button" onClick={() => setFile(null)} className="ml-3 underline">
+                        Quitar
+                      </button>
+                    </p>
+                  )}
                   <input
                     type="file"
                     accept="application/pdf"
                     onChange={(event) => setFile(event.target.files?.[0] ?? null)}
                     className="field rounded-lg border border-ink-line bg-ink-raised p-3 text-sm"
-                    required
+                    required={!file}
                   />
                   <select
                     value={signerEmail}

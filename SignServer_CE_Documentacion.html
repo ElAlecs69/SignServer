@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SignServer CE — Documentación del Proyecto</title>
+<style>
+  :root{
+    --ink:#0E141F; --surface:#161F30; --raised:#1C2740; --line:#2A3550;
+    --text:#E9EDF3; --muted:#8A93A8; --faint:#5B6478;
+    --seal:#B8934A; --seal-bright:#D4AE68;
+    --ok:#4C9A6A; --ok-bg:#16261E;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box}
+  html{scroll-padding-top:env(safe-area-inset-top,0px)}
+  body{margin:0;background:var(--ink);color:var(--text);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.5}
+  h1,h2,h3{font-family:Georgia,"Source Serif 4",serif;font-weight:600;margin:0}
+  a{color:var(--seal-bright)}
+  .wrap{max-width:1080px;margin:0 auto;padding:2rem 1.25rem 5rem}
+  header.hero{border-bottom:1px solid var(--line);padding-bottom:1.5rem;margin-bottom:2rem}
+  header.hero p.kicker{margin:.25rem 0 0;color:var(--muted);font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase}
+  header.hero h1{font-size:2rem;margin-top:.5rem}
+  nav.toc{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+  nav.toc a{font-size:.8rem;padding:.4rem .8rem;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--muted)}
+  nav.toc a:hover{border-color:var(--seal);color:var(--text)}
+  section{margin:3rem 0}
+  section h2{font-size:1.5rem;border-bottom:1px solid var(--line);padding-bottom:.6rem;margin-bottom:1.2rem}
+  section h3{font-size:1.05rem;color:var(--seal-bright);margin:1.5rem 0 .6rem}
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  th,td{text-align:left;padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em}
+  code,.mono{font-family:ui-monospace,monospace;font-size:.85em;color:var(--seal-bright)}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1.4rem}
+  .grid2{display:grid;grid-template-columns:1fr;gap:1.2rem}
+  @media(min-width:720px){.grid2{grid-template-columns:1fr 1fr}}
+  .mermaid{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem;overflow-x:auto}
+
+  /* --- boceto/wireframe genérico (bajo detalle, estilo prototipo) --- */
+  .wf{background:#0B1119;border:1px solid var(--line);border-radius:10px;padding:.9rem;font-size:.72rem;color:var(--faint)}
+  .wf .bar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed var(--line);padding-bottom:.5rem;margin-bottom:.6rem}
+  .wf .chip{border:1px solid var(--line);border-radius:5px;padding:.15rem .5rem}
+  .wf .box{border:1px dashed var(--line);border-radius:6px;padding:.6rem;margin-top:.5rem}
+  .wf .line{height:6px;background:var(--line);border-radius:3px;margin:.35rem 0}
+  .wf .line.w60{width:60%} .wf .line.w40{width:40%} .wf .line.w80{width:80%}
+  .wf .btn{display:inline-block;border-radius:5px;padding:.3rem .7rem;margin-top:.4rem;font-size:.68rem}
+  .wf .btn.seal{background:var(--seal);color:#1a1305}
+  .wf .btn.ghost{border:1px solid var(--line);color:var(--muted)}
+  .wf figcaption{margin-top:.6rem;font-size:.78rem;color:var(--muted)}
+
+  footer{border-top:1px solid var(--line);margin-top:3rem;padding-top:1.5rem;color:var(--faint);font-size:.8rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="kicker">Documentación técnica · v1.0</p>
+    <h1>SignServer CE — Registro de Firmas Digitales</h1>
+    <p style="color:var(--muted)">Bocetos de interfaz, máquina de estados y flujo de comunicación entre contenedores.</p>
+    <nav class="toc">
+      <a href="#info">Información del proyecto</a>
+      <a href="#bocetos">Bocetos / Prototipo</a>
+      <a href="#estados">Máquina de estados</a>
+      <a href="#arquitectura">Arquitectura y comunicación</a>
+      <a href="#puertos">Puertos y volúmenes</a>
+    </nav>
+  </header>
+
+  <section id="info">
+    <h2>Información del proyecto</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0">Cliente</h3>
+        <table>
+          <tr><th>Institución</th><td>Universidad Autónoma del Estado de México (UAEMéx)</td></tr>
+          <tr><th>Dependencia</th><td>Dirección de Tecnologías de la Información y Comunicaciones (DTIC)</td></tr>
+          <tr><th>Uso</th><td>Interno — firma y validación de documentos institucionales</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Proyecto</h3>
+        <table>
+          <tr><th>Nombre</th><td>Registro de Firmas — SignServer CE</td></tr>
+          <tr><th>Plataforma base</th><td>SignServer Community Edition (workers de firma/validación)</td></tr>
+          <tr><th>Frontend</th><td>React + Vite + TailwindCSS (SPA servida por nginx)</td></tr>
+          <tr><th>Backend de negocio</th><td>FastAPI (Python) — <span class="mono">document-api</span></td></tr>
+          <tr><th>Autenticación</th><td>OIDC (Entra ID) o modo de pruebas (Demo Auth)</td></tr>
+          <tr><th>Contenedores</th><td>Docker / Podman Compose</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="bocetos">
+    <h2>Bocetos / Prototipo de la interfaz</h2>
+    <p style="color:var(--muted)">Low-fidelity: representan zonas y jerarquía, no el diseño visual final (ese ya existe implementado).</p>
+    <div class="grid2">
+
+      <figure class="wf">
+        <div class="bar"><span>Login</span><span class="chip">/auth/login</span></div>
+        <div class="box" style="text-align:center">
+          <div class="line w40" style="margin:0 auto"></div>
+          <div class="line w60" style="margin:.4rem auto"></div>
+        </div>
+        <div class="box">
+          <div class="line w40"></div><div class="line w80"></div>
+          <div class="line w40"></div><div class="line w80"></div>
+          <span class="btn seal">Entrar</span>
+        </div>
+        <figcaption>Correo + contraseña de prueba (Demo Auth) o redirección a Entra ID (OIDC).</figcaption>
+      </figure>
+
+      <figure class="wf">
+        <div class="bar"><span>Firma directa y validación</span><span class="chip">view=direct</span></div>
+        <div class="box">
+          <span class="chip">Firmar</span> <span class="chip">Validar</span>
+          <div class="box" style="margin-top:.5rem">▾ Worker de firma (PDF, CMS, XML, JAR, deb, TSQ…) / formato de validación</div>
+          <div class="box" style="margin-top:.5rem">⬆ Dropzone: arrastrar / seleccionar archivo</div>
+          <div class="line w40"></div>
+          <span class="btn seal">Firmar documento</span>
+        </div>
+        <figcaption>Sello circular animado (idle → working → stamped) + bitácora de sesión en vivo.</figcaption>
+      </figure>
+
+      <figure class="wf">
+        <div class="bar"><span>Diseñar PDF</span><span class="chip">jsPDF</span></div>
+        <div class="box">
+          <div class="line w40"></div><div class="line w80"></div>
+          <div class="line w40"></div><div class="line w60"></div>
+          <div class="line w40"></div><div class="line w80"></div>
+          <span class="btn ghost">Descargar PDF</span> <span class="btn seal">Usar para firmar</span>
+        </div>
+        <figcaption>Formulario (título, autor, fecha, pie y contenido) → genera un PDF en el navegador con jsPDF y lo registra en la bitácora (document.designed).</figcaption>
+      </figure>
+
+      <figure class="wf">
+        <div class="bar"><span>Asignar documento (admin)</span><span class="chip">view=assigned</span></div>
+        <div class="box">
+          📎 Archivo &nbsp; ▾ Firmante &nbsp; <span class="btn seal">Subir y asignar</span>
+          <div class="line w40" style="margin-top:.5rem"></div>
+          <span class="chip">☐ Enviar a todos los firmantes</span>
+        </div>
+        <div class="box">
+          <div class="line w80"></div><span class="chip">signed</span>
+          <div class="line w80"></div><span class="chip">pending</span>
+        </div>
+        <figcaption>Admin: sube un PDF y lo asigna a un firmante o a todos. Firmante: «Mis documentos» con Firmar (pendientes) y Descargar.</figcaption>
+      </figure>
+
+      <figure class="wf" style="grid-column:1/-1">
+        <div class="bar"><span>Auditoría (admin / auditor)</span><span class="chip">GET /api/audit</span></div>
+        <div class="box">
+          <span class="btn ghost">Verificar integridad de la bitácora</span>
+          <div class="line w80" style="margin-top:.6rem"></div>
+          <div class="line w80"></div>
+          <div class="line w80"></div>
+        </div>
+        <figcaption>Fecha · Usuario · Evento · Estado (SUCCESS/FAILED) · IP · Cliente · Detalle — bitácora encadenada por hash (tamper-evidence).</figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <section id="estados">
+    <h2>Máquina de estados</h2>
+
+    <h3>Ciclo de vida de una asignación (documento ↔ firmante)</h3>
+    <div class="arch"><div class="archscroll"><svg viewBox="0 0 1000 420" role="img" aria-label="Ciclo de vida de una asignación de documento" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#F0D08A"/></marker></defs><line x1="44" y1="185" x2="108" y2="185" class="e" marker-end="url(#m1)"/><line x1="250" y1="185" x2="418" y2="185" class="e" marker-end="url(#m1)"/><line x1="560" y1="185" x2="758" y2="185" class="e" marker-end="url(#m1)"/><path d="M 470 160 C 455 105, 525 105, 510 160" class="e" marker-end="url(#m1)"/><path d="M 810 160 C 795 105, 865 105, 850 160" class="e" marker-end="url(#m1)"/><line x1="490" y1="210" x2="490" y2="308" class="e" marker-end="url(#m1)"/><line x1="800" y1="210" x2="548" y2="308" class="e" marker-end="url(#m1)"/><line x1="200" y1="210" x2="420" y2="325" class="e" marker-end="url(#m1)"/><line x1="560" y1="335" x2="690" y2="335" class="e" marker-end="url(#m1)"/><circle cx="35" cy="185" r="9" fill="#F0D08A"/><rect x="110" y="160" width="140" height="50" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2"/><text x="180.0" y="190.0" text-anchor="middle" class="t">subido</text><rect x="420" y="160" width="140" height="50" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2"/><text x="490.0" y="190.0" text-anchor="middle" class="t">pendiente</text><rect x="760" y="160" width="140" height="50" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2"/><text x="830.0" y="190.0" text-anchor="middle" class="t">firmado</text><rect x="420" y="310" width="140" height="50" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2"/><text x="490.0" y="340.0" text-anchor="middle" class="t">eliminado</text><circle cx="704" cy="335" r="11" fill="none" stroke="#F0D08A" stroke-width="2"/><circle cx="704" cy="335" r="6" fill="#F0D08A"/><text x="76" y="152" text-anchor="middle" class="l">document.uploaded</text><text x="334" y="144" text-anchor="middle" class="l">admin asigna (uno o todos)</text><text x="334" y="172" text-anchor="middle" class="l">document.assigned</text><text x="334" y="158" text-anchor="middle" class="l">assigned.bulk</text><text x="659" y="158" text-anchor="middle" class="l">firmante firma</text><text x="659" y="172" text-anchor="middle" class="l">document.signed</text><text x="490" y="62" text-anchor="middle" class="l">firma fallida: sigue pendiente</text><text x="490" y="76" text-anchor="middle" class="l">sign.failed · certificate.expired · worker.revoked</text><text x="830" y="62" text-anchor="middle" class="l">descarga</text><text x="830" y="76" text-anchor="middle" class="l">document.downloaded</text><text x="500" y="266" text-anchor="start" class="l">admin elimina</text><text x="500" y="280" text-anchor="start" class="l">document.deleted</text><text x="700" y="268" text-anchor="start" class="l">document.deleted</text><text x="285" y="266" text-anchor="end" class="l">document.deleted</text><text x="500" y="388" text-anchor="middle" class="s">Borrado lógico: se conserva el registro y su auditoría; solo se elimina el archivo del disco.</text><text x="500" y="406" text-anchor="middle" class="s">En la interfaz aún no hay botón para eliminar: se hace con DELETE /api/documents/{id}.</text></svg></div></div>
+
+    <h3>Estado visual del sello (Firma directa / Validación)</h3>
+    <div class="arch"><div class="archscroll"><svg viewBox="0 0 1000 310" role="img" aria-label="Estados visuales del sello" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#F0D08A"/></marker></defs><line x1="69" y1="120" x2="148" y2="120" class="e" marker-end="url(#m2)"/><line x1="290" y1="120" x2="428" y2="120" class="e" marker-end="url(#m2)"/><line x1="570" y1="120" x2="708" y2="120" class="e" marker-end="url(#m2)"/><path d="M 480 145 C 480 215, 270 215, 270 145" class="e" marker-end="url(#m2)"/><path d="M 780 145 C 780 290, 190 290, 190 145" class="e" marker-end="url(#m2)"/><circle cx="60" cy="120" r="9" fill="#F0D08A"/><rect x="150" y="95" width="140" height="50" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2"/><text x="220.0" y="125.0" text-anchor="middle" class="t">idle</text><rect x="430" y="95" width="140" height="50" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2"/><text x="500.0" y="125.0" text-anchor="middle" class="t">working</text><rect x="710" y="95" width="140" height="50" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2"/><text x="780.0" y="125.0" text-anchor="middle" class="t">stamped</text><text x="359" y="64" text-anchor="middle" class="l">clic en</text><text x="359" y="78" text-anchor="middle" class="l">Firmar / Validar</text><text x="640" y="64" text-anchor="middle" class="l">respuesta OK del worker</text><text x="640" y="78" text-anchor="middle" class="l">(firma o validación válida)</text><text x="375" y="228" text-anchor="middle" class="l">error o validación inválida</text><text x="485" y="285" text-anchor="middle" class="l">se quita el archivo o se elige uno nuevo</text></svg></div></div>
+
+    <h3>Sesión de autenticación</h3>
+    <div class="arch"><div class="archscroll"><svg viewBox="0 0 1000 340" role="img" aria-label="Sesión de autenticación" xmlns="http://www.w3.org/2000/svg"><defs><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#F0D08A"/></marker></defs><line x1="39" y1="120" x2="78" y2="120" class="e" marker-end="url(#m3)"/><line x1="230" y1="120" x2="423" y2="120" class="e" marker-end="url(#m3)"/><line x1="575" y1="120" x2="768" y2="120" class="e" marker-end="url(#m3)"/><path d="M 470 145 C 470 215, 190 215, 190 145" class="e" marker-end="url(#m3)"/><path d="M 845 145 C 845 300, 120 300, 120 145" class="e" marker-end="url(#m3)"/><circle cx="30" cy="120" r="9" fill="#F0D08A"/><rect x="80" y="95" width="150" height="50" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2"/><text x="155.0" y="125.0" text-anchor="middle" class="t">anónimo</text><rect x="425" y="95" width="150" height="50" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2"/><text x="500.0" y="125.0" text-anchor="middle" class="t">autenticando</text><rect x="770" y="95" width="150" height="50" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2"/><text x="845.0" y="125.0" text-anchor="middle" class="t">autenticado</text><text x="326" y="92" text-anchor="middle" class="l">envía credenciales</text><text x="326" y="106" text-anchor="middle" class="l">/auth/login (demo) u OIDC</text><text x="672" y="92" text-anchor="middle" class="l">credenciales válidas</text><text x="672" y="106" text-anchor="middle" class="l">auth.login.success</text><text x="330" y="232" text-anchor="middle" class="l">credenciales inválidas (demo)</text><text x="330" y="246" text-anchor="middle" class="l">auth.login.failed</text><text x="480" y="285" text-anchor="middle" class="l">cerrar sesión · auth.logout</text><text x="500" y="326" text-anchor="middle" class="s">Límite: 10 intentos por minuto en /auth/login. Con OIDC el regreso de Entra ID llega a /auth/callback.</text></svg></div></div>
+  </section>
+
+  <section id="arquitectura">
+    <h2>Arquitectura y flujo de comunicación</h2>
+    <div class="arch">
+<p class="legend"><span><i class="ln"></i> Comunicación de datos</span><span><i class="ln dd"></i> Inyección / generación (soporte)</span></p>
+<div class="archscroll"><svg viewBox="0 0 1000 710" role="img" aria-label="Diagrama de arquitectura y flujo de comunicación entre contenedores" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#F0D08A"/></marker>
+<marker id="ad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#B4BCCB"/></marker></defs>
+<line x1="500" y1="62" x2="500" y2="108" class="e" marker-end="url(#a)"/><line x1="330" y1="180" x2="180" y2="268" class="e" marker-end="url(#a)"/><line x1="500" y1="180" x2="500" y2="268" class="e" marker-end="url(#a)"/><line x1="680" y1="180" x2="860" y2="268" class="e d" marker-end="url(#ad)"/><line x1="385" y1="325" x2="252" y2="325" class="e" marker-end="url(#a)"/><line x1="615" y1="325" x2="748" y2="325" class="e" marker-end="url(#a)"/><line x1="70" y1="346" x2="100" y2="448" class="e" marker-end="url(#a)"/><line x1="200" y1="346" x2="295" y2="448" class="e" marker-end="url(#a)"/><line x1="470" y1="346" x2="490" y2="448" class="e" marker-end="url(#a)"/><line x1="520" y1="346" x2="680" y2="448" class="e" marker-end="url(#a)"/><line x1="585" y1="346" x2="890" y2="448" class="e" marker-end="url(#a)"/><line x1="295" y1="620" x2="295" y2="544" class="e d" marker-end="url(#ad)"/><line x1="60" y1="190" x2="60" y2="268" class="e d" marker-end="url(#ad)"/><line x1="240" y1="190" x2="420" y2="268" class="e d" marker-end="url(#ad)"/><rect x="350" y="10" width="300" height="52" rx="12" fill="#0E141F" stroke="#F5F7FA" stroke-width="2" /><text x="500.0" y="41.0" text-anchor="middle" class="t">Usuario / navegador</text><rect x="280" y="110" width="440" height="70" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2" /><text x="500.0" y="141.0" text-anchor="middle" class="t">signserver-web · nginx</text><text x="500.0" y="159.0" text-anchor="middle" class="s">SPA + proxy inverso + TLS</text><rect x="10" y="100" width="240" height="90" rx="12" fill="#0E141F" stroke="#8A93A8" stroke-width="2" stroke-dasharray="6 4"/><text x="130.0" y="132.0" text-anchor="middle" class="t">Datos.env</text><text x="130.0" y="150.0" text-anchor="middle" class="s">SESSION_SECRET · DB · OIDC_*</text><text x="130.0" y="168.0" text-anchor="middle" class="s">DEMO_AUTH_* · ADMIN_EMAILS</text><rect x="10" y="270" width="240" height="76" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2" /><text x="130.0" y="304.0" text-anchor="middle" class="t">signserver-app</text><text x="130.0" y="322.0" text-anchor="middle" class="s">SignServer CE · :8080</text><rect x="385" y="270" width="230" height="76" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2" /><text x="500.0" y="304.0" text-anchor="middle" class="t">signserver-document-api</text><text x="500.0" y="322.0" text-anchor="middle" class="s">FastAPI · :8001</text><rect x="750" y="270" width="240" height="76" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2" /><text x="870.0" y="304.0" text-anchor="middle" class="t">signserver-validate</text><text x="870.0" y="322.0" text-anchor="middle" class="s">FastAPI · :8000</text><rect x="10" y="450" width="180" height="92" rx="12" fill="#16261E" stroke="#5DBB82" stroke-width="2" /><text x="100.0" y="483.0" text-anchor="middle" class="t">signserver-db</text><text x="100.0" y="501.0" text-anchor="middle" class="s">MariaDB 10.11</text><text x="100.0" y="519.0" text-anchor="middle" class="s">config. interna</text><rect x="205" y="450" width="180" height="92" rx="12" fill="#161F30" stroke="#B4BCCB" stroke-width="2" stroke-dasharray="6 4"/><text x="295.0" y="483.0" text-anchor="middle" class="t">signserver_admin_ca</text><text x="295.0" y="501.0" text-anchor="middle" class="s">keystores PKCS#12</text><text x="295.0" y="519.0" text-anchor="middle" class="s">y llaves de firma</text><rect x="410" y="450" width="180" height="92" rx="12" fill="#16261E" stroke="#5DBB82" stroke-width="2" /><text x="500.0" y="483.0" text-anchor="middle" class="t">business-db</text><text x="500.0" y="501.0" text-anchor="middle" class="s">PostgreSQL</text><text x="500.0" y="519.0" text-anchor="middle" class="s">usuarios, docs, audit</text><rect x="605" y="450" width="180" height="92" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2" /><text x="695.0" y="483.0" text-anchor="middle" class="t">clamav</text><text x="695.0" y="501.0" text-anchor="middle" class="s">antivirus de</text><text x="695.0" y="519.0" text-anchor="middle" class="s">archivos subidos</text><rect x="800" y="450" width="180" height="92" rx="12" fill="#161F30" stroke="#B4BCCB" stroke-width="2" stroke-dasharray="6 4"/><text x="890.0" y="483.0" text-anchor="middle" class="t">business_documents</text><text x="890.0" y="501.0" text-anchor="middle" class="s">PDFs originales</text><text x="890.0" y="519.0" text-anchor="middle" class="s">y firmados</text><rect x="10" y="620" width="300" height="70" rx="12" fill="#1C2740" stroke="#D4AE68" stroke-width="2" /><text x="160.0" y="651.0" text-anchor="middle" class="t">signserver-init-certs</text><text x="160.0" y="669.0" text-anchor="middle" class="s">job de arranque · emite cert TLS a web</text><text x="512" y="92" text-anchor="start" class="l">HTTPS :9443</text><text x="226" y="250" text-anchor="middle" class="l">/signserver/*</text><text x="512" y="232" text-anchor="start" class="l">/api/* · /auth/*</text><text x="800" y="214" text-anchor="start" class="l">/validate/*</text><text x="318" y="316" text-anchor="middle" class="l">REST /process</text><text x="682" y="285" text-anchor="middle" class="l">REST</text><text x="682" y="299" text-anchor="middle" class="l">/pdf /cms /xml</text><text x="682" y="313" text-anchor="middle" class="l">/jar /deb /crl</text><text x="112" y="404" text-anchor="start" class="l">SQL :3306</text><text x="262" y="398" text-anchor="start" class="l">lee llaves</text><text x="466" y="404" text-anchor="end" class="l">SQL :5432</text><text x="612" y="394" text-anchor="start" class="l">TCP :3310</text><text x="770" y="384" text-anchor="start" class="l">lee / escribe</text><text x="307" y="588" text-anchor="start" class="l">genera / importa</text><text x="70" y="240" text-anchor="start" class="l">inyecta variables</text></svg></div></div>
+<style>
+.arch{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem}
+.archscroll{overflow-x:auto}.archscroll svg{display:block;min-width:900px;width:100%;height:auto}
+.arch .t{fill:#F5F7FA;font:600 15px system-ui,"Segoe UI",sans-serif}.arch .s{fill:#C3CAD8;font:12.5px system-ui,"Segoe UI",sans-serif}
+.arch .l{fill:#F0D08A;font:700 12px ui-monospace,Consolas,monospace;paint-order:stroke;stroke:#161F30;stroke-width:5px;stroke-linejoin:round}
+.arch .e{stroke:#F0D08A;stroke-width:2;fill:none}.arch .e.d{stroke:#B4BCCB;stroke-dasharray:6 4}
+.arch .legend{display:flex;gap:1.5rem;flex-wrap:wrap;margin:0 0 .6rem;font-size:.85rem;color:#C3CAD8}
+.arch .ln{display:inline-block;width:26px;border-top:2px solid #F0D08A;vertical-align:middle;margin-right:.4rem}.arch .ln.dd{border-top:2px dashed #B4BCCB}
+.rv{opacity:0}.rv.rvt{transition:opacity 1s ease-out}.rv.in{opacity:1}
+</style>
+
+    <h3>Workers de firma permitidos (SignServer CE)</h3>
+    <p style="color:var(--muted);font-size:.85rem">Son los identificadores que <span class="mono">document-api</span> acepta en <span class="mono">POST /api/direct/sign</span> (lista blanca). Qué workers están realmente activos depende de la configuración de la instancia de SignServer.</p>
+    <table>
+      <tr><th>Worker</th><th>Función</th></tr>
+      <tr><td class="mono">PDFSigner</td><td>Firma digital de PDF (también usado para los documentos asignados)</td></tr>
+      <tr><td class="mono">CMSSigner</td><td>Firma CMS/PKCS#7</td></tr>
+      <tr><td class="mono">XMLSigner</td><td>Firma XML</td></tr>
+      <tr><td class="mono">JArchiveSigner</td><td>Firma de archivos JAR</td></tr>
+      <tr><td class="mono">DebianDpkgSigSigner</td><td>Firma de paquetes .deb</td></tr>
+      <tr><td class="mono">TimeStampSigner</td><td>Sellado de tiempo (RFC 3161)</td></tr>
+      <tr><td class="mono">MRTDSigner</td><td>Firma de datos de documentos de viaje legibles por máquina (MRTD)</td></tr>
+      <tr><td class="mono">MRTDSODSigner</td><td>Firma de la estructura SOD de un documento MRTD</td></tr>
+    </table>
+    <h3>Validación (servicio signserver-validate)</h3>
+    <p style="color:var(--muted);font-size:.85rem">La validación no la hace un worker de SignServer: la ejecuta <span class="mono">signserver-validate</span> (FastAPI). En la interfaz aparece como «Validador CRL», pero es la ruta <span class="mono">POST /crl</span> de ese servicio.</p>
+    <table>
+      <tr><th>Formato</th><th>Ruta</th><th>Función</th></tr>
+      <tr><td class="mono">pdf · cms · xml · jar · deb</td><td class="mono">/pdf /cms /xml /jar /deb</td><td>Verifica la firma y la integridad del archivo</td></tr>
+      <tr><td class="mono">crl</td><td class="mono">/crl</td><td>Valida un certificado contra la CRL de la CA (<span class="mono">CRL_FILE</span>)</td></tr>
+    </table>
+  </section>
+
+  <section id="puertos">
+    <h2>Puertos, volúmenes y secretos</h2>
+    <table>
+      <tr><th>Contenedor</th><th>Puerto interno</th><th>Expuesto</th><th>Rol</th></tr>
+      <tr><td class="mono">signserver-web</td><td>80/443</td><td class="mono">9443 y 9080 (host)</td><td>nginx: SPA + proxy reverso + TLS</td></tr>
+      <tr><td class="mono">signserver-document-api</td><td class="mono">8001</td><td>interno (vía nginx)</td><td>Lógica de negocio, auth, auditoría</td></tr>
+      <tr><td class="mono">signserver-validate</td><td class="mono">8000</td><td class="mono">8000 (host)</td><td>Validación pdf/cms/xml/jar/deb/crl (también vía nginx <span class="mono">/validate/</span>)</td></tr>
+      <tr><td class="mono">signserver-app</td><td class="mono">8080</td><td class="mono">8080 y 8443 (host)</td><td>SignServer CE — REST de firma (también vía nginx <span class="mono">/signserver/</span>)</td></tr>
+      <tr><td class="mono">business-db</td><td class="mono">5432</td><td>interno</td><td>PostgreSQL — datos de negocio</td></tr>
+      <tr><td class="mono">signserver-db</td><td class="mono">3306</td><td>interno</td><td>MariaDB 10.11 — config. de SignServer</td></tr>
+      <tr><td class="mono">clamav</td><td class="mono">3310</td><td>interno</td><td>Antivirus para archivos subidos</td></tr>
+    </table>
+
+    <h3>Volúmenes</h3>
+    <table>
+      <tr><th>Volumen</th><th>Contenido</th></tr>
+      <tr><td class="mono">business_documents</td><td>PDFs originales y copias firmadas (una por firmante)</td></tr>
+      <tr><td class="mono">signserver_admin_ca</td><td>Keystores PKCS#12 / llaves privadas de firma y CA administrativa</td></tr>
+    </table>
+
+    <h3>Variables sensibles (Datos.env)</h3>
+    <table>
+      <tr><th>Variable</th><th>Uso</th></tr>
+      <tr><td class="mono">SESSION_SECRET</td><td>Firma de cookies de sesión (document-api)</td></tr>
+      <tr><td class="mono">DATABASE_URL / BUSINESS_DB_*</td><td>Credenciales PostgreSQL de negocio</td></tr>
+      <tr><td class="mono">OIDC_CLIENT_ID / SECRET / METADATA_URL</td><td>Integración con Entra ID</td></tr>
+      <tr><td class="mono">DEMO_AUTH_ENABLED / DEMO_AUTH_PASSWORD</td><td>Login de pruebas (desactivar en producción)</td></tr>
+      <tr><td class="mono">ADMIN_EMAILS / AUDITOR_EMAILS</td><td>Asignación de roles vía OIDC</td></tr>
+      <tr><td class="mono">CRL_FILE / TRUST_CA_FILE</td><td>Cadena de confianza y CRL para el validador</td></tr>
+    </table>
+  </section>
+
+  <footer>
+    SignServer CE · UAEMéx — DTIC · Documento generado para uso interno del proyecto.
+  </footer>
+</div>
+
+
+
+<script>
+/* Aparición gradual (opacidad 0 a 100) al bajar por la página */
+(function(){
+  var t=[].slice.call(document.querySelectorAll('header.hero, section > *, .grid2 > *, footer'));
+  t.forEach(function(el){el.classList.add('rv')});
+  void document.body.offsetHeight;
+  t.forEach(function(el){el.classList.add('rvt')});
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.06,rootMargin:'0px 0px -6% 0px'});
+  t.forEach(function(el){io.observe(el)});
+})();
+</script>
+</body>
+</html>

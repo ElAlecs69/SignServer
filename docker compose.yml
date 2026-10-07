@@ -10,7 +10,7 @@ services:
     container_name: signserver-init-certs
 
     env_file:
-      - ./Archivos/Datos.env
+      - ./Datos.env
 
     volumes:
 
@@ -181,26 +181,20 @@ services:
 
         echo "[4/6] Verificando admin-client.p12..."
 
-        if [ ! -f /out/admin_certs/admin-client.p12 ]; then
+        echo "      Generando PKCS#12 con la contraseña configurada..."
 
-          echo "      Generando PKCS#12..."
+        openssl pkcs12 \
+          -export \
+          -out /out/admin_certs/admin-client.p12.tmp \
+          -inkey /out/admin_certs/admin-client.key \
+          -in /out/admin_certs/admin-client.crt \
+          -certfile /out/admin_certs/admin-ca.crt \
+          -name "SignServer Administrator" \
+          -passout env:ADMIN_P12_PASSWORD
 
-          openssl pkcs12 \
-            -export \
-            -out /out/admin_certs/admin-client.p12 \
-            -inkey /out/admin_certs/admin-client.key \
-            -in /out/admin_certs/admin-client.crt \
-            -certfile /out/admin_certs/admin-ca.crt \
-            -name "SignServer Administrator" \
-            -passout env:ADMIN_P12_PASSWORD
-
-          chmod 600 /out/admin_certs/admin-client.p12
-
-        else
-
-          echo "      Ya existe. No se regenera."
-
-        fi
+        chmod 600 /out/admin_certs/admin-client.p12.tmp
+        mv /out/admin_certs/admin-client.p12.tmp \
+           /out/admin_certs/admin-client.p12
 
 
         # ========================================================
@@ -289,6 +283,10 @@ services:
 
             root /usr/share/nginx/html;
             index index.html;
+
+            location ~* \.mjs$$ {
+                default_type application/javascript;
+            }
 
             location / {
              try_files $$uri $$uri/ /index.html; 
@@ -409,7 +407,7 @@ services:
     image: docker.io/library/postgres:16-alpine
     container_name: signserver-business-db
     env_file:
-      - ./Archivos/Datos.env
+      - ./Datos.env
     environment:
       POSTGRES_DB: "${BUSINESS_DB_NAME:-signserver_business}"
       POSTGRES_USER: "${BUSINESS_DB_USER:-signserver_app}"
@@ -433,7 +431,7 @@ services:
     container_name: signserver-db
 
     env_file:
-      - ./Archivos/Datos.env
+      - ./Datos.env
 
     restart: unless-stopped
 
@@ -464,7 +462,7 @@ services:
     container_name: signserver-app
 
     env_file:
-      - ./Archivos/Datos.env
+      - ./Datos.env
 
     depends_on:
 
@@ -476,9 +474,11 @@ services:
 
     restart: unless-stopped
 
+    cgroup: host
+
     ports:
-      - "8080:8080"
-      - "8443:8443"
+      - "18080:8080"
+      - "18443:8443"
 
     environment:
 
@@ -532,11 +532,12 @@ services:
   # ============================================================
   signserver-validate:
     build:
-      context: ./Archivos/services/validate-service
+      context: .
+      dockerfile: Dockerfile
     container_name: signserver-validate
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "18000:8000"
     networks:
       - signserver-net
 
@@ -545,7 +546,7 @@ services:
       context: ./Archivos/services/document-api
     container_name: signserver-document-api
     env_file:
-      - ./Archivos/Datos.env
+      - ./Datos.env
     environment:
       DATABASE_URL: "postgresql+psycopg://${BUSINESS_DB_USER:-signserver_app}:ET%40AGDOisCTVKI%21nCMI%21@business-db:5432/${BUSINESS_DB_NAME:-signserver_business}"
       APP_PUBLIC_URL: "${APP_PUBLIC_URL:-https://172.18.117.229:9443}"

@@ -95,6 +95,24 @@ La lista de workers que aparecen en el desplegable vive en
 exactamente con los nombres de worker activos en tu `signserver.properties`
 (verifica con `signserver getstatus brief all` si tienes dudas).
 
+## 6. Formatos PDF
+
+La carpeta `../../Formatos` contiene las plantillas originales que Vite publica
+con el frontend. La vista **Formatos** reconstruye el texto de cada página en
+una capa HTML de PDF.js y mantiene los elementos gráficos originales como
+fondo para conservar su fidelidad visual. Ofrece controles HTML en las
+posiciones configuradas para evaluaciones; en las demás plantillas detecta
+etiquetas y líneas de captura del texto PDF y coloca controles HTML en esas
+posiciones. `RevisorDeProtocolo.pdf` (ya contiene datos de un caso) y
+`RUBRICA EVAL PROTOCOLO.pdf` (matriz de evaluación sin campos de captura) se
+muestran solo para consulta. No agrega campos PDF AcroForm. Al firmar, los
+valores HTML se dibujan como texto vectorial sobre el PDF original y se añade
+la firma manuscrita en el espacio configurado (o al final para plantillas
+detectadas automáticamente). El documento resultante se envía a `PDFSigner`;
+se puede descargar o cargar directamente al flujo de asignaciones. Nginx debe
+servir los archivos `.mjs` de PDF.js como `application/javascript` para que el
+worker cargue desde el origen HTTPS.
+
 ## Estructura del frontend
 
 ```

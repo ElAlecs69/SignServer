@@ -42,18 +42,20 @@ Todo dentro de la red interna de Podman: signserver-net
 Host físico: Windows + Podman Desktop (podman-machine-default, vía WSL2)
 ```
 
-**No hay Dockerfiles propios** para los tres contenedores originales — usan
-**imágenes oficiales sin modificar**, descargadas de Docker Hub. La única
-excepción es `signserver-validate` (ver sección 5.1), que sí tiene su
-propio `Dockerfile` porque necesita herramientas de verificación que no
-vienen en ninguna imagen base.
+Los contenedores de base de datos, SignServer y Nginx usan imágenes oficiales.
+`signserver-validate` se construye con el `Dockerfile` de la raíz: clona este
+repositorio y usa el código de `Archivos/services/validate-service`.
 
 | Contenedor | Imagen | Rol |
 |---|---|---|
 | `signserver-db` | `docker.io/library/mariadb:10.11` | Base de datos |
 | `signserver-app` | `docker.io/keyfactor/signserver-ce:7.3.2` | SignServer (incluye WildFly internamente) |
 | `signserver-web` | `docker.io/library/nginx:stable` | Reverse proxy + frontend estático |
-| `signserver-validate` | build propio (`services/validate-service/Dockerfile`) | Verifica firmas con `pdfsig`/`jarsigner`/`openssl`/`gpg`/`xmlsec1` |
+| `signserver-validate` | build propio (Dockerfile raíz) | Verifica firmas con `pdfsig`/`jarsigner`/`openssl`/`gpg`/`xmlsec1` |
+
+Puertos publicados en el host: SignServer `18080`/`18443`, validador
+`18000`, y Nginx `9080`/`9443`. Nginx y los servicios internos se comunican
+usando los puertos internos originales.
 
 Sobre WildFly: **no lo instalamos ni configuramos nosotros** — viene
 empaquetado dentro de la imagen `signserver-ce` como su servidor de
@@ -107,7 +109,7 @@ archivo `.env` fuera del control de versiones — actualmente no lo están.
 
 ```bash
 podman run -d --name signserver-app --network signserver-net \
-  -p 8080:8080 -p 8443:8443 \
+  -p 18080:8080 -p 18443:8443 \
   -e DATABASE_JDBC_URL="jdbc:mariadb://signserver-db:3306/signserver?characterEncoding=UTF-8" \
   -e DATABASE_USER=signserver \
   -e DATABASE_PASSWORD=signserverpassword \
@@ -252,8 +254,8 @@ dominio válido.
 
 ### 5.3 Servicio de validación (`signserver-validate`)
 
-Contenedor nuevo, con `Dockerfile` propio (`services/validate-service/`), en la
-misma red `signserver-net`. Expone en el puerto 8000 un backend FastAPI
+Contenedor nuevo, construido desde el `Dockerfile` de la raíz, en la
+misma red `signserver-net`. Expone internamente en el puerto 8000 un backend FastAPI
 que **verifica** (no firma) documentos usando herramientas estándar del
 sistema, independientes de SignServer:
 
@@ -266,6 +268,7 @@ sistema, independientes de SignServer:
 | XML | `xmlsec1 --verify` | `POST /validate/xml` |
 
 Body igual que el de firma: `{ "data": "<base64>", "filename": "..." }`.
+El puerto publicado para acceso desde el host es `18000`.
 
 ⚠️ **Nota de confianza:** tal como está, cada validador comprueba la
 **integridad** de la firma (que el archivo no se alteró), no la cadena
