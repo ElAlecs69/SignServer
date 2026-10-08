@@ -4,12 +4,15 @@ import io
 import os
 import secrets
 import uuid
+import asyncio
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Annotated
+from urllib.parse import urlparse
 
 import clamd
 import httpx
+from pypdf import PdfReader, PdfWriter
 from authlib.integrations.starlette_client import OAuth
 from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile, status
 from fastapi.responses import FileResponse, RedirectResponse
@@ -30,6 +33,9 @@ SIGN_SERVER_WORKER = os.getenv("SIGN_SERVER_WORKER", "PDFSigner")
 VALIDATE_SERVICE_URL = os.getenv("VALIDATE_SERVICE_URL", "http://signserver-validate:8000").rstrip("/")
 CLAMAV_HOST = os.getenv("CLAMAV_HOST", "clamav")
 MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(25 * 1024 * 1024)))
+DOCUMENT_INTELLIGENCE_ENDPOINT = os.getenv("DOCUMENT_INTELLIGENCE_ENDPOINT", "").rstrip("/")
+DOCUMENT_INTELLIGENCE_KEY = os.getenv("DOCUMENT_INTELLIGENCE_KEY", "")
+DOCUMENT_INTELLIGENCE_API_VERSION = "2023-07-31"
 SESSION_SECRET = os.environ["SESSION_SECRET"]
 SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "false").lower() == "true"
 OIDC_CLIENT_ID = os.environ["OIDC_CLIENT_ID"]
@@ -417,6 +423,153 @@ def csrf(request: Request, user: User = Depends(current_user)):
     return {"token": request.session["csrf"]}
 
 
+@app.post("/api/formats/analyze")
+@limiter.limit("5/minute")
+async def analyze_format_layout(
+    request: Request,
+    file: Annotated[UploadFile, File(...)],
+    _csrf=Depends(require_csrf),
+    user: User = Depends(current_user),
+):
+    if not DOCUMENT_INTELLIGENCE_ENDPOINT or not DOCUMENT_INTELLIGENCE_KEY:
+        raise HTTPException(503, "Azure Document Intelligence no está configurado en el servidor.")
+    if urlparse(DOCUMENT_INTELLIGENCE_ENDPOINT).scheme != "https":
+        raise HTTPException(503, "El endpoint de Azure Document Intelligence debe usar HTTPS.")
+    if file.content_type != "application/pdf":
+        raise HTTPException(415, "Solo se pueden analizar formatos PDF.")
+
+    source = await file.read(MAX_UPLOAD_BYTES + 1)
+    if len(source) > MAX_UPLOAD_BYTES:
+        raise HTTPException(413, "El formato excede el tamaño máximo permitido para análisis.")
+    if not source.startswith(b"%PDF-"):
+        raise HTTPException(415, "El archivo no es un PDF válido.")
+    try:
+        reader = PdfReader(io.BytesIO(source), strict=False)
+        if reader.is_encrypted:
+            raise HTTPException(422, "No se pueden analizar PDFs protegidos con contraseña.")
+        page_count = len(reader.pages)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(415, "No se pudo leer la estructura del PDF.") from exc
+    if page_count == 0:
+        raise HTTPException(422, "El PDF no contiene páginas para analizar.")
+
+    pages: list[dict] = []
+    tables: list[dict] = []
+    pairs: list[dict] = []
+    try:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(90, connect=10)) as client:
+            for first_page in range(0, page_count, 2):
+                writer = PdfWriter()
+                for page_index in range(first_page, min(first_page + 2, page_count)):
+                    writer.add_page(reader.pages[page_index])
+                chunk = io.BytesIO()
+                writer.write(chunk)
+                result = await _analyze_layout_chunk(client, chunk.getvalue())
+                local_pages = result.get("pages", [])
+                for page in local_pages:
+                    page_number = int(page.get("pageNumber", 0))
+                    page_index = first_page + page_number - 1
+                    if page_index < first_page or page_index >= page_count:
+                        continue
+                    unit = page.get("unit", "inch")
+                    scale = 72.0 if unit == "inch" else 1.0
+                    page_height = float(page.get("height", 0))
+                    pages.append({
+                        "pageIndex": page_index,
+                        "width": float(page.get("width", 0)) * scale,
+                        "height": page_height * scale,
+                        "lines": [
+                            {
+                                "text": line.get("content", ""),
+                                "bounds": _polygon_bounds(
+                                    line.get("polygon", []),
+                                    page_height,
+                                    unit,
+                                ),
+                            }
+                            for line in page.get("lines", [])
+                            if line.get("content") and line.get("polygon")
+                        ],
+                        "words": [
+                            {
+                                "text": word.get("content", ""),
+                                "bounds": _polygon_bounds(
+                                    word.get("polygon", []),
+                                    page_height,
+                                    unit,
+                                ),
+                            }
+                            for line in page.get("lines", [])
+                            for word in line.get("words", [])
+                            if word.get("content") and word.get("polygon")
+                        ],
+                    })
+                for table in result.get("tables", []):
+                    for region in table.get("boundingRegions", []):
+                        page_index = first_page + int(region.get("pageNumber", 0)) - 1
+                        if page_index < first_page or page_index >= page_count:
+                            continue
+                        table_page = next((page for page in local_pages if page.get("pageNumber") == page_index - first_page + 1), None)
+                        if not table_page:
+                            continue
+                        unit = table_page.get("unit", "inch")
+                        page_height = float(table_page.get("height", 0))
+                        tables.append({
+                            "pageIndex": page_index,
+                            "rowCount": int(table.get("rowCount", 0)),
+                            "columnCount": int(table.get("columnCount", 0)),
+                            "cells": [
+                                {
+                                    "rowIndex": int(cell.get("rowIndex", 0)),
+                                    "columnIndex": int(cell.get("columnIndex", 0)),
+                                    "rowSpan": int(cell.get("rowSpan", 1)),
+                                    "columnSpan": int(cell.get("columnSpan", 1)),
+                                    "text": cell.get("content", ""),
+                                    "bounds": _polygon_bounds(
+                                        cell_region.get("polygon", []),
+                                        page_height,
+                                        unit,
+                                    ),
+                                }
+                                for cell in table.get("cells", [])
+                                for cell_region in cell.get("boundingRegions", [])
+                                if cell_region.get("pageNumber") == region.get("pageNumber")
+                                and cell_region.get("polygon")
+                            ],
+                        })
+                for pair in result.get("keyValuePairs", []):
+                    key = pair.get("key", {})
+                    value = pair.get("value", {})
+                    for region in value.get("boundingRegions", []):
+                        page_index = first_page + int(region.get("pageNumber", 0)) - 1
+                        page = next((item for item in local_pages if item.get("pageNumber") == page_index - first_page + 1), None)
+                        if not page or not region.get("polygon"):
+                            continue
+                        pairs.append({
+                            "pageIndex": page_index,
+                            "key": key.get("content", ""),
+                            "value": value.get("content", ""),
+                            "bounds": _polygon_bounds(
+                                region.get("polygon", []),
+                                float(page.get("height", 0)),
+                                page.get("unit", "inch"),
+                            ),
+                        })
+    except httpx.HTTPError as exc:
+        raise HTTPException(502, "No se pudo conectar con Azure Document Intelligence.") from exc
+
+    audit_db = SessionLocal()
+    try:
+        audit(audit_db, user, "document.layout.analyzed", request, details=f"pages={page_count};provider=azure-document-intelligence")
+        audit_db.commit()
+    finally:
+        audit_db.close()
+    pages.sort(key=lambda page: page["pageIndex"])
+    return {"pages": pages, "tables": tables, "keyValuePairs": pairs}
+
+
 @app.post("/auth/logout")
 def logout(request: Request, _csrf=Depends(require_csrf), db: Session = Depends(db_session)):
     identity = request.session.get("identity")
@@ -460,6 +613,64 @@ class DirectValidateRequest(BaseModel):
     format: str  # uno de DIRECT_VALIDATE_FORMATS
     filename: str
     data: str  # contenido en base64
+
+
+def _polygon_bounds(polygon: list[float], page_height: float, unit: str) -> dict[str, float] | None:
+    if len(polygon) < 8 or len(polygon) % 2:
+        return None
+    scale = 72.0 if unit == "inch" else 1.0
+    xs = [float(value) * scale for value in polygon[::2]]
+    ys = [float(value) * scale for value in polygon[1::2]]
+    left, right = min(xs), max(xs)
+    top, bottom = min(ys), max(ys)
+    page_height_points = page_height * scale
+    return {
+        "x": left,
+        "y": page_height_points - bottom,
+        "width": right - left,
+        "height": bottom - top,
+    }
+
+
+async def _analyze_layout_chunk(
+    client: httpx.AsyncClient,
+    pdf_chunk: bytes,
+) -> dict:
+    analyze_url = (
+        f"{DOCUMENT_INTELLIGENCE_ENDPOINT}/formrecognizer/documentModels/prebuilt-layout:analyze"
+        f"?api-version={DOCUMENT_INTELLIGENCE_API_VERSION}&features=keyValuePairs"
+    )
+    response = await client.post(
+        analyze_url,
+        headers={
+            "Ocp-Apim-Subscription-Key": DOCUMENT_INTELLIGENCE_KEY,
+            "Content-Type": "application/pdf",
+        },
+        content=pdf_chunk,
+    )
+    if response.status_code != 202:
+        raise HTTPException(502, "Azure Document Intelligence no pudo iniciar el análisis del PDF.")
+    operation_url = response.headers.get("operation-location")
+    if not operation_url:
+        raise HTTPException(502, "Azure Document Intelligence no devolvió el identificador de análisis.")
+    if urlparse(operation_url).netloc.lower() != urlparse(DOCUMENT_INTELLIGENCE_ENDPOINT).netloc.lower():
+        raise HTTPException(502, "Azure Document Intelligence devolvió un destino de análisis no válido.")
+
+    for _ in range(120):
+        await asyncio.sleep(0.5)
+        result_response = await client.get(
+            operation_url,
+            headers={"Ocp-Apim-Subscription-Key": DOCUMENT_INTELLIGENCE_KEY},
+        )
+        if result_response.status_code != 200:
+            raise HTTPException(502, "No se pudo consultar el resultado del análisis documental.")
+        result = result_response.json()
+        status_value = result.get("status")
+        if status_value == "succeeded":
+            return result.get("analyzeResult", {})
+        if status_value in {"failed", "canceled"}:
+            raise HTTPException(502, "Azure Document Intelligence no pudo analizar este formato.")
+    raise HTTPException(504, "El análisis del documento excedió el tiempo de espera.")
 
 
 class ClientAuditEventRequest(BaseModel):

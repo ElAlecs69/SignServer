@@ -46,6 +46,8 @@ AUDITOR_EMAILS=auditor@example.org
 SIGN_SERVER_WORKER=PDFSigner
 MAX_UPLOAD_BYTES=26214400
 CLAMAV_HOST=clamav
+DOCUMENT_INTELLIGENCE_ENDPOINT=
+DOCUMENT_INTELLIGENCE_KEY=
 EOF
 chmod 600 .env
 mkdir -p runtime/tls runtime/ca runtime/admin runtime/keystores backups

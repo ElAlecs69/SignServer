@@ -100,18 +100,49 @@ exactamente con los nombres de worker activos en tu `signserver.properties`
 La carpeta `../../Formatos` contiene las plantillas originales que Vite publica
 con el frontend. La vista **Formatos** reconstruye el texto de cada página en
 una capa HTML de PDF.js y mantiene los elementos gráficos originales como
-fondo para conservar su fidelidad visual. Ofrece controles HTML en las
-posiciones configuradas para evaluaciones; en las demás plantillas detecta
-etiquetas y líneas de captura del texto PDF y coloca controles HTML en esas
-posiciones. `RevisorDeProtocolo.pdf` (ya contiene datos de un caso) y
+fondo para conservar su fidelidad visual. Muestra los campos de captura en el
+panel izquierdo y el PDF original en el panel derecho. Los campos HTML no se
+superponen al PDF de vista previa; al firmar, sus valores se integran en el
+documento original. Ofrece campos para evaluaciones y detecta etiquetas y
+líneas de captura en las demás plantillas. `RevisorDeProtocolo.pdf` (ya contiene datos de un caso) y
 `RUBRICA EVAL PROTOCOLO.pdf` (matriz de evaluación sin campos de captura) se
 muestran solo para consulta. No agrega campos PDF AcroForm. Al firmar, los
 valores HTML se dibujan como texto vectorial sobre el PDF original y se añade
-la firma manuscrita en el espacio configurado (o al final para plantillas
-detectadas automáticamente). El documento resultante se envía a `PDFSigner`;
-se puede descargar o cargar directamente al flujo de asignaciones. Nginx debe
-servir los archivos `.mjs` de PDF.js como `application/javascript` para que el
-worker cargue desde el origen HTTPS.
+la firma manuscrita recortada y alineada con la línea de firma del formato.
+La marca del cargo del comité se centra en los paréntesis localizados en el
+texto PDF. El documento resultante se envía a `PDFSigner`; se puede descargar
+o cargar directamente al flujo de asignaciones. Nginx debe servir los archivos
+`.mjs` de PDF.js como `application/javascript` para que el worker cargue desde
+el origen HTTPS. La firma directa envía el PDF a `/api/direct/sign` como JSON
+con el contenido en Base64; por ello, el Nginx generado en `docker compose.yml`
+permite cuerpos de hasta `999M` para evitar respuestas `413 Request Entity Too
+Large` con documentos grandes.
+Los campos detectados también usan controles según su contenido: las fechas se
+seleccionan con un control de calendario y se imprimen como `dd/mm/aaaa` (o
+`dd/mm/aa` cuando así lo indica la plantilla), los correos se validan como
+direcciones de email y los campos numéricos aplican límites para porcentajes,
+semestres, duración y calificaciones antes de firmar.
+En la evaluación CONACYT, las fechas se distribuyen en las posiciones
+preimpresas de día, mes y año, y cada renglón de «Actividades realizadas» exige
+seleccionar una calificación; la opción se marca con una X en su celda original.
+
+### Identificación de tablas con Azure AI
+
+El botón **Identificar tablas con Azure AI** envía el PDF seleccionado desde el
+backend a Azure AI Document Intelligence (`prebuilt-layout`). El servicio
+detecta la estructura de las tablas y las coordenadas de sus celdas; las celdas
+vacías se convierten en controles y las tablas de calificación en opciones que
+se marcan en la celda del PDF. El PDF no se envía hasta que el usuario inicia
+el análisis. Las celdas detectadas deben revisarse antes de firmar: el servicio
+detecta geometría y OCR, pero no certifica por sí solo el significado de cada
+campo.
+
+Para habilitarlo, crea un recurso Azure Document Intelligence **F0** y define
+`DOCUMENT_INTELLIGENCE_ENDPOINT` y `DOCUMENT_INTELLIGENCE_KEY` en el `.env`
+raíz del despliegue. Nunca pongas la clave en el frontend ni en Git. El nivel
+F0 limita cada solicitud de análisis a dos páginas; el backend divide el PDF en
+bloques de hasta dos páginas. La aplicación requiere reconstruir `document-api`
+para instalar la dependencia PDF nueva y propagar las variables al servicio.
 
 ## Estructura del frontend
 

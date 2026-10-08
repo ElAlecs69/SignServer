@@ -36,6 +36,8 @@ type DateSegmentDefinition = {
   y: number
   width: number
 }
+type HtmlDateSegment = Omit<DateSegmentDefinition, 'pageIndex'>
+type HtmlChoicePosition = { value: string; label: string; x: number; y: number; width: number }
 type HtmlFieldDefinition = {
   id: string
   label: string
@@ -46,7 +48,45 @@ type HtmlFieldDefinition = {
   height: number
   multiline?: boolean
   cover?: boolean
+  dateSegments?: HtmlDateSegment[]
+  choices?: HtmlChoicePosition[]
 }
+type DocumentAiBounds = { x: number; y: number; width: number; height: number }
+type DocumentAiTableCell = {
+  rowIndex: number
+  columnIndex: number
+  text: string
+  bounds: DocumentAiBounds | null
+}
+type DocumentAiTable = {
+  pageIndex: number
+  rowCount: number
+  columnCount: number
+  cells: DocumentAiTableCell[]
+}
+type DocumentAiWord = { text: string; bounds: DocumentAiBounds | null }
+type DocumentAiDateGroup = {
+  pageIndex: number
+  centerX: number
+  segments: DateSegmentDefinition[]
+}
+type DocumentAiLayout = {
+  pages: Array<{
+    pageIndex: number
+    width: number
+    height: number
+    lines: Array<{ text: string; bounds: DocumentAiBounds | null }>
+    words: DocumentAiWord[]
+  }>
+  tables: DocumentAiTable[]
+}
+type HtmlFieldInput =
+  | { type: 'date' }
+  | { type: 'email' }
+  | { type: 'digits' }
+  | { type: 'number'; min: number; max?: number; step: number }
+  | { type: 'select'; options: Array<{ value: string; label: string }> }
+  | { type: 'text' }
 type HtmlFieldProfile = Omit<HtmlFieldDefinition, 'x' | 'y' | 'width'> & {
   x?: number
   y?: number
@@ -64,7 +104,8 @@ type RoleMark = {
   hitWidth: number
   hitHeight: number
 }
-type SignatureTarget = { pageIndex: number; x: number; y: number; width: number }
+type SignatureTarget = { pageIndex: number; x: number; y: number; width: number; maxHeight?: number }
+type SignatureSize = { width: number; height: number }
 type FormLayout = {
   fields: FieldDefinition[]
   gradeFields: GradeDefinition[]
@@ -112,11 +153,95 @@ const FIELD_PROFILES: Record<string, HtmlFieldProfile[]> = {
     { id: 'becario-nombres', label: 'Nombre(s) del becario', pageIndex: 0, x: 276, y: 670, width: 125, height: 17 },
     { id: 'asesor', label: 'Nombre del asesor', pageIndex: 0, anchor: /Nombre del Asesor/i, maxWidth: 390, height: 17 },
     { id: 'tesis', label: 'Nombre de la tesis', pageIndex: 0, anchor: /Nombre de la tesis/i, maxWidth: 390, height: 17 },
-    { id: 'periodo-inicio', label: 'Inicio del periodo académico (dd/mm/aa)', pageIndex: 0, x: 250, y: 590, width: 70, height: 17 },
-    { id: 'periodo-fin', label: 'Fin del periodo académico (dd/mm/aa)', pageIndex: 0, x: 435, y: 590, width: 70, height: 17 },
+    {
+      id: 'periodo-inicio',
+      label: 'Inicio del periodo académico (dd/mm/aa)',
+      pageIndex: 0,
+      x: 248,
+      y: 589.9,
+      width: 75,
+      height: 17,
+      dateSegments: [
+        { part: 'day', x: 248, y: 589.9, width: 17 },
+        { part: 'month', x: 270, y: 589.9, width: 20 },
+        { part: 'year', x: 292, y: 589.9, width: 28 },
+      ],
+    },
+    {
+      id: 'periodo-fin',
+      label: 'Fin del periodo académico (dd/mm/aa)',
+      pageIndex: 0,
+      x: 407,
+      y: 589.9,
+      width: 75,
+      height: 17,
+      dateSegments: [
+        { part: 'day', x: 407, y: 589.9, width: 17 },
+        { part: 'month', x: 432, y: 589.9, width: 22 },
+        { part: 'year', x: 459, y: 589.9, width: 27 },
+      ],
+    },
+    {
+      id: 'activity-performance',
+      label: 'Desempeño académico',
+      pageIndex: 0,
+      x: 238.08,
+      y: 494.4,
+      width: 75.6,
+      height: 17,
+      choices: [
+        { value: 'excellent', label: 'Excelente / completamente seguro', x: 238.08, y: 494.4, width: 75.6 },
+        { value: 'good', label: 'Bueno / seguro', x: 316.56, y: 494.4, width: 74.64 },
+        { value: 'sufficient', label: 'Suficiente / casi seguro', x: 394.32, y: 494.4, width: 67.68 },
+        { value: 'unsatisfactory', label: 'No satisfactorio / no es seguro', x: 465.12, y: 494.4, width: 74.16 },
+      ],
+    },
+    {
+      id: 'activity-study-plan',
+      label: 'Cumplimiento del plan de estudios',
+      pageIndex: 0,
+      x: 238.08,
+      y: 463.56,
+      width: 75.6,
+      height: 17,
+      choices: [
+        { value: 'excellent', label: 'Excelente / completamente seguro', x: 238.08, y: 463.56, width: 75.6 },
+        { value: 'good', label: 'Bueno / seguro', x: 316.56, y: 463.56, width: 74.64 },
+        { value: 'sufficient', label: 'Suficiente / casi seguro', x: 394.32, y: 463.56, width: 67.68 },
+        { value: 'unsatisfactory', label: 'No satisfactorio / no es seguro', x: 465.12, y: 463.56, width: 74.16 },
+      ],
+    },
+    {
+      id: 'activity-degree-timing',
+      label: 'Obtención del grado dentro del tiempo oficial del plan de estudios',
+      pageIndex: 0,
+      x: 238.08,
+      y: 432.72,
+      width: 75.6,
+      height: 17,
+      choices: [
+        { value: 'excellent', label: 'Excelente / completamente seguro', x: 238.08, y: 432.72, width: 75.6 },
+        { value: 'good', label: 'Bueno / seguro', x: 316.56, y: 432.72, width: 74.64 },
+        { value: 'sufficient', label: 'Suficiente / casi seguro', x: 394.32, y: 432.72, width: 67.68 },
+        { value: 'unsatisfactory', label: 'No satisfactorio / no es seguro', x: 465.12, y: 432.72, width: 74.16 },
+      ],
+    },
     { id: 'comentarios', label: 'Comentarios sobre la evaluación', pageIndex: 0, x: 64, y: 315, width: 468, height: 74, multiline: true },
     { id: 'avance', label: 'Porcentaje de avance de la tesis', pageIndex: 0, x: 285, y: 292, width: 65, height: 17 },
-    { id: 'fecha-evaluacion', label: 'Fecha de evaluación', pageIndex: 0, x: 160, y: 111, width: 160, height: 17 },
+    {
+      id: 'fecha-evaluacion',
+      label: 'Fecha de evaluación',
+      pageIndex: 0,
+      x: 168,
+      y: 117.6,
+      width: 91,
+      height: 17,
+      dateSegments: [
+        { part: 'day', x: 168, y: 117.6, width: 22 },
+        { part: 'month', x: 197, y: 117.6, width: 28 },
+        { part: 'year', x: 229, y: 117.6, width: 32 },
+      ],
+    },
   ],
   'formato Componentes en inglés.pdf': [
     { id: 'learning-unit', label: 'Learning unit', pageIndex: 0, x: 150, y: 436.8, width: 172, height: 17 },
@@ -207,8 +332,235 @@ const FIELD_PROFILES: Record<string, HtmlFieldProfile[]> = {
 
 const PDF_FONT_SIZE = 11
 const SIGNATURE_WIDTH = 165
+const SIGNATURE_MAX_HEIGHT = 28
+const SIGNATURE_LABEL_GAP = 7
 const FIELD_HEIGHT = 17
 const UNDERLINE_TEXT_OFFSET = 3
+const DATE_BASELINE_OFFSET = 3
+const isDateField = (id: string, label = '') =>
+  /(date|fecha|periodo-inicio|periodo-fin)/i.test(id) || /\b(date|fecha)\b/i.test(label)
+const EMAIL_PATTERN = /^[A-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,}$/i
+
+function getHtmlFieldInput(
+  field: Pick<HtmlFieldDefinition, 'id' | 'label' | 'multiline' | 'choices'>,
+): HtmlFieldInput {
+  if (field.choices) {
+    return {
+      type: 'select',
+      options: field.choices.map(({ value, label }) => ({ value, label })),
+    }
+  }
+  const identity = `${field.id} ${field.label}`.toLowerCase()
+  if (isDateField(field.id, field.label)) return { type: 'date' }
+  if (/\b(email|correo)\b/.test(identity)) return { type: 'email' }
+  if (/\bcvu\b/.test(identity)) return { type: 'digits' }
+  if (/\b(porcentaje|percent|avance)\b/.test(identity)) {
+    return { type: 'number', min: 0, max: 100, step: 0.1 }
+  }
+  if (/\b(semestre|semester)\b/.test(identity)) {
+    return { type: 'number', min: 1, max: 12, step: 1 }
+  }
+  if (/\b(calificaci[oó]n|grade)\b/.test(identity)) {
+    return { type: 'number', min: 0, max: 10, step: 0.1 }
+  }
+  if (/\b(duraci[oó]n|duration)\b/.test(identity)) {
+    return { type: 'number', min: 0.1, step: 0.1 }
+  }
+  return { type: 'text' }
+}
+
+function formatHtmlFieldValue(field: HtmlFieldDefinition, value: string): string {
+  if (getHtmlFieldInput(field).type !== 'date' || !value) return value.trim()
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
+  if (!match || !isValidIsoDate(value)) return value.trim()
+  const [, year, month, day] = match
+  const displayedYear = /\bdd\s*\/\s*mm\s*\/\s*aa\b/i.test(field.label) ? year.slice(-2) : year
+  return `${day}/${month}/${displayedYear}`
+}
+
+function isValidIsoDate(value: string): boolean {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
+  if (!match) return false
+  const [, year, month, day] = match
+  const date = new Date(0)
+  date.setUTCHours(0, 0, 0, 0)
+  date.setUTCFullYear(Number(year), Number(month) - 1, Number(day))
+  return date.getUTCFullYear() === Number(year)
+    && date.getUTCMonth() === Number(month) - 1
+    && date.getUTCDate() === Number(day)
+}
+
+function validateHtmlField(field: HtmlFieldDefinition, rawValue: string): string | null {
+  const value = rawValue.trim()
+  const input = getHtmlFieldInput(field)
+  if (input.type === 'select' && !input.options.some((option) => option.value === value)) {
+    return `Selecciona una opción para ${field.label.toLowerCase()}.`
+  }
+  if (!value) return null
+  if (input.type === 'email' && (value.length > 254 || !EMAIL_PATTERN.test(value))) {
+    return `${field.label} debe tener una dirección de correo válida.`
+  }
+  if (input.type === 'date' && !isValidIsoDate(value)) {
+    return `${field.label} debe ser una fecha válida.`
+  }
+  if (input.type === 'digits' && !/^\d+$/.test(value)) {
+    return `${field.label} solo debe contener números.`
+  }
+  if (input.type === 'number') {
+    const number = Number(value)
+    if (!Number.isFinite(number) || number < input.min || (input.max !== undefined && number > input.max)) {
+      const range = input.max === undefined ? `mayor o igual a ${input.min}` : `entre ${input.min} y ${input.max}`
+      return `${field.label} debe ser ${range}.`
+    }
+    const steps = (number - input.min) / input.step
+    if (Math.abs(steps - Math.round(steps)) > 1e-8) {
+      return `${field.label} debe usar incrementos de ${input.step}.`
+    }
+  }
+  return null
+}
+
+function buildAiTableFields(layout: DocumentAiLayout): HtmlFieldDefinition[] {
+  const fields: HtmlFieldDefinition[] = []
+  const headerPatterns = /\b(excelente|bueno|suficiente|satisfactorio|calificaci[oó]n|rating|score|grade|yes|no|s[ií])\b/i
+
+  for (const [tableIndex, table] of layout.tables.entries()) {
+    const cells = new Map(table.cells.map((cell) => [`${cell.rowIndex}:${cell.columnIndex}`, cell]))
+    const headerRow = Math.min(...table.cells.map((cell) => cell.rowIndex))
+    const headers = Array.from({ length: table.columnCount }, (_, columnIndex) =>
+      cells.get(`${headerRow}:${columnIndex}`)?.text.trim() ?? '',
+    )
+    const choiceColumns = headers
+      .map((label, columnIndex) => ({ label, columnIndex }))
+      .filter(({ label, columnIndex }) => columnIndex > 0 && label && headerPatterns.test(label))
+    const isChoiceGrid = choiceColumns.length >= 2
+
+    for (let rowIndex = headerRow + 1; rowIndex < table.rowCount; rowIndex += 1) {
+      const rowLabel = cells.get(`${rowIndex}:0`)?.text.trim()
+      if (!rowLabel) continue
+      if (isChoiceGrid) {
+        const choices = choiceColumns.flatMap(({ label, columnIndex }) => {
+          const cell = cells.get(`${rowIndex}:${columnIndex}`)
+          if (!cell?.bounds) return []
+          return [{
+            value: `column-${columnIndex}`,
+            label,
+            x: cell.bounds.x,
+            y: cell.bounds.y + (cell.bounds.height - PDF_FONT_SIZE) / 2,
+            width: cell.bounds.width,
+          }]
+        })
+        if (choices.length < 2) continue
+        fields.push({
+          id: `ai-table-${table.pageIndex}-${tableIndex}-row-${rowIndex}`,
+          label: rowLabel,
+          pageIndex: table.pageIndex,
+          x: choices[0].x,
+          y: choices[0].y,
+          width: choices.reduce((sum, choice) => sum + choice.width, 0),
+          height: Math.max(...choices.map((choice) => cells.get(`${rowIndex}:${choice.value.replace('column-', '')}`)?.bounds?.height ?? FIELD_HEIGHT)),
+          choices,
+        })
+        continue
+      }
+
+      for (let columnIndex = 1; columnIndex < table.columnCount; columnIndex += 1) {
+        const cell = cells.get(`${rowIndex}:${columnIndex}`)
+        if (!cell?.bounds || cell.text.trim()) continue
+        const header = headers[columnIndex] || `columna ${columnIndex + 1}`
+        fields.push({
+          id: `ai-table-${table.pageIndex}-${tableIndex}-cell-${rowIndex}-${columnIndex}`,
+          label: `${rowLabel} — ${header}`,
+          pageIndex: table.pageIndex,
+          x: cell.bounds.x,
+          y: cell.bounds.y + 2,
+          width: cell.bounds.width,
+          height: cell.bounds.height,
+        })
+      }
+    }
+  }
+  return fields
+}
+
+function buildAiDateGroups(layout: DocumentAiLayout): DocumentAiDateGroup[] {
+  const groups: DocumentAiDateGroup[] = []
+  const markerType = (text: string): DatePart | null => {
+    const normalized = text.toLowerCase().replace(/[^a-záéíóú]/g, '')
+    if (/^(d{1,2}|day)$/.test(normalized)) return 'day'
+    if (/^(m{1,2}|month)$/.test(normalized)) return 'month'
+    if (/^(a{2,4}|y{2,4}|year)$/.test(normalized)) return 'year'
+    return null
+  }
+
+  for (const page of layout.pages) {
+    const rows: DocumentAiWord[][] = []
+    for (const word of page.words.filter((item) => item.bounds).sort((a, b) =>
+      (b.bounds?.y ?? 0) - (a.bounds?.y ?? 0) || (a.bounds?.x ?? 0) - (b.bounds?.x ?? 0),
+    )) {
+      const row = rows.find((items) => Math.abs((items[0].bounds?.y ?? 0) - (word.bounds?.y ?? 0)) <= 3)
+      if (row) row.push(word)
+      else rows.push([word])
+    }
+
+    for (const row of rows) {
+      const markers = row.flatMap((word) => {
+        const part = markerType(word.text)
+        return part && word.bounds ? [{ part, bounds: word.bounds }] : []
+      }).sort((a, b) => a.bounds.x - b.bounds.x)
+      const compactMarkers = markers.reduce<typeof markers>((result, marker) => {
+        const previous = result[result.length - 1]
+        if (previous?.part === marker.part && marker.bounds.x - (previous.bounds.x + previous.bounds.width) < 10) {
+          const right = Math.max(previous.bounds.x + previous.bounds.width, marker.bounds.x + marker.bounds.width)
+          const bottom = Math.min(previous.bounds.y, marker.bounds.y)
+          const top = Math.max(
+            previous.bounds.y + previous.bounds.height,
+            marker.bounds.y + marker.bounds.height,
+          )
+          previous.bounds = {
+            x: previous.bounds.x,
+            y: bottom,
+            width: right - previous.bounds.x,
+            height: top - bottom,
+          }
+        } else {
+          result.push({ ...marker, bounds: { ...marker.bounds } })
+        }
+        return result
+      }, [])
+      let index = 0
+      while (index + 2 < compactMarkers.length) {
+        const day = compactMarkers[index]
+        const month = compactMarkers[index + 1]
+        const year = compactMarkers[index + 2]
+        if (day.part !== 'day' || month.part !== 'month' || year.part !== 'year') {
+          index += 1
+          continue
+        }
+        const centerX = (day.bounds.x + year.bounds.x + year.bounds.width) / 2
+        const nearbyDateLabel = page.lines.some((line) =>
+          /\b(fecha|date|periodo|period)\b/i.test(line.text)
+          && line.bounds
+          && Math.abs(line.bounds.y - day.bounds.y) <= 65,
+        )
+        if (nearbyDateLabel) {
+          groups.push({
+            pageIndex: page.pageIndex,
+            centerX,
+            segments: [
+              { part: 'day', pageIndex: page.pageIndex, x: day.bounds.x - 1, y: day.bounds.y - 1, width: Math.max(14, day.bounds.width + 2) },
+              { part: 'month', pageIndex: page.pageIndex, x: month.bounds.x - 1, y: month.bounds.y - 1, width: Math.max(15, month.bounds.width + 2) },
+              { part: 'year', pageIndex: page.pageIndex, x: year.bounds.x - 1, y: year.bounds.y - 1, width: Math.max(25, year.bounds.width + 2) },
+            ],
+          })
+        }
+        index += 3
+      }
+    }
+  }
+  return groups
+}
+
 const FOUR_ROLES: CommitteeRole[] = ['director', 'co-director', 'tutor', 'external']
 const FIVE_ROLES: CommitteeRole[] = [...FOUR_ROLES, 'synod']
 const ROLE_LABELS: Record<CommitteeRole, string> = {
@@ -253,7 +605,13 @@ const dateSegments = (
   pageIndex: number,
   y: number,
   positions: Array<[DatePart, number, number]>,
-): DateSegmentDefinition[] => positions.map(([part, x, width]) => ({ part, pageIndex, x, y, width }))
+): DateSegmentDefinition[] => positions.map(([part, x, width]) => ({
+  part,
+  pageIndex,
+  x,
+  y: y + DATE_BASELINE_OFFSET,
+  width,
+}))
 
 function getFormLayout(fileName: string): FormLayout | null {
   const semester = Number(fileName.match(/Evaluacion_([1-6])semestre/)?.[1])
@@ -442,11 +800,13 @@ async function detectHtmlFields(
         label: field.label,
         pageIndex: field.pageIndex,
         x: field.x,
-        y: field.y,
+        y: field.y + (isDateField(field.id, field.label) ? DATE_BASELINE_OFFSET : 0),
         width: field.width ?? field.maxWidth ?? 0,
         height: field.height,
         multiline: field.multiline,
         cover: field.cover,
+        dateSegments: field.dateSegments,
+        choices: field.choices,
       }]
     }
     if (!field.anchor) return []
@@ -505,11 +865,14 @@ async function detectHtmlFields(
       label: field.label,
       pageIndex: field.pageIndex,
       x,
-      y: blankAfterLabel?.y ?? labelItem.y,
+      y: (blankAfterLabel?.y ?? labelItem.y)
+        + (isDateField(field.id, field.label) ? DATE_BASELINE_OFFSET : 0),
       width,
       height: field.height,
       multiline: field.multiline,
       cover: field.cover,
+      dateSegments: field.dateSegments,
+      choices: field.choices,
     }]
   })
 }
@@ -524,6 +887,165 @@ function getFallbackSignatureTarget(pages: PDFPageProxy[]): SignatureTarget {
     y: bottom + 92,
     width: Math.min(SIGNATURE_WIDTH, (right - left) / 3),
   }
+}
+
+async function findSignatureTarget(pages: PDFPageProxy[]): Promise<SignatureTarget | null> {
+  const pageText = await Promise.all(pages.map(async (page, pageIndex) => {
+    const content = await page.getTextContent()
+    const items = content.items.flatMap((item) => {
+      if (!('str' in item) || !item.str.trim()) return []
+      return [{
+        text: item.str.trim(),
+        pageIndex,
+        x: item.transform[4],
+        y: item.transform[5],
+        width: item.width,
+        height: item.height,
+      }]
+    })
+    return {
+      items,
+      anchors: items.filter((item) => /\bfirma(?:\s+y\s+nombre)?\b/i.test(item.text)),
+      underlines: items.filter((item) => /^_{3,}$/.test(item.text)),
+    }
+  }))
+  const candidates = pageText.flatMap((page) => page.anchors)
+  if (!candidates.length) return null
+
+  const lastPageIndex = Math.max(...candidates.map((candidate) => candidate.pageIndex))
+  const anchor = candidates
+    .filter((candidate) => candidate.pageIndex === lastPageIndex)
+    .sort((a, b) => a.y - b.y)[0]
+  if (!anchor) return null
+  const labelCenter = anchor.x + anchor.width / 2
+  const underline = pageText[anchor.pageIndex].underlines
+    .filter((line) => {
+      const lineCenter = line.x + line.width / 2
+      const verticalGap = line.y - anchor.y
+      return verticalGap > 0 && verticalGap <= 40 && Math.abs(lineCenter - labelCenter) <= 100
+    })
+    .sort((a, b) => a.y - b.y)[0]
+  if (underline) {
+    const width = Math.min(SIGNATURE_WIDTH, underline.width)
+    const nearestTextAboveLine = pageText[anchor.pageIndex].items
+      .filter((item) => {
+        if (item === underline || item.text.startsWith('_')) return false
+        const overlapsLine = item.x + item.width >= underline.x
+          && item.x <= underline.x + underline.width
+        const verticalGap = item.y - underline.y
+        return overlapsLine && verticalGap > 0 && verticalGap <= 70
+      })
+      .sort((a, b) => a.y - b.y)[0]
+    const availableHeight = nearestTextAboveLine
+      ? nearestTextAboveLine.y + DATE_BASELINE_OFFSET - underline.y - 3
+      : SIGNATURE_MAX_HEIGHT
+    return {
+      pageIndex: anchor.pageIndex,
+      x: underline.x + (underline.width - width) / 2,
+      y: underline.y,
+      width,
+      maxHeight: Math.max(8, Math.min(SIGNATURE_MAX_HEIGHT, availableHeight)),
+    }
+  }
+  return {
+    pageIndex: anchor.pageIndex,
+    x: labelCenter - SIGNATURE_WIDTH / 2,
+    y: anchor.y + anchor.height + SIGNATURE_LABEL_GAP,
+    width: SIGNATURE_WIDTH,
+  }
+}
+
+const ROLE_TEXT_PATTERNS: Record<CommitteeRole, RegExp> = {
+  director: /DIRECTOR(?:\(A\))?/i,
+  'co-director': /CO\s*-\s*DIRECTOR(?:\(A\))?|CODIRECTOR(?:\(A\))?/i,
+  tutor: /TUTOR(?:\(A\))?/i,
+  external: /EXTERNO(?:\(A\))?|TERNO(?:\(A\))?|EXTERNAL/i,
+  synod: /S\s*[IÍ]\s*N\s*O\s*D\s*O/i,
+}
+
+async function findCommitteeRoleMark(
+  pages: PDFPageProxy[],
+  role: CommitteeRole,
+): Promise<RoleMark | null> {
+  for (let pageIndex = 0; pageIndex < pages.length; pageIndex += 1) {
+    const content = await pages[pageIndex].getTextContent()
+    const items = content.items.flatMap((item) => {
+      if (!('str' in item) || !item.str.trim()) return []
+      return [{
+        text: item.str,
+        x: item.transform[4],
+        y: item.transform[5],
+        width: item.width,
+      }]
+    })
+    const lines: typeof items[] = []
+    for (const item of [...items].sort((a, b) => b.y - a.y || a.x - b.x)) {
+      let line = lines.find((candidate) => Math.abs(candidate[0].y - item.y) <= 2.5)
+      if (!line) {
+        line = []
+        lines.push(line)
+      }
+      line.push(item)
+    }
+
+    for (const line of lines) {
+      line.sort((a, b) => a.x - b.x)
+      let combined = ''
+      const spans = line.map((item) => {
+        const start = combined.length
+        combined += `${item.text} `
+        return { item, start, end: start + item.text.length }
+      })
+      const rolePattern = ROLE_TEXT_PATTERNS[role]
+      rolePattern.lastIndex = 0
+      const roleMatch = rolePattern.exec(combined)
+      if (!roleMatch) continue
+      if (
+        role === 'director'
+        && /CO\s*-\s*$/i.test(combined.slice(0, roleMatch.index))
+      ) continue
+
+      const roleEnd = roleMatch.index + roleMatch[0].length
+      const nextRoleIndex = Object.entries(ROLE_TEXT_PATTERNS)
+        .filter(([candidate]) => candidate !== role)
+        .map(([, pattern]) => {
+          pattern.lastIndex = 0
+          return pattern.exec(combined)?.index ?? Number.POSITIVE_INFINITY
+        })
+        .filter((index) => index > roleEnd)
+        .reduce((nearest, index) => Math.min(nearest, index), combined.length)
+      const charCenter = (index: number): number | null => {
+        const span = spans.find(({ start, end }) => index >= start && index < end)
+        if (!span) return null
+        const offset = index - span.start
+        const charWidth = span.item.width / span.item.text.length
+        return span.item.x + (offset + 0.5) * charWidth
+      }
+
+      let selectedParen: { open: number; close: number } | null = null
+      for (let open = combined.indexOf('(', roleEnd); open >= 0 && open < nextRoleIndex; open = combined.indexOf('(', open + 1)) {
+        const close = combined.indexOf(')', open + 1)
+        if (close >= 0 && close < nextRoleIndex) selectedParen = { open, close }
+      }
+      if (!selectedParen) continue
+
+      const openX = charCenter(selectedParen.open)
+      const closeX = charCenter(selectedParen.close)
+      if (openX === null || closeX === null) continue
+      const centerY = line.reduce((total, item) => total + item.y, 0) / line.length
+      return {
+        role,
+        pageIndex,
+        x: (openX + closeX) / 2,
+        y: centerY,
+        hitX: openX,
+        hitY: centerY - 9,
+        hitWidth: Math.max(8, closeX - openX),
+        hitHeight: 18,
+      }
+    }
+  }
+  return null
 }
 
 function emptyFormValues(): FormValues {
@@ -557,6 +1079,7 @@ async function createHtmlFilledPdf(
   values: FormValues,
   htmlFields: HtmlFieldDefinition[],
   htmlValues: Record<string, string>,
+  detectedRoleMark: RoleMark | null,
 ) {
   const { PDFDocument, StandardFonts, rgb } = await import('pdf-lib')
   const pdf = await PDFDocument.load(source)
@@ -658,14 +1181,55 @@ async function createHtmlFilledPdf(
     )
   }
 
-  const selectedRole = layout?.roles.find((mark) => mark.role === values.role)
+  const selectedRole = detectedRoleMark ?? layout?.roles.find((mark) => mark.role === values.role)
   if (selectedRole) {
-    drawText(selectedRole.pageIndex, selectedRole.x - 3, selectedRole.y - 3, 8, 'X', { centered: true })
+    const detected = detectedRoleMark === selectedRole
+    drawText(
+      selectedRole.pageIndex,
+      selectedRole.x - 6,
+      detected ? selectedRole.y : selectedRole.y - 3,
+      12,
+      'X',
+      { centered: true },
+    )
   }
 
-  if (!layout) {
-    for (const field of htmlFields) {
-      const text = htmlValues[field.id]?.trim() ?? ''
+  for (const field of htmlFields) {
+      const rawValue = htmlValues[field.id] ?? ''
+      if (field.choices) {
+        const selectedChoice = field.choices.find((choice) => choice.value === rawValue)
+        if (!selectedChoice) continue
+        drawText(
+          field.pageIndex,
+          selectedChoice.x,
+          selectedChoice.y,
+          selectedChoice.width,
+          'X',
+          { centered: true, label: `Selección de ${field.label.toLowerCase()}` },
+        )
+        continue
+      }
+      if (field.dateSegments) {
+        if (!isValidIsoDate(rawValue)) continue
+        const [year, month, day] = rawValue.split('-')
+        const dateValues: Record<DatePart, string> = {
+          day,
+          month,
+          year: /\bdd\s*\/\s*mm\s*\/\s*aa\b/i.test(field.label) ? year.slice(-2) : year,
+        }
+        for (const segment of field.dateSegments) {
+          drawText(
+            field.pageIndex,
+            segment.x,
+            segment.y,
+            segment.width,
+            dateValues[segment.part],
+            { centered: true, label: `${field.label}: ${segment.part}` },
+          )
+        }
+        continue
+      }
+      const text = formatHtmlFieldValue(field, rawValue)
       if (!text) continue
       const page = pdf.getPage(field.pageIndex)
       if (field.cover) {
@@ -706,7 +1270,6 @@ async function createHtmlFilledPdf(
       } else {
         drawText(field.pageIndex, field.x, field.y, field.width, text, { label: field.label })
       }
-    }
   }
   return pdf
 }
@@ -719,24 +1282,36 @@ async function buildFilledPdf(
   htmlValues: Record<string, string>,
   signatureTarget: SignatureTarget,
   signaturePng: string,
+  detectedRoleMark: RoleMark | null,
 ) {
   const response = await fetch(`/${encodeURIComponent(template.fileName)}`)
   if (!response.ok) throw new Error(`No se pudo cargar el formato (${response.status}).`)
 
-  const pdf = await createHtmlFilledPdf(await response.arrayBuffer(), layout, values, htmlFields, htmlValues)
+  const pdf = await createHtmlFilledPdf(
+    await response.arrayBuffer(),
+    layout,
+    values,
+    htmlFields,
+    htmlValues,
+    detectedRoleMark,
+  )
 
   const signatureBytes = Uint8Array.from(
     atob(signaturePng.split(',')[1]),
     (character) => character.charCodeAt(0),
   )
   const signatureImage = await pdf.embedPng(signatureBytes)
-  const signatureScale = Math.min(1, signatureTarget.width / signatureImage.width)
+  const signatureScale = Math.min(
+    1,
+    signatureTarget.width / signatureImage.width,
+    (signatureTarget.maxHeight ?? SIGNATURE_MAX_HEIGHT) / signatureImage.height,
+  )
   const signatureWidth = signatureImage.width * signatureScale
   const signatureHeight = signatureImage.height * signatureScale
   const signaturePage = pdf.getPage(signatureTarget.pageIndex)
   signaturePage.drawImage(signatureImage, {
-    x: signatureTarget.x,
-    y: signatureTarget.y - signatureHeight,
+    x: signatureTarget.x + (signatureTarget.width - signatureWidth) / 2,
+    y: signatureTarget.y,
     width: signatureWidth,
     height: signatureHeight,
   })
@@ -759,34 +1334,18 @@ function toArrayBuffer(data: Uint8Array): ArrayBuffer {
 type PdfPageViewProps = {
   page: PDFPageProxy
   pageIndex: number
-  layout: FormLayout | null
-  htmlFields: HtmlFieldDefinition[]
-  htmlValues: Record<string, string>
-  values: FormValues
   signatureTarget: SignatureTarget
   signaturePng: string
-  onChangeField: (key: FormFieldKey, value: string) => void
-  onChangeGrade: (id: string, value: string) => void
-  onChangeDatePart: (part: DatePart, value: string) => void
-  onChangeHtmlField: (id: string, value: string) => void
-  onSelectRole: (role: CommitteeRole) => void
+  signatureSize: SignatureSize | null
   onRenderError: (message: string) => void
 }
 
 function PdfPageView({
   page,
   pageIndex,
-  layout,
-  htmlFields,
-  htmlValues,
-  values,
   signatureTarget,
   signaturePng,
-  onChangeField,
-  onChangeGrade,
-  onChangeDatePart,
-  onChangeHtmlField,
-  onSelectRole,
+  signatureSize,
   onRenderError,
 }: PdfPageViewProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -866,210 +1425,31 @@ function PdfPageView({
           height: viewport.height,
           transform: `scale(${displayScale})`,
         }}
-        aria-label={`Texto HTML de la página ${pageIndex + 1}`}
+        aria-label={`Texto de la página ${pageIndex + 1}`}
       />
-
-      {(layout?.fields ?? []).map((field) => {
-        if (field.pageIndex !== pageIndex || field.key === 'date') return null
-        const [viewX, viewY] = viewport.convertToViewportPoint(field.x, getFieldDisplayY(field))
-        const left = viewX * displayScale
-        const top = (viewY - PDF_FONT_SIZE * 0.85) * displayScale
-        const fontSize = Math.max(10, PDF_FONT_SIZE * displayScale)
-        const fieldStyle = {
-          left,
-          top,
-          width: field.width * displayScale,
-          height: field.height * displayScale,
-          fontSize,
-          lineHeight: `${PDF_FONT_SIZE * 1.3 * displayScale}px`,
-        }
-
-        return (
-          <div
-            key={field.key}
-            className="absolute z-10"
-            style={fieldStyle}
-          >
-            {field.multiline ? (
-              <textarea
-                value={values[field.key]}
-                onChange={(event) => onChangeField(field.key, event.target.value)}
-                aria-label={field.label}
-                title={field.label}
-                className="format-fill-control h-full w-full resize-none overflow-hidden rounded-[2px] px-1 outline-none"
-                style={{ fontFamily: 'Arial, sans-serif', fontSize, lineHeight: fieldStyle.lineHeight }}
-              />
-            ) : (
-              <input
-                type={field.key === 'grade' ? 'number' : 'text'}
-                min={field.key === 'grade' ? 0 : undefined}
-                max={field.key === 'grade' ? 10 : undefined}
-                step={field.key === 'grade' ? 0.1 : undefined}
-                value={values[field.key]}
-                onChange={(event) => onChangeField(field.key, event.target.value)}
-                aria-label={field.label}
-                title={field.label}
-                className="format-fill-control h-full w-full rounded-[2px] px-1 outline-none"
-                style={{ fontFamily: 'Arial, sans-serif', fontSize }}
-              />
-            )}
-          </div>
-        )
-      })}
-
-      {(layout?.gradeFields ?? []).map((field) => {
-        if (field.pageIndex !== pageIndex) return null
-        const [viewX, viewY] = viewport.convertToViewportPoint(field.x, field.y)
-        const fontSize = Math.max(10, PDF_FONT_SIZE * displayScale)
-        return (
-          <input
-            key={field.id}
-            type="number"
-            min={0}
-            max={10}
-            step={0.1}
-            value={values.rubricGrades[field.id] ?? ''}
-            onChange={(event) => onChangeGrade(field.id, event.target.value)}
-            aria-label={field.label}
-            title={field.label}
-            className="format-fill-control absolute z-20 h-auto rounded-[2px] px-1 text-center outline-none"
-            style={{
-              left: viewX * displayScale,
-              top: (viewY - PDF_FONT_SIZE * 0.85) * displayScale,
-              width: field.width * displayScale,
-              height: field.height * displayScale,
-              fontFamily: 'Arial, sans-serif',
-              fontSize,
-              lineHeight: `${field.height * displayScale}px`,
-            }}
-          />
-        )
-      })}
-
-      {(layout?.dateSegments ?? []).map((segment) => {
-        if (segment.pageIndex !== pageIndex) return null
-        const [year = '', month = '', day = ''] = values.date.split('-')
-        const dateValue: Record<DatePart, string> = { day, month, year }
-        const [viewX, viewY] = viewport.convertToViewportPoint(segment.x, segment.y)
-        const fontSize = Math.max(10, PDF_FONT_SIZE * displayScale)
-        return (
-          <input
-            key={segment.part}
-            type="text"
-            inputMode="numeric"
-            maxLength={segment.part === 'year' ? 4 : 2}
-            value={dateValue[segment.part]}
-            onChange={(event) => onChangeDatePart(segment.part, event.target.value.replace(/\D/g, ''))}
-            aria-label={`Fecha: ${segment.part === 'day' ? 'día' : segment.part === 'month' ? 'mes' : 'año'}`}
-            title={`Fecha: ${segment.part === 'day' ? 'día' : segment.part === 'month' ? 'mes' : 'año'}`}
-            className="format-fill-control absolute z-20 rounded-[2px] px-1 text-center outline-none"
-            style={{
-              left: viewX * displayScale,
-              top: (viewY - PDF_FONT_SIZE * 0.85) * displayScale,
-              width: segment.width * displayScale,
-              height: FIELD_HEIGHT * displayScale,
-              fontFamily: 'Arial, sans-serif',
-              fontSize,
-            }}
-          />
-        )
-      })}
-
-      {(layout?.roles ?? []).map((mark) => {
-        if (mark.pageIndex !== pageIndex) return null
-        const [hitX, hitTop] = viewport.convertToViewportPoint(mark.hitX, mark.hitY + mark.hitHeight)
-        const [markX, markY] = viewport.convertToViewportPoint(mark.x, mark.y)
-        return (
-          <button
-            key={mark.role}
-            type="button"
-            onClick={() => onSelectRole(mark.role)}
-            aria-label={`Seleccionar ${ROLE_LABELS[mark.role]} en el comité`}
-            aria-pressed={values.role === mark.role}
-            title={`Seleccionar ${ROLE_LABELS[mark.role]}`}
-            className="absolute z-20 border border-transparent bg-transparent text-black outline-none hover:border-seal/70 hover:bg-white/20 focus:border-seal focus:bg-white/30"
-            style={{
-              left: hitX * displayScale,
-              top: hitTop * displayScale,
-              width: mark.hitWidth * displayScale,
-              height: mark.hitHeight * displayScale,
-            }}
-          >
-            {values.role === mark.role && (
-              <span
-                aria-hidden="true"
-                className="absolute -translate-x-1/2 -translate-y-1/2 font-bold"
-                style={{
-                  left: (markX - hitX) * displayScale,
-                  top: (markY - hitTop) * displayScale,
-                  fontSize: 10 * displayScale,
-                  lineHeight: 1,
-                }}
-              >
-                X
-              </span>
-            )}
-          </button>
-        )
-      })}
-
-      {htmlFields.filter((field) => field.pageIndex === pageIndex).map((field) => {
-        const [viewX, viewY] = viewport.convertToViewportPoint(field.x, field.y)
-        const fontSize = Math.max(10, PDF_FONT_SIZE * displayScale)
-        return (
-          field.multiline ? (
-            <textarea
-              key={field.id}
-              value={htmlValues[field.id] ?? ''}
-              onChange={(event) => onChangeHtmlField(field.id, event.target.value)}
-              aria-label={field.label}
-              title={field.label}
-              className="format-fill-control absolute z-20 resize-none rounded-[2px] px-1 outline-none"
-              style={{
-                left: viewX * displayScale,
-                top: (viewY - field.height * 0.85) * displayScale,
-                width: field.width * displayScale,
-                height: field.height * displayScale,
-                fontFamily: 'Arial, sans-serif',
-                fontSize,
-                lineHeight: `${PDF_FONT_SIZE * displayScale}px`,
-                backgroundColor: field.cover ? '#fff' : undefined,
-              }}
-            />
-          ) : (
-            <input
-              key={field.id}
-              type="text"
-              value={htmlValues[field.id] ?? ''}
-              onChange={(event) => onChangeHtmlField(field.id, event.target.value)}
-              aria-label={field.label}
-              title={field.label}
-              className="format-fill-control absolute z-20 rounded-[2px] px-1 outline-none"
-              style={{
-                left: viewX * displayScale,
-                top: (viewY - field.height * 0.85) * displayScale,
-                width: field.width * displayScale,
-                height: field.height * displayScale,
-                fontFamily: 'Arial, sans-serif',
-                fontSize,
-                backgroundColor: field.cover ? '#fff' : undefined,
-              }}
-            />
-          )
-        )
-      })}
-
       {signaturePng && signatureTarget.pageIndex === pageIndex && (() => {
-        const [viewX, viewY] = viewport.convertToViewportPoint(signatureTarget.x, signatureTarget.y)
+        const imageScale = signatureSize
+          ? Math.min(
+              1,
+              signatureTarget.width / signatureSize.width,
+              (signatureTarget.maxHeight ?? SIGNATURE_MAX_HEIGHT) / signatureSize.height,
+            )
+          : 1
+        const imageWidth = signatureSize ? signatureSize.width * imageScale : signatureTarget.width
+        const imageHeight = signatureSize ? signatureSize.height * imageScale : 0
+        const [viewX, viewY] = viewport.convertToViewportPoint(
+          signatureTarget.x,
+          signatureTarget.y + imageHeight,
+        )
         return (
           <img
             src={signaturePng}
             alt="Firma manuscrita colocada en el formato"
             className="pointer-events-none absolute z-10 h-auto"
             style={{
-              left: viewX * displayScale,
+              left: (viewX + (signatureTarget.width - imageWidth) / 2) * displayScale,
               top: viewY * displayScale,
-              width: signatureTarget.width * displayScale,
+              width: imageWidth * displayScale,
             }}
           />
         )
@@ -1089,6 +1469,8 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
   const readOnly = selected ? READ_ONLY_FORMATS.has(selected.fileName) : false
   const [pdfDocument, setPdfDocument] = useState<PDFDocumentProxy | null>(null)
   const [pdfPages, setPdfPages] = useState<PDFPageProxy[]>([])
+  const [pdfSource, setPdfSource] = useState<ArrayBuffer | null>(null)
+  const [signatureTarget, setSignatureTarget] = useState<SignatureTarget | null>(null)
   const [loadingPdf, setLoadingPdf] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -1096,10 +1478,14 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
   const [values, setValues] = useState<FormValues>(emptyFormValues)
   const [htmlFields, setHtmlFields] = useState<HtmlFieldDefinition[]>([])
   const [htmlValues, setHtmlValues] = useState<Record<string, string>>({})
+  const [aiTableFields, setAiTableFields] = useState<HtmlFieldDefinition[]>([])
+  const [analyzingLayout, setAnalyzingLayout] = useState(false)
+  const [aiLayoutAnalyzed, setAiLayoutAnalyzed] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const pointerRef = useRef<{ x: number; y: number } | null>(null)
   const [hasSignature, setHasSignature] = useState(false)
   const [signaturePng, setSignaturePng] = useState('')
+  const [signatureSize, setSignatureSize] = useState<SignatureSize | null>(null)
 
   useEffect(() => {
     if (!selected) return
@@ -1108,8 +1494,12 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
     let task: PDFDocumentLoadingTask | null = null
     setPdfDocument(null)
     setPdfPages([])
+    setPdfSource(null)
+    setSignatureTarget(null)
     setHtmlFields([])
     setHtmlValues({})
+    setAiTableFields([])
+    setAiLayoutAnalyzed(false)
     setLoadingPdf(true)
     setError('')
 
@@ -1130,12 +1520,15 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
           Array.from({ length: document.numPages }, (_, index) => document.getPage(index + 1)),
         )
         const detectedFields = layout || readOnly ? [] : await detectHtmlFields(pages, selected.fileName)
+        const detectedSignatureTarget = await findSignatureTarget(pages)
         if (cancelled) {
           void document.destroy()
           return
         }
         setPdfDocument(document)
         setPdfPages(pages)
+        setPdfSource(source.slice(0))
+        setSignatureTarget(detectedSignatureTarget ?? layout?.signature ?? getFallbackSignatureTarget(pages))
         setHtmlFields(detectedFields)
       } catch (cause: unknown) {
         if (!cancelled) setError(cause instanceof Error ? cause.message : String(cause))
@@ -1159,8 +1552,11 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
     setValues(emptyFormValues())
     setHtmlFields([])
     setHtmlValues({})
+    setAiTableFields([])
+    setAiLayoutAnalyzed(false)
     setHasSignature(false)
     setSignaturePng('')
+    setSignatureSize(null)
     const context = canvasRef.current?.getContext('2d')
     if (context && canvasRef.current) {
       context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
@@ -1182,19 +1578,47 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
     setResult(null)
   }
 
-  function updateDatePart(part: DatePart, value: string) {
-    setValues((current) => {
-      const [year = '', month = '', day = ''] = current.date.split('-')
-      const parts: Record<DatePart, string> = { day, month, year }
-      parts[part] = value
-      return { ...current, date: `${parts.year}-${parts.month}-${parts.day}` }
-    })
-    setResult(null)
-  }
-
   function updateHtmlField(id: string, value: string) {
     setHtmlValues((current) => ({ ...current, [id]: value }))
     setResult(null)
+  }
+
+  async function analyzeSelectedLayout() {
+    if (!selected || !pdfSource || analyzingLayout) return
+    setAnalyzingLayout(true)
+    setError('')
+    try {
+      const form = new FormData()
+      form.append('file', new Blob([pdfSource], { type: 'application/pdf' }), selected.fileName)
+      const detectedLayout: DocumentAiLayout = await api('/api/formats/analyze', {
+        method: 'POST',
+        headers: { 'X-CSRF-Token': csrf },
+        body: form,
+      })
+      const candidates = buildAiTableFields(detectedLayout)
+      const uniqueFields = candidates.filter((candidate) => !htmlFields.some((existing) => {
+        if (existing.pageIndex !== candidate.pageIndex) return false
+        const overlapX = Math.max(
+          0,
+          Math.min(existing.x + existing.width, candidate.x + candidate.width) - Math.max(existing.x, candidate.x),
+        )
+        const overlapY = Math.max(
+          0,
+          Math.min(existing.y + existing.height, candidate.y + candidate.height) - Math.max(existing.y, candidate.y),
+        )
+        return overlapX > 0 && overlapY > 0
+      }))
+      setAiTableFields(uniqueFields)
+      setAiLayoutAnalyzed(true)
+      setError(uniqueFields.length
+        ? `Azure identificó ${uniqueFields.length} campos editables en tablas. Revisa las etiquetas antes de firmar.`
+        : 'Azure analizó el diseño, pero no identificó celdas de tabla editables en este formato.')
+    } catch (cause) {
+      setAiLayoutAnalyzed(false)
+      setError(cause instanceof Error ? cause.message : String(cause))
+    } finally {
+      setAnalyzingLayout(false)
+    }
   }
 
   function drawSignature(event: PointerEvent<HTMLCanvasElement>) {
@@ -1234,9 +1658,49 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
 
   function finishSignatureDrawing() {
     pointerRef.current = null
-    if (canvasRef.current && hasSignature) {
-      setSignaturePng(canvasRef.current.toDataURL('image/png'))
+    const canvas = canvasRef.current
+    const context = canvas?.getContext('2d')
+    if (!canvas || !context || !hasSignature) return
+
+    const { data, width, height } = context.getImageData(0, 0, canvas.width, canvas.height)
+    let left = width
+    let top = height
+    let right = -1
+    let bottom = -1
+    for (let y = 0; y < height; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        if (data[(y * width + x) * 4 + 3] === 0) continue
+        left = Math.min(left, x)
+        top = Math.min(top, y)
+        right = Math.max(right, x)
+        bottom = Math.max(bottom, y)
+      }
     }
+    if (right < left || bottom < top) return
+
+    const padding = 8
+    left = Math.max(0, left - padding)
+    top = Math.max(0, top - padding)
+    right = Math.min(width - 1, right + padding)
+    bottom = Math.min(height - 1, bottom + padding)
+    const croppedCanvas = document.createElement('canvas')
+    croppedCanvas.width = right - left + 1
+    croppedCanvas.height = bottom - top + 1
+    const croppedContext = croppedCanvas.getContext('2d')
+    if (!croppedContext) throw new Error('No se pudo recortar la firma.')
+    croppedContext.drawImage(
+      canvas,
+      left,
+      top,
+      croppedCanvas.width,
+      croppedCanvas.height,
+      0,
+      0,
+      croppedCanvas.width,
+      croppedCanvas.height,
+    )
+    setSignatureSize({ width: croppedCanvas.width, height: croppedCanvas.height })
+    setSignaturePng(croppedCanvas.toDataURL('image/png'))
   }
 
   function clearSignature() {
@@ -1246,12 +1710,14 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
     pointerRef.current = null
     setHasSignature(false)
     setSignaturePng('')
+    setSignatureSize(null)
     setResult(null)
   }
 
   async function signFormat(event: FormEvent) {
     event.preventDefault()
     if (!selected || !canvasRef.current || !hasSignature || (layout && !values.role)) return
+    const allHtmlFields = [...htmlFields, ...aiTableFields]
     if (layout && (!values.evaluator.trim() || !values.student.trim() || !values.project.trim() || !values.grade.trim())) {
       setError('Completa el nombre del evaluador, alumno, proyecto y calificación en el documento.')
       return
@@ -1276,20 +1742,31 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
       setError('Completa al menos un campo HTML detectado en el documento.')
       return
     }
+    const invalidHtmlField = allHtmlFields
+      .map((field) => ({ field, error: validateHtmlField(field, htmlValues[field.id] ?? '') }))
+      .find(({ error: validationError }) => validationError)
+    if (invalidHtmlField?.error) {
+      setError(invalidHtmlField.error)
+      return
+    }
 
     setBusy(true)
     setError('')
     setResult(null)
 
     try {
+      const detectedRoleMark = values.role
+        ? await findCommitteeRoleMark(pdfPages, values.role)
+        : null
       const unsignedBytes = await buildFilledPdf(
         selected,
         layout,
         values,
-        htmlFields,
+        allHtmlFields,
         htmlValues,
-        layout?.signature ?? getFallbackSignatureTarget(pdfPages),
+        signatureTarget ?? getFallbackSignatureTarget(pdfPages),
         canvasRef.current.toDataURL('image/png'),
+        detectedRoleMark,
       )
       const inputBuffer = toArrayBuffer(unsignedBytes)
       const inputSha256 = await sha256(inputBuffer)
@@ -1343,7 +1820,7 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
     <section className="mt-8 spot reveal rounded-2xl border border-ink-line bg-ink-surface p-6 shadow-lg">
       <h2 className="font-display text-2xl">Formatos</h2>
       <p className="mt-1 text-sm text-parchment-muted">
-        Completa los campos HTML sobre la vista del documento, dibuja tu firma y genera el PDF para firmarlo.
+        Completa los campos en el panel izquierdo y consulta el PDF original a la derecha; después dibuja tu firma para generar el documento firmado.
       </p>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -1373,54 +1850,297 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
       </div>
 
       {selected && (
-        <div className="mt-8 grid grid-cols-1 gap-6">
+        <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(320px,0.8fr)_minmax(0,1.2fr)]">
           <div className="min-w-0">
-            <h3 className="font-display text-xl">{selected.title}</h3>
+            <h3 className="font-display text-xl">Datos del formato</h3>
             {layout && (
               <div className="mt-3 rounded-lg border border-ink-line bg-ink-raised p-3 text-sm text-parchment-muted">
-                Completa los campos HTML directamente sobre el documento. Selecciona el cargo del comité y
-                captura cada calificación (escala 0–10) en su casilla.
+                Completa los campos aquí. El PDF original se muestra a la derecha y conserva su diseño.
+                Selecciona también tu cargo en el comité y captura las calificaciones requeridas.
               </div>
             )}
             {readOnly && (
               <p role="status" className="mt-3 rounded-lg border border-ink-line bg-ink-raised p-3 text-sm text-parchment-muted">
-                Este documento es solo de consulta; no se mostrará captura HTML ni se generará una copia firmada.
+                Este documento es solo de consulta; no se mostrará captura ni se generará una copia firmada.
               </p>
             )}
             {!layout && !readOnly && htmlFields.length > 0 && (
               <p role="status" className="mt-3 rounded-lg border border-seal/30 bg-seal/5 p-3 text-sm text-parchment-muted">
-                Se detectaron {htmlFields.length} espacios de captura. Los campos aparecen como controles HTML
-                sobre la plantilla; revisa la posición antes de generar el PDF.
+                Completa los campos detectados. Los datos se integrarán en el PDF original al generar el documento firmado.
               </p>
             )}
-            {!layout && !readOnly && pdfDocument && htmlFields.length === 0 && (
+            {!readOnly && pdfSource && (
+              <div className="mt-3 grid gap-2 rounded-lg border border-ink-line bg-ink-raised p-3">
+                <p className="text-xs text-parchment-muted">
+                  El análisis usa Azure Document Intelligence para localizar tablas y celdas. Al iniciarlo, el PDF se envía a Azure.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => void analyzeSelectedLayout()}
+                  disabled={analyzingLayout}
+                  className="btn btn-ghost rounded-lg px-3 py-2 text-sm"
+                >
+                  {analyzingLayout ? 'Analizando diseño…' : aiLayoutAnalyzed ? 'Volver a analizar con Azure AI' : 'Identificar tablas con Azure AI'}
+                </button>
+              </div>
+            )}
+            {!layout && !readOnly && pdfDocument && htmlFields.length === 0 && aiTableFields.length === 0 && (
               <p role="status" className="mt-3 rounded-lg border border-alert/40 bg-alert-bg p-3 text-sm text-alert">
                 No se detectaron espacios editables en esta plantilla. No es posible generar un documento llenado
                 automáticamente para este archivo.
               </p>
             )}
 
-            <div className="mt-4 h-[78vh] min-h-[600px] overflow-auto rounded-lg border border-ink-line bg-[#292929] p-4 sm:p-6">
-              {loadingPdf && <p className="text-sm text-parchment-muted">Cargando páginas del formato...</p>}
-              {pdfDocument && pdfPages.map((page, pageIndex) => (
-                  <PdfPageView
-                    key={`${selected.fileName}-${pageIndex}`}
-                    pageIndex={pageIndex}
-                    page={page}
-                    layout={layout}
-                    htmlFields={htmlFields}
-                    htmlValues={htmlValues}
-                    values={values}
-                    signatureTarget={layout?.signature ?? getFallbackSignatureTarget(pdfPages)}
-                    signaturePng={signaturePng}
-                    onChangeField={updateField}
-                    onChangeGrade={updateGrade}
-                    onChangeDatePart={updateDatePart}
-                    onChangeHtmlField={updateHtmlField}
-                    onSelectRole={(role) => updateField('role', role)}
-                    onRenderError={setError}
-                  />
+            {(layout || (!readOnly && (htmlFields.length > 0 || aiTableFields.length > 0))) && (
+              <form onSubmit={signFormat} noValidate className="mt-4 grid content-start gap-4">
+                {layout && (
+                  <>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {layout.fields.map((field) => (
+                        <label
+                          key={field.key}
+                          className={`grid gap-1 text-sm text-parchment-muted ${
+                            field.multiline ? 'sm:col-span-2' : ''
+                          }`}
+                        >
+                          <span>{field.label}</span>
+                          {field.multiline ? (
+                            <textarea
+                              value={values[field.key]}
+                              onChange={(event) => updateField(field.key, event.target.value)}
+                              rows={4}
+                              className="format-fill-control min-h-24 w-full resize-y rounded-lg px-3 py-2"
+                            />
+                          ) : (
+                            <input
+                              type={field.key === 'date' ? 'date' : field.key === 'grade' ? 'number' : 'text'}
+                              min={field.key === 'grade' ? 0 : undefined}
+                              max={field.key === 'grade' ? 10 : undefined}
+                              step={field.key === 'grade' ? 0.1 : undefined}
+                              value={values[field.key]}
+                              onChange={(event) => updateField(field.key, event.target.value)}
+                              className="format-fill-control w-full rounded-lg px-3 py-2"
+                            />
+                          )}
+                        </label>
+                      ))}
+                    </div>
+
+                    <label className="grid gap-1 text-sm text-parchment-muted">
+                      <span>Cargo en el comité</span>
+                      <select
+                        value={values.role}
+                        onChange={(event) => updateField('role', event.target.value)}
+                        className="format-fill-control w-full rounded-lg px-3 py-2"
+                      >
+                        <option value="">Selecciona un cargo</option>
+                        {layout.availableRoles.map((role) => (
+                          <option key={role} value={role}>{ROLE_LABELS[role]}</option>
+                        ))}
+                      </select>
+                    </label>
+
+                    {layout.gradeFields.length > 0 && (
+                      <fieldset className="grid gap-3 rounded-lg border border-ink-line p-3">
+                        <legend className="px-2 text-sm font-semibold text-parchment-muted">Calificaciones</legend>
+                        {layout.gradeFields.map((field) => (
+                          <label key={field.id} className="grid gap-1 text-sm text-parchment-muted">
+                            <span>{field.label}</span>
+                            <input
+                              type="number"
+                              min={0}
+                              max={10}
+                              step={0.1}
+                              value={values.rubricGrades[field.id] ?? ''}
+                              onChange={(event) => updateGrade(field.id, event.target.value)}
+                              className="format-fill-control w-full rounded-lg px-3 py-2"
+                            />
+                          </label>
+                        ))}
+                      </fieldset>
+                    )}
+                  </>
+                )}
+
+                {!layout && htmlFields.map((field) => (
+                  <label key={field.id} className="grid gap-1 text-sm text-parchment-muted">
+                    <span>{field.label}</span>
+                    {field.choices ? (
+                      <select
+                        value={htmlValues[field.id] ?? ''}
+                        onChange={(event) => updateHtmlField(field.id, event.target.value)}
+                        required
+                        className="format-fill-control w-full rounded-lg px-3 py-2"
+                      >
+                        <option value="">Selecciona una calificación</option>
+                        {field.choices.map((choice) => (
+                          <option key={choice.value} value={choice.value}>{choice.label}</option>
+                        ))}
+                      </select>
+                    ) : field.multiline ? (
+                      <textarea
+                        value={htmlValues[field.id] ?? ''}
+                        onChange={(event) => updateHtmlField(field.id, event.target.value)}
+                        rows={4}
+                        className="format-fill-control min-h-24 w-full resize-y rounded-lg px-3 py-2"
+                      />
+                    ) : (
+                      (() => {
+                        const input = getHtmlFieldInput(field)
+                        const inputType = input.type === 'digits' ? 'text' : input.type
+                        return (
+                          <input
+                            type={inputType}
+                            inputMode={input.type === 'digits' ? 'numeric' : undefined}
+                            min={input.type === 'number' ? input.min : undefined}
+                            max={input.type === 'number' ? input.max : undefined}
+                            step={input.type === 'number' ? input.step : undefined}
+                            maxLength={input.type === 'email' ? 254 : input.type === 'digits' ? 20 : undefined}
+                            value={htmlValues[field.id] ?? ''}
+                            onChange={(event) => updateHtmlField(
+                              field.id,
+                              input.type === 'digits'
+                                ? event.target.value.replace(/\D/g, '').slice(0, 20)
+                                : event.target.value,
+                            )}
+                            className="format-fill-control w-full rounded-lg px-3 py-2"
+                          />
+                        )
+                      })()
+                    )}
+                  </label>
                 ))}
+
+                {aiTableFields.length > 0 && (
+                  <fieldset className="grid gap-3 rounded-lg border border-seal/40 p-3">
+                    <legend className="px-2 text-sm font-semibold text-parchment-muted">
+                      Celdas identificadas por Azure AI
+                    </legend>
+                    {aiTableFields.map((field) => (
+                      <label key={field.id} className="grid gap-1 text-sm text-parchment-muted">
+                        <span>{field.label}</span>
+                        {field.choices ? (
+                          <select
+                            value={htmlValues[field.id] ?? ''}
+                            onChange={(event) => updateHtmlField(field.id, event.target.value)}
+                            className="format-fill-control w-full rounded-lg px-3 py-2"
+                          >
+                            <option value="">Selecciona una opción</option>
+                            {field.choices.map((choice) => (
+                              <option key={choice.value} value={choice.value}>{choice.label}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type="text"
+                            value={htmlValues[field.id] ?? ''}
+                            onChange={(event) => updateHtmlField(field.id, event.target.value)}
+                            className="format-fill-control w-full rounded-lg px-3 py-2"
+                          />
+                        )}
+                      </label>
+                    ))}
+                  </fieldset>
+                )}
+
+                <div>
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="format-signature" className="text-xs font-semibold uppercase tracking-wider text-parchment-muted">
+                      Firma manuscrita del administrador
+                    </label>
+                    <button type="button" onClick={clearSignature} className="link-draw text-xs text-alert">
+                      Borrar firma
+                    </button>
+                  </div>
+                  <canvas
+                    id="format-signature"
+                    ref={canvasRef}
+                    width={800}
+                    height={220}
+                    onPointerDown={drawSignature}
+                    onPointerMove={(event) => {
+                      if (event.buttons & 1) drawSignature(event)
+                    }}
+                    onPointerUp={finishSignatureDrawing}
+                    onPointerCancel={finishSignatureDrawing}
+                    className="mt-2 h-36 w-full touch-none rounded-lg border border-ink-line bg-white"
+                    aria-label="Área para dibujar la firma"
+                  />
+                  {!hasSignature && (
+                    <p className="mt-1 text-xs text-parchment-faint">
+                      Dibuja tu firma aquí; aparecerá en el PDF original.
+                    </p>
+                  )}
+                </div>
+
+                {error && (
+                  <p role="alert" className="rounded-lg border border-alert/40 bg-alert-bg p-3 text-sm text-alert">
+                    {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={busy || !hasSignature || (layout
+                    ? !values.role || !values.evaluator.trim() || !values.student.trim() || !values.project.trim() || !values.grade.trim() || layout.gradeFields.some((field) => !values.rubricGrades[field.id]?.trim())
+                    : !htmlFields.length || !Object.values(htmlValues).some((value) => value.trim()))}
+                  data-loading={busy}
+                  className="btn btn-seal w-full rounded-xl py-3.5 font-medium"
+                >
+                  {busy ? 'Generando y firmando PDF...' : 'Firmar formato'}
+                </button>
+
+                {result && (
+                  <div className="rounded-xl border border-verified/40 bg-verified-bg p-4 text-sm text-verified">
+                    <p className="font-medium">Formato llenado y firmado correctamente: {result.file.name}</p>
+                    <dl className="mt-3 grid gap-2 font-mono text-[10px] text-parchment-muted">
+                      <div>
+                        <dt>SHA-256 antes de firmar</dt>
+                        <dd className="break-all">{result.originalSha256}</dd>
+                      </div>
+                      <div>
+                        <dt>SHA-256 firmado</dt>
+                        <dd className="break-all">{result.signedSha256}</dd>
+                      </div>
+                    </dl>
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      <button type="button" onClick={downloadResult} className="btn btn-fill rounded-lg px-4 py-2 text-sm">
+                        Descargar PDF firmado
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onQueueForAssignment(result.file)}
+                        className="btn btn-ghost rounded-lg px-4 py-2 text-sm"
+                      >
+                        Enviar por asignaciones
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </form>
+            )}
+          </div>
+
+          <div className="min-w-0">
+            <h3 className="font-display text-xl">{selected.title} — PDF original</h3>
+            {readOnly && (
+              <p role="status" className="mt-3 rounded-lg border border-ink-line bg-ink-raised p-3 text-sm text-parchment-muted">
+                Este formato es solo de consulta.
+              </p>
+            )}
+            <div className="mt-4 h-[78vh] min-h-[600px] overflow-auto rounded-lg border border-ink-line bg-[#292929] p-4 sm:p-6">
+              {loadingPdf && <p className="text-sm text-parchment-muted">Cargando PDF original...</p>}
+              {pdfDocument && pdfPages.map((page, pageIndex) => (
+                <PdfPageView
+                  key={`${selected.fileName}-${pageIndex}`}
+                  pageIndex={pageIndex}
+                  page={page}
+                  signatureTarget={signatureTarget ?? getFallbackSignatureTarget(pdfPages)}
+                  signaturePng={signaturePng}
+                  signatureSize={signatureSize}
+                  onRenderError={setError}
+                />
+              ))}
             </div>
             {pdfDocument && (
               <p className="mt-2 text-right text-xs text-parchment-faint">
@@ -1428,92 +2148,6 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
               </p>
             )}
           </div>
-
-          {(layout || (!readOnly && htmlFields.length > 0)) && <form onSubmit={signFormat} className="grid content-start gap-4">
-            <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="format-signature" className="text-xs font-semibold uppercase tracking-wider text-parchment-muted">
-                  Firma manuscrita del administrador
-                </label>
-                <button type="button" onClick={clearSignature} className="link-draw text-xs text-alert">
-                  Borrar firma
-                </button>
-              </div>
-              <div className="mt-2 max-w-3xl">
-                <canvas
-                  id="format-signature"
-                  ref={canvasRef}
-                  width={800}
-                  height={220}
-                  onPointerDown={drawSignature}
-                  onPointerMove={(event) => {
-                    if (event.buttons & 1) drawSignature(event)
-                  }}
-                  onPointerUp={finishSignatureDrawing}
-                  onPointerCancel={finishSignatureDrawing}
-                  className="h-36 w-full touch-none rounded-lg border border-ink-line bg-white"
-                  aria-label="Área para dibujar la firma"
-                />
-              </div>
-              {!hasSignature && (
-                <p className="mt-1 text-xs text-parchment-faint">
-                  Dibuja tu firma aquí; aparecerá automáticamente en el espacio de firma del formato.
-                </p>
-              )}
-              {hasSignature && (
-                <p className="mt-1 text-xs text-verified">
-                  {layout
-                    ? 'La firma se colocará en el espacio impreso.'
-                    : 'La firma se colocará al final del documento.'}
-                </p>
-              )}
-            </div>
-
-            {error && (
-              <p role="alert" className="rounded-lg border border-alert/40 bg-alert-bg p-3 text-sm text-alert">
-                {error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={busy || !hasSignature || (layout
-                ? !values.role || !values.evaluator.trim() || !values.student.trim() || !values.project.trim() || !values.grade.trim() || layout.gradeFields.some((field) => !values.rubricGrades[field.id]?.trim())
-                : !htmlFields.length || !Object.values(htmlValues).some((value) => value.trim()))}
-              data-loading={busy}
-              className="btn btn-seal w-full rounded-xl py-3.5 font-medium"
-            >
-              {busy ? 'Generando y firmando PDF...' : 'Firmar formato'}
-            </button>
-
-            {result && (
-              <div className="rounded-xl border border-verified/40 bg-verified-bg p-4 text-sm text-verified">
-                <p className="font-medium">Formato llenado y firmado correctamente: {result.file.name}</p>
-                <dl className="mt-3 grid gap-2 font-mono text-[10px] text-parchment-muted">
-                  <div>
-                    <dt>SHA-256 antes de firmar</dt>
-                    <dd className="break-all">{result.originalSha256}</dd>
-                  </div>
-                  <div>
-                    <dt>SHA-256 firmado</dt>
-                    <dd className="break-all">{result.signedSha256}</dd>
-                  </div>
-                </dl>
-                <div className="mt-4 flex flex-wrap gap-3">
-                  <button type="button" onClick={downloadResult} className="btn btn-fill rounded-lg px-4 py-2 text-sm">
-                    Descargar PDF firmado
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onQueueForAssignment(result.file)}
-                    className="btn btn-ghost rounded-lg px-4 py-2 text-sm"
-                  >
-                    Enviar por asignaciones
-                  </button>
-                </div>
-              </div>
-            )}
-          </form>}
         </div>
       )}
     </section>

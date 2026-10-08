@@ -280,6 +280,8 @@ services:
             ssl_certificate_key /etc/nginx/certs/server.key;
 
             ssl_protocols TLSv1.2 TLSv1.3;
+            # La firma directa envía el PDF en Base64 dentro de JSON (~33% extra).
+            client_max_body_size 999M;
 
             root /usr/share/nginx/html;
             index index.html;
@@ -563,6 +565,8 @@ services:
       SIGN_SERVER_WORKER: "${SIGN_SERVER_WORKER:-PDFSigner}"
       CLAMAV_HOST: "clamav"
       DOCUMENTS_DIR: "/data/documents"
+      DOCUMENT_INTELLIGENCE_ENDPOINT: "${DOCUMENT_INTELLIGENCE_ENDPOINT:-}"
+      DOCUMENT_INTELLIGENCE_KEY: "${DOCUMENT_INTELLIGENCE_KEY:-}"
     depends_on:
       business-db:
         condition: service_healthy

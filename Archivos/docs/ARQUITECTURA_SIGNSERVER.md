@@ -190,7 +190,7 @@ server {
     ssl_certificate_key /etc/nginx/certs/signserver-web.key;
     ssl_protocols TLSv1.2 TLSv1.3;
 
-    client_max_body_size 260M;  # debe ser >= max-post-size de WildFly (200 MB) + overhead de Base64
+    client_max_body_size 999M;  # debe ser >= max-post-size de WildFly (200 MB) + overhead de Base64
 
     location / {
         root /usr/share/nginx/html;
