@@ -43,15 +43,15 @@ Host físico: Windows + Podman Desktop (podman-machine-default, vía WSL2)
 ```
 
 Los contenedores de base de datos, SignServer y Nginx usan imágenes oficiales.
-`signserver-validate` se construye con el `Dockerfile` de la raíz: clona este
-repositorio y usa el código de `Archivos/services/validate-service`.
+`signserver-validate` se construye localmente con el `Dockerfile` de
+`Archivos/services/validate-service`.
 
 | Contenedor | Imagen | Rol |
 |---|---|---|
 | `signserver-db` | `docker.io/library/mariadb:10.11` | Base de datos |
 | `signserver-app` | `docker.io/keyfactor/signserver-ce:7.3.2` | SignServer (incluye WildFly internamente) |
 | `signserver-web` | `docker.io/library/nginx:stable` | Reverse proxy + frontend estático |
-| `signserver-validate` | build propio (Dockerfile raíz) | Verifica firmas con `pdfsig`/`jarsigner`/`openssl`/`gpg`/`xmlsec1` |
+| `signserver-validate` | build propio (`services/validate-service`) | Verifica firmas con `pdfsig`/`jarsigner`/`openssl`/`gpg`/`xmlsec1` |
 
 Puertos publicados en el host: SignServer `18080`/`18443`, validador
 `18000`, y Nginx `9080`/`9443`. Nginx y los servicios internos se comunican

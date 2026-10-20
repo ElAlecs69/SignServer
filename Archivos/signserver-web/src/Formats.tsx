@@ -483,7 +483,7 @@ function buildAiTableFields(layout: DocumentAiLayout): HtmlFieldDefinition[] {
   return fields
 }
 
-function buildAiDateGroups(layout: DocumentAiLayout): DocumentAiDateGroup[] {
+export function buildAiDateGroups(layout: DocumentAiLayout): DocumentAiDateGroup[] {
   const groups: DocumentAiDateGroup[] = []
   const markerType = (text: string): DatePart | null => {
     const normalized = text.toLowerCase().replace(/[^a-záéíóú]/g, '')
@@ -644,7 +644,7 @@ function getFormLayout(fileName: string): FormLayout | null {
         ['tutor', 399, 621, 319, 92],
         ['external', 508, 621, 410, 113],
       ]),
-      signature: { pageIndex: 0, x: 103, y: 104, width: SIGNATURE_WIDTH },
+      signature: { pageIndex: 0, x: 214.8, y: 103, width: SIGNATURE_WIDTH, maxHeight: SIGNATURE_MAX_HEIGHT },
       availableRoles: FOUR_ROLES,
     }
   }
@@ -1514,6 +1514,7 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
         const response = await fetch(`/${encodeURIComponent(selected.fileName)}`)
         if (!response.ok) throw new Error(`No se pudo cargar el formato (${response.status}).`)
         const source = await response.arrayBuffer()
+        const sourceCopy = source.slice(0)
         task = getDocument({ data: new Uint8Array(source) })
         const document = await task.promise
         const pages = await Promise.all(
@@ -1527,7 +1528,7 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
         }
         setPdfDocument(document)
         setPdfPages(pages)
-        setPdfSource(source.slice(0))
+        setPdfSource(sourceCopy)
         setSignatureTarget(detectedSignatureTarget ?? layout?.signature ?? getFallbackSignatureTarget(pages))
         setHtmlFields(detectedFields)
       } catch (cause: unknown) {
@@ -1765,7 +1766,7 @@ export default function Formats({ csrf, onQueueForAssignment }: Props) {
         allHtmlFields,
         htmlValues,
         signatureTarget ?? getFallbackSignatureTarget(pdfPages),
-        canvasRef.current.toDataURL('image/png'),
+        signaturePng || canvasRef.current.toDataURL('image/png'),
         detectedRoleMark,
       )
       const inputBuffer = toArrayBuffer(unsignedBytes)

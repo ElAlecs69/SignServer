@@ -3,7 +3,7 @@ name: signserver
 services:
 
   # ============================================================
-  # 1. GENERACIÃ“N AUTOMÃTICA DE CERTIFICADOS
+  # 1. GENERACIÓN AUTOMÁTICA DE CERTIFICADOS
   # ============================================================
   init-certs:
     image: docker.io/library/alpine:3.20
@@ -17,17 +17,20 @@ services:
       # Certificados persistentes dentro de Podman
       - signserver_admin_certs:/out/admin_certs
 
-      # Certificados tambiÃ©n disponibles directamente en Windows
-      - ./certs:/out/windows_certs
+      # Certificados también disponibles directamente en Windows
+      - ./certs:/out/windows_certs:Z
 
       # Certificados TLS de Nginx
       - nginx_certs:/out/nginx_certs
 
-      # ConfiguraciÃ³n Nginx
+      # Configuración Nginx
       - nginx_conf:/out/nginx_conf
 
       # Keystores de workers
       - signserver_keystores:/out/keystores
+
+      # CA de administración (solo el .crt) que lee SignServer
+      - signserver_admin_ca:/out/admin_ca
 
     entrypoint:
       - /bin/sh
@@ -39,7 +42,7 @@ services:
 
         echo ""
         echo "=================================================="
-        echo " SignServer CE - InicializaciÃ³n automÃ¡tica"
+        echo " SignServer CE - Inicialización automática"
         echo "=================================================="
         echo ""
 
@@ -47,6 +50,7 @@ services:
 
         mkdir -p \
           /out/admin_certs \
+          /out/admin_ca \
           /out/windows_certs \
           /out/nginx_certs \
           /out/nginx_conf \
@@ -93,10 +97,10 @@ services:
 
 
         # ========================================================
-        # 2. CA DE ADMINISTRACIÃ“N
+        # 2. CA DE ADMINISTRACIÓN
         # ========================================================
 
-        echo "[2/6] Verificando CA de administraciÃ³n..."
+        echo "[2/6] Verificando CA de administración..."
 
         if [ ! -f /out/admin_certs/admin-ca.key ] || \
            [ ! -f /out/admin_certs/admin-ca.crt ]; then
@@ -258,11 +262,17 @@ services:
         done
 
 
+        # SignServer corre con otro UID en su contenedor: los keystores
+        # (protegidos con contraseña) deben ser legibles desde ahí.
+        chmod 755 /out/keystores
+        chmod 644 /out/keystores/*.p12
+
+
         # ========================================================
-        # 6. CONFIGURACIÃ“N NGINX
+        # 6. CONFIGURACIÓN NGINX
         # ========================================================
 
-        echo "[6/6] Generando configuraciÃ³n Nginx..."
+        echo "[6/6] Generando configuración Nginx..."
 
         cat > /out/nginx_conf/signserver.conf <<'NGINXCONF'
 
@@ -286,16 +296,23 @@ services:
             root /usr/share/nginx/html;
             index index.html;
 
+            # Backends en variables: Nginx vuelve a resolver el nombre DNS
+            # (resolver en conf.d/00-resolver.conf) y no se queda con una IP
+            # vieja cuando un contenedor se recrea.
+            set $$signserver_upstream http://signserver-app:8080;
+            set $$validate_upstream   http://signserver-validate:8000;
+            set $$api_upstream        http://document-api:8001;
+
             location ~* \.mjs$$ {
                 default_type application/javascript;
             }
 
             location / {
-             try_files $$uri $$uri/ /index.html; 
+                try_files $$uri $$uri/ /index.html;
             }
 
             location /signserver/ {
-                proxy_pass http://signserver-app:8080/signserver/;
+                proxy_pass $$signserver_upstream;
 
                 proxy_set_header Host $$host;
                 proxy_set_header X-Real-IP $$remote_addr;
@@ -307,8 +324,9 @@ services:
                 proxy_read_timeout 60s;
             }
 
-              location /validate/ {
-                proxy_pass http://signserver-validate:8000/;
+            location /validate/ {
+                rewrite ^/validate/(.*)$$ /$$1 break;
+                proxy_pass $$validate_upstream;
 
                 proxy_set_header Host $$host;
                 proxy_set_header X-Real-IP $$remote_addr;
@@ -322,23 +340,32 @@ services:
             }
 
             location /auth/ {
-              proxy_pass http://document-api:8001/auth/;
-              proxy_set_header Host $$host;
-              proxy_set_header X-Real-IP $$remote_addr;
-              proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $$scheme;
+                proxy_pass $$api_upstream;
+                proxy_set_header Host $$host;
+                proxy_set_header X-Real-IP $$remote_addr;
+                proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $$scheme;
             }
 
             location /api/ {
-              proxy_pass http://document-api:8001/api/;
-              proxy_set_header Host $$host;
-              proxy_set_header X-Real-IP $$remote_addr;
-              proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $$scheme;
+                proxy_pass $$api_upstream;
+                proxy_set_header Host $$host;
+                proxy_set_header X-Real-IP $$remote_addr;
+                proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $$scheme;
             }
         }
 
         NGINXCONF
+
+
+        # ========================================================
+        # CA PÚBLICA PARA SIGNSERVER (nunca se copia la llave)
+        # ========================================================
+
+        cp /out/admin_certs/admin-ca.crt /out/admin_ca/admin-ca.crt
+        chmod 755 /out/admin_ca
+        chmod 644 /out/admin_ca/admin-ca.crt
 
 
         # ========================================================
@@ -383,13 +410,13 @@ services:
 
         echo ""
         echo "=================================================="
-        echo " InicializaciÃ³n terminada correctamente"
+        echo " Inicialización terminada correctamente"
         echo "=================================================="
         echo ""
         echo "Certificado para el navegador:"
         echo "  ./certs/admin-client.p12"
         echo ""
-        echo "CA de administraciÃ³n:"
+        echo "CA de administración:"
         echo "  ./certs/admin-ca.crt"
         echo ""
         echo "IMPORTANTE:"
@@ -522,7 +549,7 @@ services:
       # CA que firma los certificados de administradores
       #
       # IMPORTANTE:
-      # SignServer busca las CA administrativas aquÃ­.
+      # SignServer busca las CA administrativas aquí.
       - signserver_admin_ca:/mnt/external/secrets/tls/cas:ro
 
     networks:
@@ -530,12 +557,130 @@ services:
 
 
   # ============================================================
+  # 3b. CREACIÓN AUTOMÁTICA DE WORKERS (idempotente)
+  # ============================================================
+  # Contenedor de un solo uso que comparte la red de signserver-app
+  # (por eso el CLI conecta a localhost:8080, igual que con "podman exec").
+  # Espera a que SignServer responda y crea cada worker SOLO si no existe.
+  # Si el worker ya existe, no se toca. Reemplaza los comandos manuales
+  # de la sección 8 de DESDE_CERO_ROCKY_LINUX.md.
+  init-workers:
+    image: docker.io/keyfactor/signserver-ce:7.3.2
+    container_name: signserver-init-workers
+
+    env_file:
+      - ./Datos.env
+
+    depends_on:
+      signserver-app:
+        condition: service_started
+
+    restart: "no"
+
+    network_mode: "service:signserver-app"
+
+    entrypoint:
+      - /bin/bash
+      - -c
+
+    command:
+      - |
+        set -u
+
+        SS=/opt/keyfactor/signserver/bin/signserver
+        KS_DIR=/opt/keyfactor/signserver/res/test
+        FAILED=0
+
+        : "$${KEYSTORE_PASSWORD:?ERROR: KEYSTORE_PASSWORD no definido}"
+
+        echo ""
+        echo "=================================================="
+        echo " SignServer CE - Creación de workers"
+        echo "=================================================="
+
+        echo "Esperando a que SignServer termine de iniciar..."
+        TRIES=0
+        until $$SS getstatus brief all >/dev/null 2>&1; do
+          TRIES=$$((TRIES + 1))
+          if [ "$$TRIES" -ge 120 ]; then
+            echo "ERROR: SignServer no respondió después de 10 minutos."
+            exit 1
+          fi
+          sleep 5
+        done
+        echo "SignServer listo."
+        echo ""
+
+        # create_worker ID NOMBRE CLASE KEYSTORE [PROPIEDAD VALOR ...]
+        #   KEYSTORE es el nombre del .p12 (sin extensión) y también DEFAULTKEY.
+        create_worker() {
+          WID="$$1"; WNAME="$$2"; WCLASS="$$3"; WKS="$$4"
+          shift 4
+
+          if $$SS getconfig "$$WID" 2>/dev/null | grep -q "IMPLEMENTATION_CLASS"; then
+            echo "[$$WID] $$WNAME ya existe. No se modifica."
+            return 0
+          fi
+
+          echo "[$$WID] Creando $$WNAME..."
+
+          $$SS setproperty "$$WID" NAME "$$WNAME" \
+            && $$SS setproperty "$$WID" IMPLEMENTATION_CLASS "$$WCLASS" \
+            && $$SS setproperty "$$WID" AUTHTYPE NOAUTH \
+            && $$SS setproperty "$$WID" KEYSTOREPATH "$$KS_DIR/$$WKS.p12" \
+            && $$SS setproperty "$$WID" KEYSTOREPASSWORD "$$KEYSTORE_PASSWORD" \
+            && $$SS setproperty "$$WID" KEYSTORETYPE PKCS12 \
+            && $$SS setproperty "$$WID" DEFAULTKEY "$$WKS" \
+            || { echo "[$$WID] ERROR configurando $$WNAME"; FAILED=$$((FAILED + 1)); return 1; }
+
+          # Propiedades extra opcionales (pares PROPIEDAD VALOR)
+          while [ "$$#" -ge 2 ]; do
+            $$SS setproperty "$$WID" "$$1" "$$2" \
+              || { echo "[$$WID] ERROR en propiedad $$1"; FAILED=$$((FAILED + 1)); return 1; }
+            shift 2
+          done
+
+          $$SS reload "$$WID" \
+            || { echo "[$$WID] ERROR en reload de $$WNAME"; FAILED=$$((FAILED + 1)); return 1; }
+        }
+
+        create_worker 1 PDFSigner org.signserver.module.pdfsigner.PDFSigner pdfsigner
+
+        create_worker 2 TimeStampSigner org.signserver.module.tsa.TimeStampSigner timestamp1 \
+          DEFAULTTSAPOLICYOID 1.3.6.1.4.1.22408.1.2.3.45 \
+          ACCEPTANYPOLICY true
+
+        # Clase de los workers 3 y 7: inferida, no confirmada (ver sección 8 del doc).
+        create_worker 3 CMSSigner org.signserver.module.cmssigner.CMSSigner newcodesigner
+
+        create_worker 4 JArchiveSigner org.signserver.module.jarchive.signer.JArchiveSigner jarsigner
+
+        create_worker 5 DebianDpkgSigSigner org.signserver.module.debiandpkgsig.signer.DebianDpkgSigSigner debsigner
+
+        create_worker 6 XMLSigner org.signserver.module.xmlsigner.XMLSigner xmlsigner
+
+        create_worker 7 MRTDSigner org.signserver.module.mrtdsigner.MRTDSigner mrtdsigner
+
+        create_worker 8 MRTDSODSigner org.signserver.module.mrtdsodsigner.MRTDSODSigner mrtdsodsigner
+
+        echo ""
+        echo "Estado de los workers:"
+        $$SS getstatus brief all
+
+        echo ""
+        if [ "$$FAILED" -gt 0 ]; then
+          echo "TERMINADO CON $$FAILED ERROR(ES). Revisa los mensajes anteriores."
+          exit 1
+        fi
+        echo "Workers listos."
+
+
+  # ============================================================
   # 4. SERVICIO DE VALIDACION
   # ============================================================
   signserver-validate:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./Archivos/services/validate-service
     container_name: signserver-validate
     restart: unless-stopped
     ports:
@@ -550,8 +695,7 @@ services:
     env_file:
       - ./Datos.env
     environment:
-      DATABASE_URL: "postgresql+psycopg://${BUSINESS_DB_USER:-signserver_app}:ET%40AGDOisCTVKI%21nCMI%21@business-db:5432/${BUSINESS_DB_NAME:-signserver_business}"
-      APP_PUBLIC_URL: "${APP_PUBLIC_URL:-https://172.18.117.229:9443}"
+      APP_PUBLIC_URL: "${APP_PUBLIC_URL:?APP_PUBLIC_URL is required (ej. https://IP_DEL_SERVIDOR:9443)}"
       SESSION_SECRET: "${SESSION_SECRET:?SESSION_SECRET is required}"
       DEMO_AUTH_ENABLED: "true"
       DEFAULT_NEW_USER_ROLE: "${DEFAULT_NEW_USER_ROLE:-signer}"
@@ -604,13 +748,22 @@ services:
 
     restart: unless-stopped
 
+    # Toma el DNS interno de la red (aardvark-dns en Podman, 127.0.0.11 en Docker)
+    command:
+      - /bin/sh
+      - -c
+      - |
+        NS=$$(awk '/^nameserver[ \t]+[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/ {print $$2; exit}' /etc/resolv.conf)
+        echo "resolver $${NS:-127.0.0.11} valid=5s ipv6=off;" > /etc/nginx/conf.d/00-resolver.conf
+        exec nginx -g 'daemon off;'
+
     ports:
       - "9080:80"
       - "9443:443"
 
     volumes:
 
-      - ./Archivos/signserver-web/dist:/usr/share/nginx/html:ro
+      - ./Archivos/signserver-web/dist:/usr/share/nginx/html:ro,Z
 
       - nginx_conf:/etc/nginx/conf.d
 

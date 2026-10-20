@@ -114,7 +114,7 @@ texto PDF. El documento resultante se envía a `PDFSigner`; se puede descargar
 o cargar directamente al flujo de asignaciones. Nginx debe servir los archivos
 `.mjs` de PDF.js como `application/javascript` para que el worker cargue desde
 el origen HTTPS. La firma directa envía el PDF a `/api/direct/sign` como JSON
-con el contenido en Base64; por ello, el Nginx generado en `docker compose.yml`
+con el contenido en Base64; por ello, el Nginx generado en `docker-compose.yml`
 permite cuerpos de hasta `999M` para evitar respuestas `413 Request Entity Too
 Large` con documentos grandes.
 Los campos detectados también usan controles según su contenido: las fechas se

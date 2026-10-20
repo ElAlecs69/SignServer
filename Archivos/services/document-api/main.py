@@ -23,9 +23,25 @@ from slowapi.util import get_remote_address
 from pydantic import BaseModel
 from sqlalchemy import DateTime, ForeignKey, String, Text, create_engine, func, select, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, relationship, sessionmaker
+from sqlalchemy.engine import URL
 from starlette.middleware.sessions import SessionMiddleware
 
-DATABASE_URL = os.environ["DATABASE_URL"]
+def _build_database_url():
+    """DATABASE_URL explícita, o se arma con BUSINESS_DB_* (Datos.env); URL.create escapa caracteres especiales."""
+    explicit = os.getenv("DATABASE_URL")
+    if explicit:
+        return explicit
+    return URL.create(
+        "postgresql+psycopg",
+        username=os.getenv("BUSINESS_DB_USER", "signserver_app"),
+        password=os.environ["BUSINESS_DB_PASSWORD"],
+        host=os.getenv("BUSINESS_DB_HOST", "business-db"),
+        port=int(os.getenv("BUSINESS_DB_PORT", "5432")),
+        database=os.getenv("BUSINESS_DB_NAME", "signserver_business"),
+    )
+
+
+DATABASE_URL = _build_database_url()
 APP_PUBLIC_URL = os.getenv("APP_PUBLIC_URL", "").rstrip("/")
 DOCUMENTS_DIR = Path(os.getenv("DOCUMENTS_DIR", "/data/documents"))
 SIGN_SERVER_URL = os.getenv("SIGN_SERVER_URL", "http://signserver-app:8080/signserver")

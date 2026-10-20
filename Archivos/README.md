@@ -29,7 +29,7 @@ npm install
 npm run dev
 npm run build
 cd ..\..
-podman compose -f "docker compose.yml" --env-file Datos.env up -d --build
+podman compose --env-file Datos.env up -d --build
 ```
 
 En esta máquina Podman/WSL, el controlador `pids` no se delega a los
@@ -54,8 +54,8 @@ Los puertos publicados son:
 - Nginx: `9080` (HTTP) y `9443` (HTTPS), sin cambios
 
 Las rutas internas entre contenedores siguen usando los puertos de servicio
-originales. El `Dockerfile` de la raíz clona el repositorio y construye el
-validador desde `Archivos/services/validate-service`.
+originales. El validador se construye localmente desde
+`Archivos/services/validate-service` (ya no se clona desde GitHub).
 
 Con `UserModeNetworking` desactivado en esta VM, accede a los puertos publicados
 desde Windows usando la IP de la VM Podman en vez de `localhost`; la IP se puede
@@ -66,7 +66,52 @@ Los certificados y los datos de las bases se conservan en volúmenes de Podman.
 ## Validaciones
 
 ```powershell
-podman compose -f docker-compose.yml config --quiet
+podman compose --env-file Datos.env config --quiet
 cd signserver-web
 npm run build
 ```
+
+
+## Despliegue en Linux (Debian / Rocky Linux)
+
+Paquetes (Podman con `podman-compose`; en Rocky este último viene de EPEL):
+
+```bash
+# Debian
+sudo apt install -y podman podman-compose
+
+# Rocky Linux
+sudo dnf install -y epel-release
+sudo dnf install -y podman podman-compose
+```
+
+1. Copia `docker-compose.yml`, `Datos.env` y `Archivos/` (con
+   `signserver-web/dist` ya compilado). No copies `certs/`, `keystores_backup/`
+   ni volúmenes: se regeneran solos en la máquina nueva.
+2. En `Datos.env` pon la IP o dominio del servidor en `SIGNSERVER_IP`,
+   `APP_PUBLIC_URL`, `OIDC_REDIRECT_URI` y `PUBLIC_DOMAIN`.
+3. Levanta el stack:
+
+   ```bash
+   podman compose --env-file Datos.env up -d --build
+   ```
+
+4. Firewall: abre solo `9443/tcp` (y `9080/tcp` para la redirección).
+   - Rocky: `sudo firewall-cmd --permanent --add-port=9443/tcp --add-port=9080/tcp && sudo firewall-cmd --reload`
+   - Debian (ufw): `sudo ufw allow 9443/tcp && sudo ufw allow 9080/tcp`
+5. Arranque tras reiniciar el servidor:
+   - Rootful: `sudo systemctl enable --now podman-restart.service`
+   - Rootless: `loginctl enable-linger $USER` y
+     `systemctl --user enable --now podman-restart.service`
+
+Notas:
+
+- Los montajes desde carpetas del proyecto llevan `:Z` para SELinux (Rocky); en
+  Debian se ignora.
+- Si ejecutas con `sudo` (rootful), `./certs` queda como propiedad de root.
+- Nginx vuelve a resolver el DNS de los contenedores en cada petición, así que
+  ya no hace falta reiniciar `signserver-web` al recrear `document-api` o
+  `signserver-validate`.
+- Con `ADMINWEB_ACCESS` se usa el certificado `certs/admin-client.p12`; es nuevo
+  en cada máquina y hay que importarlo en el navegador.
+- Los ajustes `pids_limit` y de IP de la VM son solo de Podman en Windows/WSL.
