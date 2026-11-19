@@ -1,0 +1,14 @@
+[Unit]
+Description=Ngrok tunnel for SignServer
+After=signserver-compose.service
+Requires=signserver-compose.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/SignServer-main
+ExecStart=/usr/local/bin/ngrok http https://127.0.0.1:9443 --traffic-policy-file %h/SignServer-main/Archivos/deploy/ngrok-traffic-policy.yml --upstream-tls-verify=false
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

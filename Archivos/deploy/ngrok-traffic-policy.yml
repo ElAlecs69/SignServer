@@ -1,0 +1,22 @@
+on_http_request:
+  - actions:
+      - type: oauth
+        config:
+          provider: microsoft
+          max_session_duration: 8h
+          idle_session_timeout: 30m
+  - expressions:
+      - "!actions.ngrok.oauth.identity.email.endsWith('@alumno.uaemex.mx')"
+    actions:
+      - type: deny
+        config:
+          status_code: 403
+  - actions:
+      - type: remove-headers
+        config:
+          headers:
+            - x-signserver-authenticated-email
+      - type: add-headers
+        config:
+          headers:
+            x-signserver-authenticated-email: "${actions.ngrok.oauth.identity.email}"
