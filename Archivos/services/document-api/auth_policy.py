@@ -8,3 +8,5 @@ def is_allowed_institutional_email(email: str, allowed_domains: tuple[str, ...])
         return False
 
     return domain in allowed_domains
+
+"Prueba"
