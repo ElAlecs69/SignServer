@@ -1,0 +1,60 @@
+name: Build and deploy SignServer
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docker-compose.yml
+      - Archivos/services/document-api/**
+      - Archivos/signserver-web/**
+      - .github/workflows/main.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: signserver-production-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: [self-hosted, linux, x64, signserver]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: Archivos/signserver-web/package-lock.json
+
+      - name: Build frontend
+        working-directory: Archivos/signserver-web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy to Rocky Linux
+        env:
+          DEPLOY_DIR: /home/thelma/SignServer-main
+        run: |
+          set -Eeuo pipefail
+
+          test -r "$DEPLOY_DIR/Datos.env"
+          install -d "$DEPLOY_DIR/Archivos/services/document-api"
+          install -d "$DEPLOY_DIR/Archivos/signserver-web/dist"
+
+          cp "$GITHUB_WORKSPACE/docker-compose.yml" "$DEPLOY_DIR/docker-compose.yml"
+          cp "$GITHUB_WORKSPACE/Archivos/services/document-api/Dockerfile" "$DEPLOY_DIR/Archivos/services/document-api/"
+          cp "$GITHUB_WORKSPACE/Archivos/services/document-api/requirements.txt" "$DEPLOY_DIR/Archivos/services/document-api/"
+          cp "$GITHUB_WORKSPACE/Archivos/services/document-api/main.py" "$DEPLOY_DIR/Archivos/services/document-api/"
+          cp "$GITHUB_WORKSPACE/Archivos/services/document-api/auth_policy.py" "$DEPLOY_DIR/Archivos/services/document-api/"
+          cp -a "$GITHUB_WORKSPACE/Archivos/signserver-web/dist/." "$DEPLOY_DIR/Archivos/signserver-web/dist/"
+
+          cd "$DEPLOY_DIR"
+          podman compose --env-file Datos.env config --quiet
+          podman compose --env-file Datos.env up -d --build --no-deps document-api
+          podman exec signserver-web nginx -s reload

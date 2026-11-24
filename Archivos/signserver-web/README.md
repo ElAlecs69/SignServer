@@ -41,31 +41,36 @@ Desde aquí, cada cambio que hagas es: editar código → `git commit` →
 `git push`. El repo queda como única fuente de verdad — se acabó copiar
 archivos sueltos con `podman cp` a mano.
 
-## 4. Sincronizacion automatica al servidor (CI/CD)
+## 4. Despliegue automatico a Rocky Linux
 
-Como tu servidor vive en una red privada (`172.18.117.229`, dentro de WSL2),
-**GitHub no puede conectarse a él directamente** — por eso el pipeline en
-`.github/workflows/main.yml` usa un **runner self-hosted**: un pequeño
-agente que instalas tú en la máquina Debian, que escucha al repo y ejecuta el
-build/deploy localmente cuando hay un push a `main`.
+El workflow `.github/workflows/main.yml` corre al hacer push a `main` cuando
+cambian `docker-compose.yml`, el backend `document-api` o el frontend. Compila
+el frontend y actualiza la API y el `dist` del despliegue existente en
+`/home/thelma/SignServer-main`. No copia `Datos.env`: ese archivo debe existir
+solo en el servidor.
 
-### Registrar el runner (una sola vez, en la máquina Debian)
+Registra un runner self-hosted en el mismo Rocky donde corre Podman:
 
-1. En GitHub: `Settings` → `Actions` → `Runners` → `New self-hosted runner`.
-2. Sigue las instrucciones que te da GitHub para Linux x64 (descargar el
-   paquete, `./config.sh --url ... --token ...`).
-3. Cuando te pida las **etiquetas (labels)** del runner, agrega `signserver`
-   (así coincide con `runs-on: [self-hosted, signserver]` del workflow).
-4. Instálalo como servicio para que quede siempre escuchando:
+1. En GitHub abre `ElAlecs69/SignServer` → `Settings` → `Actions` → `Runners`
+   → `New self-hosted runner` y selecciona Linux x64.
+2. Sigue los comandos de descarga y extracción que muestra GitHub en Rocky.
+   En la configuración usa la URL del repositorio y el token temporal que
+   proporciona GitHub; no publiques ni compartas ese token.
+3. Agrega la etiqueta `signserver`, requerida por el workflow, y ejecuta el
+   runner bajo el usuario `thelma`, el mismo dueño del Podman rootless:
    ```bash
-   sudo ./svc.sh install
+   ./config.sh --url https://github.com/ElAlecs69/SignServer --token TOKEN_TEMPORAL --labels signserver
+   sudo ./svc.sh install thelma
    sudo ./svc.sh start
    ```
+   Sustituye `TOKEN_TEMPORAL` por el valor mostrado en la pantalla de GitHub.
+4. Comprueba en esa pantalla que el runner aparezca `Idle`. Haz push a `main`
+   y revisa `Actions` para confirmar que el job termine correctamente.
 
-Desde ese momento: cada `git push` a `main` dispara el workflow, que compila
-el proyecto y copia `dist/` directo al contenedor `signserver-web`
-(`podman cp` + `nginx -s reload`) — sin que tengas que tocar la terminal del
-servidor de nuevo.
+El usuario `thelma` debe poder ejecutar `podman compose`, `podman exec` y
+`npm` sin `sudo`; el job utiliza la sesión rootless de ese usuario. Restringe
+los pushes a `main` a colaboradores de confianza: un runner self-hosted ejecuta
+el código del repositorio en el servidor.
 
 ### Alternativa más simple (sin GitHub Actions)
 
